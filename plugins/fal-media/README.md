@@ -6,7 +6,7 @@ AI-powered media generation using fal.ai's Gemini and Veo models.
 
 ```bash
 # Add the Bluewaves marketplace
-/plugin marketplace add bertranddour/bluewaves-skills
+/plugin marketplace add bluewaves-creations/bluewaves-skills
 
 # Install this plugin
 /plugin install fal-media@bluewaves-skills

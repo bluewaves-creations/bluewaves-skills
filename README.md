@@ -10,7 +10,7 @@ A Claude Code plugin marketplace featuring AI-powered media generation and docum
 Add this marketplace to Claude Code:
 
 ```bash
-/plugin marketplace add bertranddour/bluewaves-skills
+/plugin marketplace add bluewaves-creations/bluewaves-skills
 ```
 
 ## Available Plugins
@@ -93,7 +93,7 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
     "bluewaves-skills": {
       "source": {
         "source": "github",
-        "repo": "bertranddour/bluewaves-skills"
+        "repo": "bluewaves-creations/bluewaves-skills"
       }
     }
   },
@@ -111,7 +111,7 @@ Team members who trust the repository will have the marketplace and plugins auto
 ### "Marketplace not found"
 Ensure you added the marketplace first:
 ```bash
-/plugin marketplace add bertranddour/bluewaves-skills
+/plugin marketplace add bluewaves-creations/bluewaves-skills
 ```
 
 ### "FAL_KEY not set"
@@ -131,7 +131,7 @@ Try reinstalling:
 ### "HTTPS authentication failed"
 If using a private repository, use the SSH URL:
 ```bash
-/plugin marketplace add git@github.com:bertranddour/bluewaves-skills.git
+/plugin marketplace add git@github.com:bluewaves-creations/bluewaves-skills.git
 ```
 
 ## Requirements
