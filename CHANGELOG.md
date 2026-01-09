@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-01-09
+
+### Added
+- **swift-apple-dev plugin** (v1.0.0) - Comprehensive Apple Swift development skills:
+  - **15 Skills** covering iOS 26/macOS Tahoe development:
+    - `swift-fundamentals` - Swift 6.x features, macros, Package.swift
+    - `swift-concurrency` - Async/await, actors, @MainActor, Sendable
+    - `liquid-glass-design` - iOS 26 Liquid Glass design system (~900 lines)
+    - `swiftui-patterns` - Modern architecture, @Observable, MV vs MVVM
+    - `swiftui-colors-modifiers` - foregroundStyle, gradients, ViewModifiers
+    - `animations-transitions` - @Animatable macro, PhaseAnimator, KeyframeAnimator
+    - `navigation-menus` - NavigationStack, TabView, toolbars, routing
+    - `text-rich-content` - AttributedString, Markdown, rich text editing
+    - `swiftdata-persistence` - @Model, @Query, native iCloud sync
+    - `foundation-models` - On-device AI with @Generable, tool calling
+    - `app-intents` - Siri, Shortcuts, Spotlight, Action Button
+    - `widgets-live-activities` - WidgetKit, Live Activities, Dynamic Island
+    - `spotlight-discovery` - CoreSpotlight, NSUserActivity
+    - `transferable-sharing` - Drag/drop, ShareLink, Universal Clipboard
+    - `swift-testing` - Swift Testing framework, @Test, #expect
+  - **4 Specialized Agents**:
+    - `swift-architect` - Architecture design and code review
+    - `swift-designer` - UI/UX review and HIG compliance
+    - `swift-qa` - Quality assurance and test strategy
+    - `swift-performance` - Profiling with Instruments
+  - **Validation hook** for Xcode/Swift installation check
+
 ## [1.2.0] - 2026-01-09
 
 ### Changed

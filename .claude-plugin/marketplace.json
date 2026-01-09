@@ -1,8 +1,8 @@
 {
   "name": "bluewaves-skills",
   "metadata": {
-    "description": "AI-powered media generation and document creation skills for Claude Code",
-    "version": "1.2.0"
+    "description": "AI-powered media generation, document creation, and Swift development skills for Claude Code",
+    "version": "1.3.0"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -38,6 +38,21 @@
       "license": "MIT",
       "keywords": ["epub", "ebook", "markdown", "publishing", "document-generation"],
       "category": "documents"
+    },
+    {
+      "name": "swift-apple-dev",
+      "source": "./plugins/swift-apple-dev",
+      "description": "Comprehensive Apple Swift development skills for iOS 26, macOS Tahoe, SwiftUI, SwiftData, Liquid Glass, Foundation Models, and modern Apple frameworks",
+      "version": "1.0.0",
+      "author": {
+        "name": "Bluewaves Team",
+        "email": "contact@bluewaves.boutique"
+      },
+      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/swift-apple-dev",
+      "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+      "license": "MIT",
+      "keywords": ["swift", "ios", "macos", "swiftui", "swiftdata", "xcode", "apple", "liquid-glass", "foundation-models", "app-intents", "widgets", "testing"],
+      "category": "development"
     }
   ]
 }

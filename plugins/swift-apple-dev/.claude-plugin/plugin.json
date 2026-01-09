@@ -1,0 +1,28 @@
+{
+  "name": "swift-apple-dev",
+  "version": "1.0.0",
+  "description": "Comprehensive Apple Swift development skills for iOS 26, macOS Tahoe, SwiftUI, SwiftData, Liquid Glass, Foundation Models, and modern Apple frameworks",
+  "author": {
+    "name": "Bluewaves Team",
+    "email": "contact@bluewaves.boutique"
+  },
+  "license": "MIT",
+  "keywords": [
+    "swift",
+    "ios",
+    "macos",
+    "swiftui",
+    "swiftdata",
+    "xcode",
+    "apple",
+    "liquid-glass",
+    "foundation-models",
+    "app-intents",
+    "widgets",
+    "cloudkit",
+    "testing"
+  ],
+  "homepage": "https://github.com/bluewaves-creations/bluewaves-skills",
+  "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+  "hooks": "./hooks/hooks.json"
+}
