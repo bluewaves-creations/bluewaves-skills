@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Bluewaves Skills is a Claude Code plugin marketplace featuring AI-powered media generation and document creation skills. It contains production-grade plugins that extend Claude's capabilities.
+Bluewaves Skills is a Claude Code plugin marketplace featuring AI-powered media generation, document creation, and Swift development skills. It contains production-grade plugins that extend Claude's capabilities.
 
 ## Architecture
 
@@ -21,10 +21,40 @@ bluewaves-skills/
 │   │       ├── veo-image-to-video/SKILL.md
 │   │       ├── veo-reference-video/SKILL.md
 │   │       └── veo-frames-to-video/SKILL.md
-│   └── epub-generator/           # EPUB ebook generation
+│   ├── epub-generator/           # EPUB ebook generation
+│   │   ├── .claude-plugin/plugin.json
+│   │   └── skills/
+│   │       └── epub-creator/SKILL.md
+│   └── swift-apple-dev/          # Apple Swift development (21 skills, 4 agents)
 │       ├── .claude-plugin/plugin.json
+│       ├── hooks/hooks.json
+│       ├── agents/
+│       │   ├── swift-architect.md
+│       │   ├── swift-designer.md
+│       │   ├── swift-qa.md
+│       │   └── swift-performance.md
 │       └── skills/
-│           └── epub-creator/SKILL.md
+│           ├── swift-fundamentals/SKILL.md
+│           ├── swift-concurrency/SKILL.md
+│           ├── swift-testing/SKILL.md
+│           ├── liquid-glass-design/SKILL.md
+│           ├── swiftui-patterns/SKILL.md
+│           ├── swiftui-colors-modifiers/SKILL.md
+│           ├── animations-transitions/SKILL.md
+│           ├── navigation-menus/SKILL.md
+│           ├── text-rich-content/SKILL.md
+│           ├── swiftdata-persistence/SKILL.md
+│           ├── swiftdata-migration/SKILL.md
+│           ├── foundation-models/SKILL.md
+│           ├── app-intents/SKILL.md
+│           ├── widgets-live-activities/SKILL.md
+│           ├── spotlight-discovery/SKILL.md
+│           ├── transferable-sharing/SKILL.md
+│           ├── performance-profiling/SKILL.md
+│           ├── macos-development/SKILL.md
+│           ├── visionos-spatial/SKILL.md
+│           ├── multiplatform-development/SKILL.md
+│           └── combine-migration/SKILL.md
 └── README.md
 ```
 
@@ -84,10 +114,13 @@ bluewaves-skills/
 
 - **fal-media:** Requires `FAL_KEY` environment variable (fal.ai API key)
 - **epub-generator:** Requires `uv pip install ebooklib markdown Pillow beautifulsoup4 lxml`
+- **swift-apple-dev:** Requires Xcode 26+ with Swift 6 toolchain
 
 ## Versioning
 
-All plugins currently sync to version 1.1.0. When updating:
+Current marketplace version: 1.4.0
+
+When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`
 2. Update version in `.claude-plugin/marketplace.json`
 3. Update CHANGELOG.md

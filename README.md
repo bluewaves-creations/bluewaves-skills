@@ -1,9 +1,9 @@
 # Bluewaves Skills
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue)
+![Version](https://img.shields.io/badge/version-1.4.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A Claude Code plugin marketplace featuring AI-powered media generation and document creation skills.
+A Claude Code plugin marketplace featuring AI-powered media generation, document creation, and enterprise-grade Swift development skills.
 
 ## Installation
 
@@ -14,6 +14,35 @@ Add this marketplace to Claude Code:
 ```
 
 ## Available Plugins
+
+### swift-apple-dev
+
+Enterprise-grade Apple Swift development skills for iOS 26, macOS Tahoe, visionOS, and cross-platform apps.
+
+```bash
+/plugin install swift-apple-dev@bluewaves-skills
+```
+
+**21 Skills organized by category:**
+
+| Category | Skills |
+|----------|--------|
+| **Core Swift** | `swift-fundamentals`, `swift-concurrency`, `swift-testing` |
+| **SwiftUI & Design** | `liquid-glass-design`, `swiftui-patterns`, `swiftui-colors-modifiers`, `animations-transitions` |
+| **Data & AI** | `swiftdata-persistence`, `swiftdata-migration`, `foundation-models` |
+| **Navigation & Content** | `navigation-menus`, `text-rich-content`, `app-intents`, `widgets-live-activities`, `spotlight-discovery`, `transferable-sharing` |
+| **Platform-Specific** | `macos-development`, `visionos-spatial`, `multiplatform-development` |
+| **Migration & Performance** | `combine-migration`, `performance-profiling` |
+
+**4 Specialized Agents:**
+- `swift-architect` - Architecture design and code review
+- `swift-designer` - UI/UX review and HIG compliance
+- `swift-qa` - Quality assurance and test strategy
+- `swift-performance` - Profiling with Instruments
+
+**Prerequisites:** Xcode 26+ with Swift 6 toolchain
+
+---
 
 ### fal-media
 
@@ -32,6 +61,8 @@ AI-powered media generation using fal.ai's Gemini and Veo models.
 
 **Prerequisites:** Set `FAL_KEY` environment variable in `~/.zshrc`
 
+---
+
 ### epub-generator
 
 Generate validated EPUB 3 ebooks from markdown and images.
@@ -45,9 +76,16 @@ Generate validated EPUB 3 ebooks from markdown and images.
 
 **Prerequisites:** `uv pip install ebooklib markdown`
 
+---
+
 ## Usage Examples
 
 ```
+# Swift development
+"Create a SwiftUI view with Liquid Glass design"
+"Help me migrate from CoreData to SwiftData"
+"Profile my app for memory leaks"
+
 # Generate an image
 "Create a 4K image of a cyberpunk city at night"
 
@@ -75,7 +113,7 @@ This pulls the latest changes from the repository.
 
 Remove a plugin:
 ```bash
-/plugin uninstall fal-media@bluewaves-skills
+/plugin uninstall swift-apple-dev@bluewaves-skills
 ```
 
 Remove the marketplace entirely:
@@ -98,6 +136,7 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
     }
   },
   "enabledPlugins": {
+    "swift-apple-dev@bluewaves-skills": true,
     "fal-media@bluewaves-skills": true,
     "epub-generator@bluewaves-skills": true
   }
@@ -124,8 +163,8 @@ Then restart your terminal or run `source ~/.zshrc`.
 ### "Plugin not loading"
 Try reinstalling:
 ```bash
-/plugin uninstall fal-media@bluewaves-skills
-/plugin install fal-media@bluewaves-skills
+/plugin uninstall swift-apple-dev@bluewaves-skills
+/plugin install swift-apple-dev@bluewaves-skills
 ```
 
 ### "HTTPS authentication failed"
@@ -137,6 +176,7 @@ If using a private repository, use the SSH URL:
 ## Requirements
 
 - Claude Code CLI
+- For swift-apple-dev: Xcode 26+ with Swift 6
 - For fal-media: fal.ai API key (`FAL_KEY`)
 - For epub-generator: Python with ebooklib
 
