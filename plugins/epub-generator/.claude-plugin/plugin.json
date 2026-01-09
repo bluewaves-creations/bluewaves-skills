@@ -8,7 +8,6 @@
   },
   "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/epub-generator",
   "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
-  "bugs": "https://github.com/bluewaves-creations/bluewaves-skills/issues",
   "license": "MIT",
   "keywords": ["epub", "ebook", "markdown", "publishing", "document-generation"]
 }
