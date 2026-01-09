@@ -1,0 +1,10 @@
+{
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "match": "Bash",
+      "type": "command",
+      "command": "${CLAUDE_PLUGIN_ROOT}/hooks/validate-fal-key.sh"
+    }
+  ]
+}

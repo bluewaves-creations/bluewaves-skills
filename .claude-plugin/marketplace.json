@@ -1,5 +1,9 @@
 {
   "name": "bluewaves-skills",
+  "metadata": {
+    "description": "AI-powered media generation and document creation skills for Claude Code",
+    "version": "1.2.0"
+  },
   "owner": {
     "name": "Bluewaves Team",
     "email": "contact@bluewaves.boutique"
@@ -9,13 +13,31 @@
       "name": "fal-media",
       "source": "./plugins/fal-media",
       "description": "fal.ai media generation (Gemini images, Veo videos)",
-      "version": "1.1.0"
+      "version": "1.2.0",
+      "author": {
+        "name": "Bluewaves Team",
+        "email": "contact@bluewaves.boutique"
+      },
+      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/fal-media",
+      "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+      "license": "MIT",
+      "keywords": ["fal.ai", "image-generation", "video-generation", "gemini", "veo", "ai-media"],
+      "category": "media"
     },
     {
       "name": "epub-generator",
       "source": "./plugins/epub-generator",
       "description": "Generate validated EPUB from markdown and images",
-      "version": "1.1.0"
+      "version": "1.2.0",
+      "author": {
+        "name": "Bluewaves Team",
+        "email": "contact@bluewaves.boutique"
+      },
+      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/epub-generator",
+      "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+      "license": "MIT",
+      "keywords": ["epub", "ebook", "markdown", "publishing", "document-generation"],
+      "category": "documents"
     }
   ]
 }

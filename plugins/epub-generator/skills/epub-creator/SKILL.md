@@ -1,6 +1,7 @@
 ---
 name: epub-creator
 description: Create production-quality EPUB 3 ebooks from markdown and images with automated QA, formatting fixes, and validation. Use when creating ebooks, converting markdown to EPUB, or compiling chapters into a publishable book. Handles markdown quirks, generates TOC, adds covers, and validates output automatically.
+allowed-tools: Bash, Read, Write
 ---
 
 # EPUB Creator (Production Grade)

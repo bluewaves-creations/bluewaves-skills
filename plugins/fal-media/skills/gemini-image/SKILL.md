@@ -1,6 +1,7 @@
 ---
 name: gemini-image
 description: Generate images from text prompts using fal.ai Gemini 3 Pro. Use when the user asks to create, generate, or make an image from a text description. Supports multiple aspect ratios and resolutions up to 4K.
+allowed-tools: Bash, Read, Write
 ---
 
 # Gemini Image Generation

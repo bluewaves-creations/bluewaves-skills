@@ -1,6 +1,7 @@
 ---
 name: veo-frames-to-video
 description: Generate video from first and last frame images using fal.ai Veo 3.1. Use when the user wants to create a video transition between two images, morph between scenes, or generate smooth video connecting a starting and ending frame.
+allowed-tools: Bash, Read, Write
 ---
 
 # Veo 3.1 First-Last-Frame-to-Video

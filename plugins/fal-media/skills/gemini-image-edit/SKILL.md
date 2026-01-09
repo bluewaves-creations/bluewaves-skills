@@ -1,6 +1,7 @@
 ---
 name: gemini-image-edit
 description: Edit existing images with text prompts using fal.ai Gemini 3 Pro. Use when the user wants to modify, edit, transform, or change an existing image based on a text description. Supports multiple input images for context.
+allowed-tools: Bash, Read, Write
 ---
 
 # Gemini Image Editing

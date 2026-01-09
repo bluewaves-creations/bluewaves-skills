@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-01-09
+
+### Changed
+- **Enterprise upgrade** to align with latest Claude Code plugin specifications:
+  - Added `metadata` section to marketplace.json with description and version
+  - Enriched plugin entries with full metadata (author, homepage, repository, license, keywords, category)
+  - Added `homepage` and `bugs` fields to all plugin.json files
+  - Synchronized all versions to 1.1.0 (was mismatched between marketplace and plugins)
+
+### Added
+- **Security hardening** via `allowed-tools` in all SKILL.md frontmatter
+  - Restricts Claude's tool access to Bash, Read, Write when skills are active
+- **Validation hooks** for fal-media plugin
+  - PreToolUse hook validates FAL_KEY environment variable before API calls
+  - Blocks commands with helpful error message if key is missing
+
 ## [1.1.0] - 2025-12-10
 
 ### Changed

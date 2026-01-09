@@ -1,12 +1,15 @@
 {
   "name": "fal-media",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "fal.ai media generation skills for Gemini image generation and Veo video creation",
   "author": {
     "name": "Bluewaves Team",
     "email": "contact@bluewaves.boutique"
   },
+  "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/fal-media",
   "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+  "bugs": "https://github.com/bluewaves-creations/bluewaves-skills/issues",
   "license": "MIT",
-  "keywords": ["fal.ai", "image-generation", "video-generation", "gemini", "veo", "ai-media"]
+  "keywords": ["fal.ai", "image-generation", "video-generation", "gemini", "veo", "ai-media"],
+  "hooks": "./hooks/hooks.json"
 }
