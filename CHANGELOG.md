@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-01-10
+
+### Added
+
+#### fal-media v1.3.0
+- **5 new photographer style skills** with researched prompt templates:
+  - `photographer-lindbergh` - Peter Lindbergh style: raw B&W photography, emotional depth, film grain, minimal retouching
+  - `photographer-ritts` - Herb Ritts style: sculptural forms, California golden hour, classical Greek influence
+  - `photographer-testino` - Mario Testino style: vibrant glamour, bold saturated colors, natural warmth
+  - `photographer-lachapelle` - David LaChapelle style: pop surrealism, fluorescent colors, baroque maximalism
+  - `photographer-vonunwerth` - Ellen von Unwerth style: playful vintage, film noir influence, feminine empowerment
+- **Error handling sections** added to all 5 existing fal-media skills with solution tables
+- **Troubleshooting guide** in README with common issues and solutions
+- **Prompt engineering tips** for better image generation results
+
+#### epub-generator v1.3.0
+- **Dependency validation hook** (`hooks/validate-dependencies.sh`) that blocks execution with helpful messages when packages are missing
+- **Pre-validation function** (`validate_sources()`) checks all inputs before processing
+- **Post-validation function** (`post_validate_epub()`) with comprehensive output checks
+- **Nested table of contents** support with `extract_toc_structure()` for H1/H2/H3 hierarchy
+- **Progress reporting** during EPUB generation with chapter-by-chapter status
+- **Configurable parameters** including `max_image_size_mb`, `toc_depth`, `custom_css`, and more
+- **Complete prerequisites** documentation with macOS/Linux installation commands
+
+### Changed
+- fal-media now has **10 skills** (up from 5) including photographer style presets
+- epub-generator now has **production-grade validation** with pre/post checks
+- Updated all plugin descriptions to reflect new capabilities
+- Enhanced keywords for better discoverability
+
+---
+
 ## [1.4.0] - 2026-01-09
 
 ### Added

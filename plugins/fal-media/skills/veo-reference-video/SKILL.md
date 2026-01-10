@@ -127,3 +127,13 @@ console.log("Generated video:", result.video.url);
 - Describe both the scene and the subject's actions in the prompt
 - More reference images generally lead to better subject consistency
 - Works best with distinct, recognizable subjects
+
+## Error Handling
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `401 Unauthorized` | Invalid FAL_KEY | Verify key at fal.ai dashboard |
+| `429 Too Many Requests` | Rate limit exceeded | Wait 60 seconds, retry |
+| `400 Bad Request` | Invalid image URLs | Ensure all reference URLs are accessible |
+| `500 Server Error` | API temporary issue | Retry after 30 seconds |
+| `Timeout` | Video generation taking too long | Use 720p or fewer references |

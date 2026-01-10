@@ -1,6 +1,6 @@
 # Bluewaves Skills
 
-![Version](https://img.shields.io/badge/version-1.4.0-blue)
+![Version](https://img.shields.io/badge/version-1.5.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A Claude Code plugin marketplace featuring AI-powered media generation, document creation, and enterprise-grade Swift development skills.
@@ -46,18 +46,26 @@ Enterprise-grade Apple Swift development skills for iOS 26, macOS Tahoe, visionO
 
 ### fal-media
 
-AI-powered media generation using fal.ai's Gemini and Veo models.
+AI-powered media generation using fal.ai's Gemini and Veo models, plus 5 photographer style skills.
 
 ```bash
 /plugin install fal-media@bluewaves-skills
 ```
 
-**Skills:**
-- `gemini-image` - Generate images from text prompts
-- `gemini-image-edit` - Edit images with text instructions
-- `veo-image-to-video` - Animate images into videos
-- `veo-reference-video` - Generate video with consistent subjects
-- `veo-frames-to-video` - Create video from first/last frames
+**10 Skills:**
+
+| Category | Skills |
+|----------|--------|
+| **Image Generation** | `gemini-image`, `gemini-image-edit` |
+| **Video Generation** | `veo-image-to-video`, `veo-reference-video`, `veo-frames-to-video` |
+| **Photographer Styles** | `photographer-lindbergh`, `photographer-ritts`, `photographer-testino`, `photographer-lachapelle`, `photographer-vonunwerth` |
+
+**Photographer Styles:**
+- **Lindbergh** - Raw B&W photography, emotional depth, film grain
+- **Ritts** - Sculptural forms, California golden hour, classical Greek
+- **Testino** - Vibrant glamour, bold saturated colors
+- **LaChapelle** - Pop surrealism, fluorescent colors, baroque maximalism
+- **von Unwerth** - Playful vintage, film noir, feminine empowerment
 
 **Prerequisites:** Set `FAL_KEY` environment variable in `~/.zshrc`
 
@@ -65,16 +73,23 @@ AI-powered media generation using fal.ai's Gemini and Veo models.
 
 ### epub-generator
 
-Generate validated EPUB 3 ebooks from markdown and images.
+Production-grade EPUB 3 generation with validation, nested TOC, and dependency checking.
 
 ```bash
 /plugin install epub-generator@bluewaves-skills
 ```
 
 **Skills:**
-- `epub-creator` - Convert markdown files to EPUB with cover, TOC, and styling
+- `epub-creator` - Convert markdown files to EPUB with cover, nested TOC, and styling
 
-**Prerequisites:** `uv pip install ebooklib markdown`
+**Features:**
+- Pre-validation of source files before processing
+- Post-validation with comprehensive EPUB checks
+- Hierarchical table of contents (H1/H2/H3)
+- Progress reporting during generation
+- Automatic dependency validation hook
+
+**Prerequisites:** `pip install ebooklib markdown Pillow beautifulsoup4 lxml PyYAML`
 
 ---
 
@@ -178,7 +193,7 @@ If using a private repository, use the SSH URL:
 - Claude Code CLI
 - For swift-apple-dev: Xcode 26+ with Swift 6
 - For fal-media: fal.ai API key (`FAL_KEY`)
-- For epub-generator: Python with ebooklib
+- For epub-generator: Python 3.8+ with ebooklib, markdown, Pillow, beautifulsoup4, lxml, PyYAML
 
 ## License
 

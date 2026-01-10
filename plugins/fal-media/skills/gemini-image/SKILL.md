@@ -109,3 +109,20 @@ console.log("Generated image:", result.images[0].url);
 
 3. **High resolution**:
    - Prompt: "Generate a detailed 4K image of a coral reef" with `resolution: "4K"`
+
+## Tips
+
+- Be specific in your prompts for better results
+- Include lighting, mood, and style descriptors
+- Use appropriate aspect ratios for your use case (16:9 for landscapes, 9:16 for portraits)
+- Higher resolution takes longer to generate
+
+## Error Handling
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `401 Unauthorized` | Invalid FAL_KEY | Verify key at fal.ai dashboard |
+| `429 Too Many Requests` | Rate limit exceeded | Wait 60 seconds, retry |
+| `400 Bad Request` | Invalid parameters | Check aspect_ratio, resolution values |
+| `500 Server Error` | API temporary issue | Retry after 30 seconds |
+| `Timeout` | Generation taking too long | Reduce resolution or simplify prompt |

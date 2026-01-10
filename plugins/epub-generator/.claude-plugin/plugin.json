@@ -1,7 +1,7 @@
 {
   "name": "epub-generator",
-  "version": "1.2.0",
-  "description": "Generate validated EPUB ebooks from markdown files and images",
+  "version": "1.3.0",
+  "description": "Production-grade EPUB generation with pre/post validation, nested ToC, and dependency checking",
   "author": {
     "name": "Bluewaves Team",
     "email": "contact@bluewaves.boutique"
@@ -9,5 +9,6 @@
   "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/epub-generator",
   "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
   "license": "MIT",
-  "keywords": ["epub", "ebook", "markdown", "publishing", "document-generation"]
+  "keywords": ["epub", "ebook", "markdown", "publishing", "document-generation", "validation"],
+  "hooks": "hooks/hooks.json"
 }

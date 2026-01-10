@@ -118,3 +118,13 @@ console.log("Edited image:", result.images[0].url);
 - Use descriptive language for style changes
 - Multiple images can be provided for context or combining elements
 - The `auto` aspect ratio preserves the original image proportions
+
+## Error Handling
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `401 Unauthorized` | Invalid FAL_KEY | Verify key at fal.ai dashboard |
+| `429 Too Many Requests` | Rate limit exceeded | Wait 60 seconds, retry |
+| `400 Bad Request` | Invalid image URL or parameters | Ensure image URLs are accessible |
+| `500 Server Error` | API temporary issue | Retry after 30 seconds |
+| `Timeout` | Generation taking too long | Reduce resolution or simplify edit |
