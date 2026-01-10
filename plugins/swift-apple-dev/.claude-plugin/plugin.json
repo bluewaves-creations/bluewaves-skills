@@ -23,6 +23,5 @@
     "testing"
   ],
   "homepage": "https://github.com/bluewaves-creations/bluewaves-skills",
-  "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
-  "hooks": "./hooks/hooks.json"
+  "repository": "https://github.com/bluewaves-creations/bluewaves-skills"
 }

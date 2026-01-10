@@ -9,6 +9,5 @@
   "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/fal-media",
   "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
   "license": "MIT",
-  "keywords": ["fal.ai", "image-generation", "video-generation", "gemini", "veo", "ai-media"],
-  "hooks": "./hooks/hooks.json"
+  "keywords": ["fal.ai", "image-generation", "video-generation", "gemini", "veo", "ai-media"]
 }
