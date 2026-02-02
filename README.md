@@ -1,5 +1,7 @@
 # Bluewaves Skills
 
+![Bluewaves — We craft AI products you can actually use](bluewaves.png)
+
 ![Version](https://img.shields.io/badge/version-1.7.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
