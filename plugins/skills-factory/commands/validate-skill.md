@@ -11,7 +11,7 @@ Arguments should be the path to a skill folder containing a SKILL.md file. If no
 
 1. **Locate the script:**
    ```bash
-   SCRIPT="${CLAUDE_PLUGIN_ROOT}/skills/skill-creator/scripts/quick_validate.py"
+   SCRIPT="${CLAUDE_PLUGIN_ROOT}/skills/skill-shaper/scripts/quick_validate.py"
    ```
 
 2. **Run quick_validate.py:**

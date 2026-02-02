@@ -106,10 +106,10 @@ Skill creation, validation, and cross-platform conversion tools for Agent Skills
 
 | Category | Skills |
 |----------|--------|
-| **Skill Creation** | `skill-creator` |
+| **Skill Creation** | `skill-shaper` |
 | **Cross-Platform Conversion** | `gemini-gem-converter`, `openai-gpt-converter` |
 
-- **skill-creator** - Create effective Agent Skills with guided workflows, bundled scripts, and reference materials
+- **skill-shaper** - Create effective Agent Skills with guided workflows, bundled scripts, and reference materials
 - **gemini-gem-converter** - Convert Agent Skills to Gemini Gems with platform constraint awareness
 - **openai-gpt-converter** - Convert Agent Skills to Custom GPTs with 8K instruction limit strategies
 

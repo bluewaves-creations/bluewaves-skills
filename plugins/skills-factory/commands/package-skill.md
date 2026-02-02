@@ -11,7 +11,7 @@ Arguments should be: `<skill-folder> [output-directory]`. If no arguments are pr
 
 1. **Locate the script:**
    ```bash
-   SCRIPT="${CLAUDE_PLUGIN_ROOT}/skills/skill-creator/scripts/package_skill.py"
+   SCRIPT="${CLAUDE_PLUGIN_ROOT}/skills/skill-shaper/scripts/package_skill.py"
    ```
 
 2. **Run package_skill.py:**

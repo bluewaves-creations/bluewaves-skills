@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **skills-factory:** `/skills-factory:init-skill` — Scaffold a new skill from template; `/skills-factory:validate-skill` — Validate a skill folder; `/skills-factory:package-skill` — Package a skill into a distributable ZIP
 
 #### skills-factory v1.0.0 (new plugin)
-- **`skill-creator` skill** — Guide for creating effective Agent Skills with bundled scripts, references, and templates. Includes `init_skill.py`, `package_skill.py`, `quick_validate.py`, and 4 reference documents (skill specification, authoring best practices, workflows, output patterns)
+- **`skill-shaper` skill** — Guide for creating effective Agent Skills with bundled scripts, references, and templates. Includes `init_skill.py`, `package_skill.py`, `quick_validate.py`, and 4 reference documents (skill specification, authoring best practices, workflows, output patterns)
 - **`gemini-gem-converter` skill** — Knowledge-only skill for converting Agent Skills to Gemini Gems format with platform constraint awareness, 10-file limit strategies, and script-to-docs conversion patterns
 - **`openai-gpt-converter` skill** — Knowledge-only skill for converting Agent Skills to Custom GPT format with 8K instruction limit condensation strategies, Code Interpreter evaluation, and Actions mapping
 - New `"tools"` category for meta-tooling plugins

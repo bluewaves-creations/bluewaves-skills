@@ -6,7 +6,7 @@ Skill creation, validation, and cross-platform conversion tools for Agent Skills
 
 | Skill | Description |
 |-------|-------------|
-| `skill-creator` | Guide for creating effective Agent Skills with bundled scripts, references, and templates |
+| `skill-shaper` | Guide for creating effective Agent Skills with bundled scripts, references, and templates |
 | `gemini-gem-converter` | Convert Agent Skills to Gemini Gems format with platform constraint awareness |
 | `openai-gpt-converter` | Convert Agent Skills to Custom GPT format with 8K instruction limit strategies |
 
@@ -18,7 +18,7 @@ Skill creation, validation, and cross-platform conversion tools for Agent Skills
 
 ## Prerequisites
 
-- **skill-creator**: `skills-ref` recommended for validation (`uv pip install -e deps/agentskills/skills-ref/`). Fallback: PyYAML (`uv pip install pyyaml`) for `quick_validate.py`.
+- **skill-shaper**: `skills-ref` recommended for validation (`uv pip install -e deps/agentskills/skills-ref/`). Fallback: PyYAML (`uv pip install pyyaml`) for `quick_validate.py`.
 - **gemini-gem-converter**: No dependencies (knowledge-only skill)
 - **openai-gpt-converter**: No dependencies (knowledge-only skill)
 

@@ -5,7 +5,7 @@
 #
 # Usage:
 #   ./scripts/validate-skills.sh              # Validate all skills
-#   ./scripts/validate-skills.sh skill-creator # Validate one skill
+#   ./scripts/validate-skills.sh skill-shaper # Validate one skill
 
 set -euo pipefail
 

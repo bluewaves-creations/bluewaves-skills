@@ -13,7 +13,7 @@ If no arguments are provided, ask the user for a skill name and target path.
 
 1. **Locate the script:**
    ```bash
-   SCRIPT="${CLAUDE_PLUGIN_ROOT}/skills/skill-creator/scripts/init_skill.py"
+   SCRIPT="${CLAUDE_PLUGIN_ROOT}/skills/skill-shaper/scripts/init_skill.py"
    ```
 
 2. **Run init_skill.py:**

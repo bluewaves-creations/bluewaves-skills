@@ -5,6 +5,6 @@ Run the marketplace skill validation script against all skills (or a single skil
 
 $ARGUMENTS
 
-If arguments are provided, treat them as a skill name filter (e.g., "skill-creator" to validate only that skill). Otherwise validate all skills.
+If arguments are provided, treat them as a skill name filter (e.g., "skill-shaper" to validate only that skill). Otherwise validate all skills.
 
 Execute: `bash scripts/validate-skills.sh $ARGUMENTS`

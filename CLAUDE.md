@@ -63,7 +63,7 @@ bluewaves-skills/
 │       ├── .claude-plugin/plugin.json
 │       ├── commands/              # init-skill, validate-skill, package-skill
 │       └── skills/
-│           ├── skill-creator/SKILL.md, scripts/, references/
+│           ├── skill-shaper/SKILL.md, scripts/, references/
 │           ├── gemini-gem-converter/SKILL.md, references/
 │           └── openai-gpt-converter/SKILL.md, references/
 ├── deps/
@@ -163,7 +163,7 @@ uv pip install -e deps/agentskills/skills-ref/
 bash scripts/validate-skills.sh
 
 # Validate a single skill
-bash scripts/validate-skills.sh skill-creator
+bash scripts/validate-skills.sh skill-shaper
 ```
 
 To update the submodule: `git submodule update --remote deps/agentskills`
