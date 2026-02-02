@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-02-02
+
+### Added
+
+#### Slash commands for all plugins
+- **Project-level:** `/validate-skills` — Validate marketplace skills via skills-ref
+- **fal-media:** `/fal-media:check-fal-key` — Check FAL_KEY and test API connectivity; `/fal-media:generate-image` — Quick image generation from a text prompt
+- **epub-generator:** `/epub-generator:install-deps` — One-step Python dependency installation and verification
+- **swift-apple-dev:** `/swift-apple-dev:check-environment` — Comprehensive Xcode/Swift/SDK readiness audit
+- **skills-factory:** `/skills-factory:init-skill` — Scaffold a new skill from template; `/skills-factory:validate-skill` — Validate a skill folder; `/skills-factory:package-skill` — Package a skill into a distributable ZIP
+
+#### skills-factory v1.0.0 (new plugin)
+- **`skill-creator` skill** — Guide for creating effective Agent Skills with bundled scripts, references, and templates. Includes `init_skill.py`, `package_skill.py`, `quick_validate.py`, and 4 reference documents (skill specification, authoring best practices, workflows, output patterns)
+- **`gemini-gem-converter` skill** — Knowledge-only skill for converting Agent Skills to Gemini Gems format with platform constraint awareness, 10-file limit strategies, and script-to-docs conversion patterns
+- **`openai-gpt-converter` skill** — Knowledge-only skill for converting Agent Skills to Custom GPT format with 8K instruction limit condensation strategies, Code Interpreter evaluation, and Actions mapping
+- New `"tools"` category for meta-tooling plugins
+
+#### Marketplace infrastructure
+- **`skills-ref` git submodule** at `deps/agentskills/` — Official Anthropic skill validation library pinned as submodule for authoritative SKILL.md validation
+- **`scripts/validate-skills.sh`** — Marketplace-wide validation script using `skills-ref validate` against all skills
+- **Build script update** — `scripts/build-skill-zips.sh` now includes `scripts/`, `references/`, and `assets/` directories in standalone ZIPs when present
+
+---
+
 ## [1.6.1] - 2026-02-02
 
 ### Fixed

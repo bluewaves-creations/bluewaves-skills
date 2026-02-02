@@ -1,9 +1,9 @@
 # Bluewaves Skills
 
-![Version](https://img.shields.io/badge/version-1.6.1-blue)
+![Version](https://img.shields.io/badge/version-1.7.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A Claude Code plugin marketplace featuring AI-powered media generation, document creation, and enterprise-grade Swift development skills.
+A Claude Code plugin marketplace featuring AI-powered media generation, document creation, enterprise-grade Swift development, and skill creation and cross-platform conversion tools.
 
 ## Installation
 
@@ -94,6 +94,69 @@ Production-grade EPUB 3 generation with validation, nested TOC, and dependency c
 
 ---
 
+### skills-factory
+
+Skill creation, validation, and cross-platform conversion tools for Agent Skills.
+
+```bash
+/plugin install skills-factory@bluewaves-skills
+```
+
+**3 Skills:**
+
+| Category | Skills |
+|----------|--------|
+| **Skill Creation** | `skill-creator` |
+| **Cross-Platform Conversion** | `gemini-gem-converter`, `openai-gpt-converter` |
+
+- **skill-creator** - Create effective Agent Skills with guided workflows, bundled scripts, and reference materials
+- **gemini-gem-converter** - Convert Agent Skills to Gemini Gems with platform constraint awareness
+- **openai-gpt-converter** - Convert Agent Skills to Custom GPTs with 8K instruction limit strategies
+
+**Prerequisites:** `skills-ref` recommended for validation (`uv pip install -e deps/agentskills/skills-ref/`). Fallback: PyYAML for `quick_validate.py`.
+
+---
+
+## Slash Commands
+
+Explicit commands you can invoke from the Claude Code prompt. These complement skills (which trigger automatically).
+
+### Project-Level
+
+| Command | Description |
+|---------|-------------|
+| `/validate-skills` | Validate marketplace skills via skills-ref |
+| `/build-skill-zips` | Build standalone skill ZIP files for Claude.ai users |
+
+### fal-media
+
+| Command | Description |
+|---------|-------------|
+| `/fal-media:check-fal-key` | Check if FAL_KEY is set and test API connectivity |
+| `/fal-media:generate-image <prompt>` | Quick image generation from a text prompt |
+
+### epub-generator
+
+| Command | Description |
+|---------|-------------|
+| `/epub-generator:install-deps` | Install Python dependencies (uses `uv` by default, `--pip` for pip) |
+
+### swift-apple-dev
+
+| Command | Description |
+|---------|-------------|
+| `/swift-apple-dev:check-environment` | Audit Xcode, Swift, SDKs, and simulators |
+
+### skills-factory
+
+| Command | Description |
+|---------|-------------|
+| `/skills-factory:init-skill <name> --path <dir>` | Scaffold a new skill from template |
+| `/skills-factory:validate-skill <path>` | Validate a skill folder |
+| `/skills-factory:package-skill <path> [output-dir]` | Package a skill into a `.skill` ZIP |
+
+---
+
 ## Use Without Claude Code
 
 Individual skills are available as standalone ZIP files for **Claude.ai** (web/desktop) users who don't use Claude Code.
@@ -105,7 +168,7 @@ Individual skills are available as standalone ZIP files for **Claude.ai** (web/d
 3. Click **Upload skill** and select the downloaded ZIP
 4. Toggle the skill **ON**
 
-Each ZIP contains a single skill with its instructions. All 33 skills are available individually.
+Each ZIP contains a single skill with its instructions. All 36 skills are available individually.
 
 > **Note:** Plugin hooks (API key validation, Xcode version checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
 
@@ -130,6 +193,13 @@ Each ZIP contains a single skill with its instructions. All 33 skills are availa
 
 # Generate EPUB
 "Create an EPUB from the markdown files in ./chapters"
+
+# Create a skill
+"Help me create a skill for processing CSV files"
+
+# Convert a skill to other platforms
+"Convert my pdf-processor skill to a Gemini Gem"
+"Adapt this skill for use as a Custom GPT"
 ```
 
 ## Updating
@@ -171,7 +241,8 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
   "enabledPlugins": {
     "swift-apple-dev@bluewaves-skills": true,
     "fal-media@bluewaves-skills": true,
-    "epub-generator@bluewaves-skills": true
+    "epub-generator@bluewaves-skills": true,
+    "skills-factory@bluewaves-skills": true
   }
 }
 ```
@@ -212,6 +283,7 @@ If using a private repository, use the SSH URL:
 - For swift-apple-dev: Xcode 26+ with Swift 6
 - For fal-media: fal.ai API key (`FAL_KEY`)
 - For epub-generator: Python 3.8+ with ebooklib, markdown, Pillow, beautifulsoup4, lxml, PyYAML
+- For skills-factory: `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback
 
 ## License
 

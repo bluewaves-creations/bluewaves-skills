@@ -15,6 +15,7 @@ bluewaves-skills/
 ├── plugins/
 │   ├── fal-media/                # fal.ai media generation (Gemini/Veo)
 │   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/             # check-fal-key, generate-image
 │   │   └── skills/
 │   │       ├── gemini-image/SKILL.md
 │   │       ├── gemini-image-edit/SKILL.md
@@ -23,45 +24,58 @@ bluewaves-skills/
 │   │       └── veo-frames-to-video/SKILL.md
 │   ├── epub-generator/           # EPUB ebook generation
 │   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/             # install-deps
 │   │   └── skills/
 │   │       └── epub-creator/SKILL.md
-│   └── swift-apple-dev/          # Apple Swift development (22 skills, 4 agents)
+│   ├── swift-apple-dev/          # Apple Swift development (22 skills, 4 agents)
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/             # check-environment
+│   │   ├── hooks/hooks.json
+│   │   ├── agents/
+│   │   │   ├── swift-architect.md
+│   │   │   ├── swift-designer.md
+│   │   │   ├── swift-qa.md
+│   │   │   └── swift-performance.md
+│   │   └── skills/
+│   │       ├── swift-fundamentals/SKILL.md
+│   │       ├── swift-concurrency/SKILL.md
+│   │       ├── swift-testing/SKILL.md
+│   │       ├── liquid-glass-design/SKILL.md
+│   │       ├── swiftui-patterns/SKILL.md
+│   │       ├── swiftui-colors-modifiers/SKILL.md
+│   │       ├── animations-transitions/SKILL.md
+│   │       ├── navigation-menus/SKILL.md
+│   │       ├── text-rich-content/SKILL.md
+│   │       ├── swiftdata-persistence/SKILL.md
+│   │       ├── swiftdata-migration/SKILL.md
+│   │       ├── foundation-models/SKILL.md
+│   │       ├── app-intents/SKILL.md
+│   │       ├── widgets-live-activities/SKILL.md
+│   │       ├── spotlight-discovery/SKILL.md
+│   │       ├── transferable-sharing/SKILL.md
+│   │       ├── performance-profiling/SKILL.md
+│   │       ├── macos-development/SKILL.md
+│   │       ├── visionos-spatial/SKILL.md
+│   │       ├── multiplatform-development/SKILL.md
+│   │       ├── combine-migration/SKILL.md
+│   │       └── cloudkit/SKILL.md
+│   └── skills-factory/            # Skill creation & cross-platform conversion (3 skills)
 │       ├── .claude-plugin/plugin.json
-│       ├── hooks/hooks.json
-│       ├── agents/
-│       │   ├── swift-architect.md
-│       │   ├── swift-designer.md
-│       │   ├── swift-qa.md
-│       │   └── swift-performance.md
+│       ├── commands/              # init-skill, validate-skill, package-skill
 │       └── skills/
-│           ├── swift-fundamentals/SKILL.md
-│           ├── swift-concurrency/SKILL.md
-│           ├── swift-testing/SKILL.md
-│           ├── liquid-glass-design/SKILL.md
-│           ├── swiftui-patterns/SKILL.md
-│           ├── swiftui-colors-modifiers/SKILL.md
-│           ├── animations-transitions/SKILL.md
-│           ├── navigation-menus/SKILL.md
-│           ├── text-rich-content/SKILL.md
-│           ├── swiftdata-persistence/SKILL.md
-│           ├── swiftdata-migration/SKILL.md
-│           ├── foundation-models/SKILL.md
-│           ├── app-intents/SKILL.md
-│           ├── widgets-live-activities/SKILL.md
-│           ├── spotlight-discovery/SKILL.md
-│           ├── transferable-sharing/SKILL.md
-│           ├── performance-profiling/SKILL.md
-│           ├── macos-development/SKILL.md
-│           ├── visionos-spatial/SKILL.md
-│           ├── multiplatform-development/SKILL.md
-│           ├── combine-migration/SKILL.md
-│           └── cloudkit/SKILL.md
+│           ├── skill-creator/SKILL.md, scripts/, references/
+│           ├── gemini-gem-converter/SKILL.md, references/
+│           └── openai-gpt-converter/SKILL.md, references/
+├── deps/
+│   └── agentskills/              # Git submodule: github.com/agentskills/agentskills
+│       └── skills-ref/           # Official skill validation library
 └── README.md
 ```
 
 **Key patterns:**
 - Each plugin is self-contained in `plugins/[plugin-name]/`
 - Skills are defined in `skills/[skill-name]/SKILL.md` with YAML frontmatter
+- Commands are defined in `commands/[command-name].md` with `description` YAML frontmatter
 - Plugin metadata lives in `.claude-plugin/plugin.json`
 - All plugins are registered in `.claude-plugin/marketplace.json`
 
@@ -116,6 +130,7 @@ bluewaves-skills/
 - **fal-media:** Requires `FAL_KEY` environment variable (fal.ai API key)
 - **epub-generator:** Requires `uv pip install ebooklib markdown Pillow beautifulsoup4 lxml`
 - **swift-apple-dev:** Requires Xcode 26+ with Swift 6 toolchain
+- **skills-factory:** `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback for `quick_validate.py`
 
 ## Building
 
@@ -131,13 +146,31 @@ bash scripts/build-skill-zips.sh
 bash scripts/build-skill-zips.sh gemini-image
 ```
 
-ZIPs are output to `dist/` (gitignored). Each ZIP contains `skill-name/SKILL.md`.
+ZIPs are output to `dist/` (gitignored). Each ZIP contains `skill-name/SKILL.md` plus any `scripts/`, `references/`, and `assets/` directories.
 
 You can also use the slash command `/build-skill-zips` from Claude Code.
 
+### Skill Validation
+
+Validate skills using the official `skills-ref` library (pinned as git submodule at `deps/agentskills/`):
+
+```bash
+# Install skills-ref from submodule
+git submodule update --init
+uv pip install -e deps/agentskills/skills-ref/
+
+# Validate all skills in the marketplace
+bash scripts/validate-skills.sh
+
+# Validate a single skill
+bash scripts/validate-skills.sh skill-creator
+```
+
+To update the submodule: `git submodule update --remote deps/agentskills`
+
 ## Versioning
 
-Current marketplace version: 1.4.0
+Current marketplace version: 1.7.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`
