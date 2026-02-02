@@ -4,6 +4,12 @@
 # This hook runs before Bash tool use to ensure Xcode tools are available.
 # It only validates when the command involves Swift development.
 
+# Gracefully allow if jq is not available
+if ! command -v jq &> /dev/null; then
+    echo '{"decision": "allow"}'
+    exit 0
+fi
+
 # Read the tool input from stdin
 INPUT=$(cat)
 

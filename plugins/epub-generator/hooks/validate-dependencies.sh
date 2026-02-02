@@ -1,6 +1,12 @@
 #!/bin/bash
 # Validate Python dependencies for epub-generator
 
+# Gracefully allow if jq is not available
+if ! command -v jq &> /dev/null; then
+    echo '{"decision": "allow"}'
+    exit 0
+fi
+
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
 

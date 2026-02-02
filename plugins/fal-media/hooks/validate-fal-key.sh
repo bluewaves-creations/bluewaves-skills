@@ -4,6 +4,12 @@
 # This hook runs before Bash tool use to ensure the API key is configured.
 # It only validates when the command contains fal.ai references.
 
+# Gracefully allow if jq is not available
+if ! command -v jq &> /dev/null; then
+    echo '{"decision": "allow"}'
+    exit 0
+fi
+
 # Read the tool input from stdin
 INPUT=$(cat)
 
