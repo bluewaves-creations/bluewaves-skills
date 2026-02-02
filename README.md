@@ -23,13 +23,14 @@ Enterprise-grade Apple Swift development skills for iOS 26, macOS Tahoe, visionO
 /plugin install swift-apple-dev@bluewaves-skills
 ```
 
-**21 Skills organized by category:**
+**22 Skills organized by category:**
 
 | Category | Skills |
 |----------|--------|
 | **Core Swift** | `swift-fundamentals`, `swift-concurrency`, `swift-testing` |
 | **SwiftUI & Design** | `liquid-glass-design`, `swiftui-patterns`, `swiftui-colors-modifiers`, `animations-transitions` |
 | **Data & AI** | `swiftdata-persistence`, `swiftdata-migration`, `foundation-models` |
+| **Cloud & Sync** | `cloudkit` |
 | **Navigation & Content** | `navigation-menus`, `text-rich-content`, `app-intents`, `widgets-live-activities`, `spotlight-discovery`, `transferable-sharing` |
 | **Platform-Specific** | `macos-development`, `visionos-spatial`, `multiplatform-development` |
 | **Migration & Performance** | `combine-migration`, `performance-profiling` |

@@ -25,7 +25,7 @@ bluewaves-skills/
 │   │   ├── .claude-plugin/plugin.json
 │   │   └── skills/
 │   │       └── epub-creator/SKILL.md
-│   └── swift-apple-dev/          # Apple Swift development (21 skills, 4 agents)
+│   └── swift-apple-dev/          # Apple Swift development (22 skills, 4 agents)
 │       ├── .claude-plugin/plugin.json
 │       ├── hooks/hooks.json
 │       ├── agents/
@@ -54,7 +54,8 @@ bluewaves-skills/
 │           ├── macos-development/SKILL.md
 │           ├── visionos-spatial/SKILL.md
 │           ├── multiplatform-development/SKILL.md
-│           └── combine-migration/SKILL.md
+│           ├── combine-migration/SKILL.md
+│           └── cloudkit/SKILL.md
 └── README.md
 ```
 
