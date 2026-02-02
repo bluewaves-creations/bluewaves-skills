@@ -1,8 +1,8 @@
 {
   "name": "bluewaves-skills",
   "metadata": {
-    "description": "AI-powered media generation, document creation, and Swift development skills for Claude Code",
-    "version": "1.6.1"
+    "description": "AI-powered media generation, document creation, Swift development, and skill creation and cross-platform conversion tools for Claude Code",
+    "version": "1.7.0"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -53,6 +53,21 @@
       "license": "MIT",
       "keywords": ["swift", "ios", "macos", "visionos", "swiftui", "swiftdata", "xcode", "apple", "liquid-glass", "foundation-models", "app-intents", "widgets", "testing", "performance", "instruments", "multiplatform"],
       "category": "development"
+    },
+    {
+      "name": "skills-factory",
+      "source": "./plugins/skills-factory",
+      "description": "Skill creation, validation, and cross-platform conversion tools for Agent Skills (Gemini Gems, Custom GPTs)",
+      "version": "1.0.0",
+      "author": {
+        "name": "Bluewaves Team",
+        "email": "contact@bluewaves.boutique"
+      },
+      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/skills-factory",
+      "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+      "license": "MIT",
+      "keywords": ["skill-creation", "agent-skills", "gemini-gems", "custom-gpts", "conversion", "validation", "cross-platform"],
+      "category": "tools"
     }
   ]
 }

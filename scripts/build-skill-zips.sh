@@ -38,6 +38,13 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
     mkdir -p "$tmp_dir/$skill_name"
     cp "$skill_md" "$tmp_dir/$skill_name/SKILL.md"
 
+    # Copy optional resource directories if present
+    for resource_dir in scripts references assets; do
+        if [[ -d "$skill_dir/$resource_dir" ]]; then
+            cp -r "$skill_dir/$resource_dir" "$tmp_dir/$skill_name/$resource_dir"
+        fi
+    done
+
     # Create the ZIP from inside the temp dir so the path is skill-name/SKILL.md
     (cd "$tmp_dir" && zip -q -r "$DIST_DIR/$skill_name.zip" "$skill_name")
 
