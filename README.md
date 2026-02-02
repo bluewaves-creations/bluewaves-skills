@@ -1,6 +1,6 @@
 # Bluewaves Skills
 
-![Version](https://img.shields.io/badge/version-1.5.0-blue)
+![Version](https://img.shields.io/badge/version-1.6.1-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A Claude Code plugin marketplace featuring AI-powered media generation, document creation, and enterprise-grade Swift development skills.
@@ -91,6 +91,23 @@ Production-grade EPUB 3 generation with validation, nested TOC, and dependency c
 - Automatic dependency validation hook
 
 **Prerequisites:** `pip install ebooklib markdown Pillow beautifulsoup4 lxml PyYAML`
+
+---
+
+## Use Without Claude Code
+
+Individual skills are available as standalone ZIP files for **Claude.ai** (web/desktop) users who don't use Claude Code.
+
+### How to install a skill in Claude.ai
+
+1. Download the `.zip` file for the skill you want from the [latest GitHub release](https://github.com/bluewaves-creations/bluewaves-skills/releases)
+2. In Claude.ai, go to **Settings > Capabilities**
+3. Click **Upload skill** and select the downloaded ZIP
+4. Toggle the skill **ON**
+
+Each ZIP contains a single skill with its instructions. All 33 skills are available individually.
+
+> **Note:** Plugin hooks (API key validation, Xcode version checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
 
 ---
 

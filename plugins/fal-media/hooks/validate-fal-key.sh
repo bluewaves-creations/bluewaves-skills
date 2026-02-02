@@ -11,7 +11,7 @@ INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
 
 # Only validate if the command involves fal.ai
-if echo "$COMMAND" | grep -qE "fal\.run|fal\.ai|FAL_KEY"; then
+if echo "$COMMAND" | grep -qE "fal[._](run|ai|client)|FAL_KEY"; then
   if [ -z "$FAL_KEY" ]; then
     # Output JSON to block the action with a helpful message
     echo '{"decision": "block", "message": "FAL_KEY environment variable is not set. Please set it in ~/.zshrc or export it: export FAL_KEY=your_key"}'

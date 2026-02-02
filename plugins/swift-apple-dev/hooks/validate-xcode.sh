@@ -11,7 +11,7 @@ INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
 
 # Only validate for Swift-related commands
-if echo "$COMMAND" | grep -qE "swift|swiftc|xcodebuild|xcrun|xcode-select|xctest"; then
+if echo "$COMMAND" | grep -qE "(^|&&|;|\|)\s*(swift|swiftc|xcodebuild|xcrun|xcode-select|xctest)\b"; then
     if ! command -v swift &> /dev/null; then
         echo '{"decision": "block", "message": "Swift is not installed. Please install Xcode or Xcode Command Line Tools.\n\nRun: xcode-select --install"}'
         exit 0

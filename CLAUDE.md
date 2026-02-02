@@ -117,6 +117,24 @@ bluewaves-skills/
 - **epub-generator:** Requires `uv pip install ebooklib markdown Pillow beautifulsoup4 lxml`
 - **swift-apple-dev:** Requires Xcode 26+ with Swift 6 toolchain
 
+## Building
+
+### Standalone Skill ZIPs
+
+Generate standalone ZIP files for Claude.ai users (uploads via Settings > Capabilities):
+
+```bash
+# Build all skills
+bash scripts/build-skill-zips.sh
+
+# Build a single skill
+bash scripts/build-skill-zips.sh gemini-image
+```
+
+ZIPs are output to `dist/` (gitignored). Each ZIP contains `skill-name/SKILL.md`.
+
+You can also use the slash command `/build-skill-zips` from Claude Code.
+
 ## Versioning
 
 Current marketplace version: 1.4.0

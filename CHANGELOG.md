@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-02-02
+
+### Fixed
+
+#### swift-apple-dev
+- **Xcode validation hook regex tightened** — anchored to command position to prevent false triggers on `git commit -m "swift..."`, `grep swift`, and similar non-Xcode commands
+
+#### fal-media
+- **FAL_KEY validation hook regex consolidated** — added `fal_client` pattern for Python SDK detection alongside existing patterns
+
+---
+
+## [1.6.0] - 2026-01-31
+
+### Added
+
+#### swift-apple-dev v1.2.0
+- **`cloudkit` skill** — CloudKit framework for iCloud data storage, sync, and sharing (CKContainer, CKDatabase, CKRecord, CKQuery, subscriptions, CKShare)
+- swift-apple-dev now has **22 skills** total
+
+### Fixed
+
+#### epub-generator
+- **Narrowed dependency hook regex** to avoid false matches on unrelated commands
+- **Active virtualenv detection** — dependency hook now respects already-activated Python virtual environments
+
+### Changed
+- Updated README and CLAUDE.md to reflect CloudKit skill addition
+
+---
+
 ## [1.5.0] - 2026-01-10
 
 ### Added
