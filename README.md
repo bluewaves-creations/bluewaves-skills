@@ -2,10 +2,10 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-1.7.0-blue)
+![Version](https://img.shields.io/badge/version-1.8.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A Claude Code plugin marketplace featuring AI-powered media generation, document creation, enterprise-grade Swift development, and skill creation and cross-platform conversion tools.
+A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, document creation, enterprise-grade Swift development, and skill creation and cross-platform conversion tools.
 
 ## Installation
 
@@ -96,6 +96,28 @@ Production-grade EPUB 3 generation with validation, nested TOC, and dependency c
 
 ---
 
+### athena
+
+Bidirectional document exchange with the Athena note-taking app. Process `.athenabrief` research packages and create `.athena` import packages.
+
+```bash
+/plugin install athena@bluewaves-skills
+```
+
+**2 Skills:**
+
+| Category | Skills |
+|----------|--------|
+| **Processing** | `athena-work` |
+| **Packaging** | `athena-package` |
+
+- **athena-work** - Process `.athenabrief` research packages with progressive disclosure, zero-instruction support, and automatic result packaging
+- **athena-package** - Create validated `.athena` import packages with manifest, markdown notes, aurora tags, and optional assets
+
+**Prerequisites:** Python 3.8+ (stdlib only, no additional packages)
+
+---
+
 ### skills-factory
 
 Skill creation, validation, and cross-platform conversion tools for Agent Skills.
@@ -149,6 +171,13 @@ Explicit commands you can invoke from the Claude Code prompt. These complement s
 |---------|-------------|
 | `/swift-apple-dev:check-environment` | Audit Xcode, Swift, SDKs, and simulators |
 
+### athena
+
+| Command | Description |
+|---------|-------------|
+| `/athena:inspect-package <path>` | Inspect contents of a `.athenabrief` or `.athena` package |
+| `/athena:validate-package <path>` | Validate a `.athena` package against the import spec |
+
 ### skills-factory
 
 | Command | Description |
@@ -170,7 +199,7 @@ Individual skills are available as standalone ZIP files for **Claude.ai** (web/d
 3. Click **Upload skill** and select the downloaded ZIP
 4. Toggle the skill **ON**
 
-Each ZIP contains a single skill with its instructions. All 36 skills are available individually.
+Each ZIP contains a single skill with its instructions. All 38 skills are available individually.
 
 > **Note:** Plugin hooks (API key validation, Xcode version checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
 
@@ -195,6 +224,14 @@ Each ZIP contains a single skill with its instructions. All 36 skills are availa
 
 # Generate EPUB
 "Create an EPUB from the markdown files in ./chapters"
+
+# Process Athena research brief
+"Summarize the key findings from this athenabrief"
+"Process this research package and create action items"
+
+# Create Athena notes
+"Package these meeting notes for Athena"
+"Turn this conversation into Athena notes"
 
 # Create a skill
 "Help me create a skill for processing CSV files"
@@ -244,6 +281,7 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
     "swift-apple-dev@bluewaves-skills": true,
     "fal-media@bluewaves-skills": true,
     "epub-generator@bluewaves-skills": true,
+    "athena@bluewaves-skills": true,
     "skills-factory@bluewaves-skills": true
   }
 }
@@ -285,6 +323,7 @@ If using a private repository, use the SSH URL:
 - For swift-apple-dev: Xcode 26+ with Swift 6
 - For fal-media: fal.ai API key (`FAL_KEY`)
 - For epub-generator: Python 3.8+ with ebooklib, markdown, Pillow, beautifulsoup4, lxml, PyYAML
+- For athena: Python 3.8+ (stdlib only, no additional packages)
 - For skills-factory: `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback
 
 ## License

@@ -27,6 +27,13 @@ bluewaves-skills/
 │   │   ├── commands/             # install-deps
 │   │   └── skills/
 │   │       └── epub-creator/SKILL.md
+│   ├── athena/                   # Athena document exchange (2 skills)
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/             # inspect-package, validate-package
+│   │   ├── hooks/hooks.json
+│   │   └── skills/
+│   │       ├── athena-work/SKILL.md, references/
+│   │       └── athena-package/SKILL.md, references/, scripts/
 │   ├── swift-apple-dev/          # Apple Swift development (22 skills, 4 agents)
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/             # check-environment
@@ -130,6 +137,7 @@ bluewaves-skills/
 - **fal-media:** Requires `FAL_KEY` environment variable (fal.ai API key)
 - **epub-generator:** Requires `uv pip install ebooklib markdown Pillow beautifulsoup4 lxml`
 - **swift-apple-dev:** Requires Xcode 26+ with Swift 6 toolchain
+- **athena:** Python 3.8+ (stdlib only, no additional packages)
 - **skills-factory:** `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback for `quick_validate.py`
 
 ## Building
@@ -170,7 +178,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 1.7.0
+Current marketplace version: 1.8.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

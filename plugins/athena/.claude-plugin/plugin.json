@@ -1,0 +1,13 @@
+{
+  "name": "athena",
+  "version": "1.0.0",
+  "description": "Bidirectional document exchange with the Athena note-taking app: process .athenabrief research packages and create .athena import packages",
+  "author": {
+    "name": "Bluewaves Team",
+    "email": "contact@bluewaves.boutique"
+  },
+  "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/athena",
+  "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+  "license": "MIT",
+  "keywords": ["athena", "notes", "research", "document-exchange", "packaging"]
+}

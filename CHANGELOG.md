@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-02-07
+
+### Added
+
+#### athena v1.0.0 (new plugin)
+- **`athena-work` skill** — Process `.athenabrief` research packages exported from the Athena note-taking app. Features progressive disclosure reading order (brief.md → summaries.json → manifest.json → references), short-circuit decision matrix for ~80% early resolution, zero-instruction processing support, and automatic handoff to athena-package for result packaging
+- **`athena-package` skill** — Create validated `.athena` import packages for Athena with manifest.json, markdown notes with mandatory header format, aurora energy tags, cross-references, and optional assets. Includes Python validation and creation scripts with validate-fix-revalidate loop
+- **`/athena:inspect-package` command** — Inspect contents of `.athenabrief` or `.athena` packages (file listing, manifest preview)
+- **`/athena:validate-package` command** — Validate `.athena` packages against the import specification with specific error messages
+- **Python dependency validation hook** — PreToolUse hook checks Python 3.8+ availability before running athena scripts
+- New `"documents"` category entry for the athena plugin
+
+#### Marketplace
+- Marketplace version bumped to 1.8.0
+- Total: 5 plugins, 38 skills
+
+---
+
 ## [1.7.0] - 2026-02-02
 
 ### Added

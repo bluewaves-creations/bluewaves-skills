@@ -1,8 +1,8 @@
 {
   "name": "bluewaves-skills",
   "metadata": {
-    "description": "AI-powered media generation, document creation, Swift development, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "1.7.0"
+    "description": "AI-powered media generation, Athena document exchange, document creation, Swift development, and skill creation and cross-platform conversion tools for Claude Code",
+    "version": "1.8.0"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -53,6 +53,21 @@
       "license": "MIT",
       "keywords": ["swift", "ios", "macos", "visionos", "swiftui", "swiftdata", "xcode", "apple", "liquid-glass", "foundation-models", "app-intents", "widgets", "testing", "performance", "instruments", "multiplatform"],
       "category": "development"
+    },
+    {
+      "name": "athena",
+      "source": "./plugins/athena",
+      "description": "Bidirectional document exchange with the Athena note-taking app: process .athenabrief research packages and create .athena import packages",
+      "version": "1.0.0",
+      "author": {
+        "name": "Bluewaves Team",
+        "email": "contact@bluewaves.boutique"
+      },
+      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/athena",
+      "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+      "license": "MIT",
+      "keywords": ["athena", "notes", "research", "document-exchange", "packaging"],
+      "category": "documents"
     },
     {
       "name": "skills-factory",
