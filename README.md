@@ -2,10 +2,10 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-1.8.0-blue)
+![Version](https://img.shields.io/badge/version-1.9.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, document creation, enterprise-grade Swift development, and skill creation and cross-platform conversion tools.
+A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation, document creation, enterprise-grade Swift development, and skill creation and cross-platform conversion tools.
 
 ## Installation
 
@@ -118,6 +118,30 @@ Bidirectional document exchange with the Athena note-taking app. Process `.athen
 
 ---
 
+### docs-factory
+
+Branded document generation with three brand kits and a PDF rendering engine.
+
+```bash
+/plugin install docs-factory@bluewaves-skills
+```
+
+**4 Skills:**
+
+| Category | Skills |
+|----------|--------|
+| **Brand Kits** | `brand-bluewaves`, `brand-wave-artisans`, `brand-decathlon` |
+| **PDF Engine** | `pdf-factory` |
+
+- **brand-bluewaves** - Merriweather typography, brown sand primary, teal/red accents
+- **brand-wave-artisans** - Nunito Sans typography, gray-driven minimalist palette
+- **brand-decathlon** - Inter typography, blue/purple primary, green accent
+- **pdf-factory** - Production-grade PDF rendering from markdown using brand kits
+
+**Prerequisites:** Python 3.8+ with `pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib cssselect2`
+
+---
+
 ### skills-factory
 
 Skill creation, validation, and cross-platform conversion tools for Agent Skills.
@@ -178,6 +202,13 @@ Explicit commands you can invoke from the Claude Code prompt. These complement s
 | `/athena:inspect-package <path>` | Inspect contents of a `.athenabrief` or `.athena` package |
 | `/athena:validate-package <path>` | Validate a `.athena` package against the import spec |
 
+### docs-factory
+
+| Command | Description |
+|---------|-------------|
+| `/docs-factory:install-deps` | Install Python dependencies for PDF rendering |
+| `/docs-factory:generate-pdf <file> [--brand <name>]` | Generate a branded PDF from markdown |
+
 ### skills-factory
 
 | Command | Description |
@@ -199,7 +230,7 @@ Individual skills are available as standalone ZIP files for **Claude.ai** (web/d
 3. Click **Upload skill** and select the downloaded ZIP
 4. Toggle the skill **ON**
 
-Each ZIP contains a single skill with its instructions. All 38 skills are available individually.
+Each ZIP contains a single skill with its instructions. All 42 skills are available individually.
 
 > **Note:** Plugin hooks (API key validation, Xcode version checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
 
@@ -232,6 +263,10 @@ Each ZIP contains a single skill with its instructions. All 38 skills are availa
 # Create Athena notes
 "Package these meeting notes for Athena"
 "Turn this conversation into Athena notes"
+
+# Generate branded PDF
+"Generate a PDF report for Bluewaves from this markdown"
+"Create a Decathlon-branded proposal from proposal.md"
 
 # Create a skill
 "Help me create a skill for processing CSV files"
@@ -282,7 +317,8 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
     "fal-media@bluewaves-skills": true,
     "epub-generator@bluewaves-skills": true,
     "athena@bluewaves-skills": true,
-    "skills-factory@bluewaves-skills": true
+    "skills-factory@bluewaves-skills": true,
+    "docs-factory@bluewaves-skills": true
   }
 }
 ```
@@ -324,6 +360,7 @@ If using a private repository, use the SSH URL:
 - For fal-media: fal.ai API key (`FAL_KEY`)
 - For epub-generator: Python 3.8+ with ebooklib, markdown, Pillow, beautifulsoup4, lxml, PyYAML
 - For athena: Python 3.8+ (stdlib only, no additional packages)
+- For docs-factory: Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2
 - For skills-factory: `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback
 
 ## License

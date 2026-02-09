@@ -1,0 +1,13 @@
+{
+  "name": "docs-factory",
+  "version": "1.0.0",
+  "description": "Branded document generation with three brand kits (Bluewaves, Wave Artisans, Decathlon) and a PDF rendering engine for production-grade typeset output from markdown",
+  "author": {
+    "name": "Bluewaves Team",
+    "email": "contact@bluewaves.boutique"
+  },
+  "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/docs-factory",
+  "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+  "license": "MIT",
+  "keywords": ["pdf", "brand-kit", "document-generation", "typography", "design-tokens", "reportlab"]
+}

@@ -8,5 +8,6 @@
   },
   "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/skills-factory",
   "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": ["skill-creation", "validation", "cross-platform", "converter", "gemini", "openai"]
 }

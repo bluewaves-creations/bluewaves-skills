@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-02-09
+
+### Added
+
+#### docs-factory v1.0.0 (new plugin)
+- **`brand-bluewaves` skill** — Brand kit for Bluewaves with Merriweather typography, brown sand primary (#B78A66), teal ocean and sun red accents, design tokens, font files, logo variants, PDF page templates with content zones, and decorative patterns
+- **`brand-wave-artisans` skill** — Brand kit for Wave Artisans with Nunito Sans typography, gray-driven minimalist palette, design tokens, font files, logo variants, PDF page templates with content zones, and decorative patterns
+- **`brand-decathlon` skill** — Brand kit for Decathlon with Inter typography, blue/purple primary (#3643BA), green accent on dark backgrounds only, no rounded corners, design tokens, font files, logo variants, PDF page templates with content zones, and decorative patterns
+- **`pdf-factory` skill** — Production-grade PDF rendering engine that converts markdown to professionally typeset PDF using brand kit assets. 6-step pipeline: resolve brand → parse markdown → render content → compose document → validate → sign. Includes render.py (xhtml2pdf + reportlab), compose.py (pypdf page assembly), validate_output.py (QA checks), and install_deps.py
+- **`/docs-factory:install-deps` command** — Install Python dependencies for PDF rendering (xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2)
+- **`/docs-factory:generate-pdf` command** — Full-workflow branded PDF generation from markdown with brand selection, metadata extraction, and validation
+- **PDF dependency validation hook** — PreToolUse hook checks Python 3.8+ and required packages before running pdf-factory scripts, sandboxed to pdf-factory paths only
+- All three brand kits share 12 semantic colors for status/feedback/categorization
+- New `"documents"` category entry for the docs-factory plugin
+
+#### Marketplace
+- Marketplace version bumped to 1.9.0
+- Total: 6 plugins, 42 skills
+
+---
+
 ## [1.8.0] - 2026-02-07
 
 ### Added

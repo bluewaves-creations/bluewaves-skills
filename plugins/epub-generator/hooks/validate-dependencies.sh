@@ -11,7 +11,7 @@ INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
 
 # Only validate for commands that actually RUN Python epub code
-if [[ "$COMMAND" =~ python.*epub.*\.py|build_epub\.py|create_epub\.py|markdown_to_epub\.py|generate_epub\.py ]]; then
+if [[ "$COMMAND" =~ python3?[[:space:]].*(epub.*\.py|build_epub|create_epub|markdown_to_epub|generate_epub) ]]; then
     # Extract venv python from command if invoked directly (e.g. /path/.venv/bin/python)
     VENV_PYTHON=$(echo "$COMMAND" | grep -oE '/[^ ]*venv[^ ]*/bin/python[3]?' | head -1)
     if [ -n "$VENV_PYTHON" ] && [ -x "$VENV_PYTHON" ]; then

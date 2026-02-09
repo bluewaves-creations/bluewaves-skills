@@ -1,0 +1,91 @@
+{
+  "cover-front": {
+    "source": "cover-front.pdf",
+    "page_size": [595, 842],
+    "zones": {
+      "title": {
+        "x": 50, "y": 280, "width": 495, "height": 80,
+        "style": "display", "color_role": "text-inverse", "align": "left"
+      },
+      "subtitle": {
+        "x": 50, "y": 370, "width": 495, "height": 40,
+        "style": "h3", "color_role": "text-inverse", "align": "left"
+      },
+      "date": {
+        "x": 50, "y": 750, "width": 200, "height": 20,
+        "style": "overline", "color_role": "text-inverse", "align": "left"
+      },
+      "logo": {
+        "x": 430, "y": 740, "width": 120, "height": 40,
+        "type": "image", "source": "logo-full-white.svg"
+      }
+    }
+  },
+  "section-divider": {
+    "source": "section-divider.pdf",
+    "page_size": [595, 842],
+    "zones": {
+      "section_number": {
+        "x": 50, "y": 350, "width": 100, "height": 50,
+        "style": "display", "color_role": "text-inverse", "align": "left"
+      },
+      "section_title": {
+        "x": 50, "y": 400, "width": 495, "height": 60,
+        "style": "h1", "color_role": "text-inverse", "align": "left"
+      }
+    }
+  },
+  "page-content": {
+    "source": "page-content.pdf",
+    "page_size": [595, 842],
+    "zones": {
+      "header": {
+        "x": 50, "y": 30, "width": 495, "height": 20,
+        "style": "caption", "color_role": "text-muted", "align": "right"
+      },
+      "body": {
+        "x": 50, "y": 70, "width": 453, "height": 700,
+        "type": "flow", "style": "body", "color_role": "text-body"
+      },
+      "footer_page": {
+        "x": 480, "y": 800, "width": 65, "height": 15,
+        "style": "caption", "color_role": "text-muted", "align": "right"
+      }
+    }
+  },
+  "cover-back": {
+    "source": "cover-back.pdf",
+    "page_size": [595, 842],
+    "zones": {
+      "logo": {
+        "x": 237, "y": 400, "width": 120, "height": 40,
+        "type": "image", "source": "logo-full-white.svg"
+      }
+    }
+  },
+  "page-blank": {
+    "source": "page-blank.pdf",
+    "page_size": [595, 842],
+    "zones": {}
+  },
+  "color-primary": {
+    "source": "color-primary.pdf",
+    "page_size": [595, 842],
+    "zones": {
+      "title": {
+        "x": 50, "y": 380, "width": 495, "height": 80,
+        "style": "display", "color_role": "text-inverse", "align": "center"
+      }
+    }
+  },
+  "color-accent": {
+    "source": "color-accent.pdf",
+    "page_size": [595, 842],
+    "zones": {
+      "title": {
+        "x": 50, "y": 380, "width": 495, "height": 80,
+        "style": "display", "color_role": "text-inverse", "align": "center"
+      }
+    }
+  }
+}

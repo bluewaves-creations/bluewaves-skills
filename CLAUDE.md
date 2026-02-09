@@ -66,6 +66,15 @@ bluewaves-skills/
 │   │       ├── multiplatform-development/SKILL.md
 │   │       ├── combine-migration/SKILL.md
 │   │       └── cloudkit/SKILL.md
+│   ├── docs-factory/              # Branded document generation (4 skills)
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/              # install-deps, generate-pdf
+│   │   ├── hooks/hooks.json
+│   │   └── skills/
+│   │       ├── brand-bluewaves/SKILL.md, references/, assets/
+│   │       ├── brand-wave-artisans/SKILL.md, references/, assets/
+│   │       ├── brand-decathlon/SKILL.md, references/, assets/
+│   │       └── pdf-factory/SKILL.md, references/, scripts/, assets/
 │   └── skills-factory/            # Skill creation & cross-platform conversion (3 skills)
 │       ├── .claude-plugin/plugin.json
 │       ├── commands/              # init-skill, validate-skill, package-skill
@@ -138,6 +147,7 @@ bluewaves-skills/
 - **epub-generator:** Requires `uv pip install ebooklib markdown Pillow beautifulsoup4 lxml`
 - **swift-apple-dev:** Requires Xcode 26+ with Swift 6 toolchain
 - **athena:** Python 3.8+ (stdlib only, no additional packages)
+- **docs-factory:** Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2
 - **skills-factory:** `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback for `quick_validate.py`
 
 ## Building
@@ -178,7 +188,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 1.8.0
+Current marketplace version: 1.9.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

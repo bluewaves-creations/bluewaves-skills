@@ -11,7 +11,7 @@ INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
 
 # Only validate for commands that actually RUN athena Python scripts
-if [[ "$COMMAND" =~ python.*athena.*\.py|create_athena_package\.py|validate_athena_package\.py ]]; then
+if [[ "$COMMAND" =~ python.*athena/skills/athena-package/scripts/.*\.py ]]; then
     # Extract venv python from command if invoked directly (e.g. /path/.venv/bin/python)
     VENV_PYTHON=$(echo "$COMMAND" | grep -oE '/[^ ]*venv[^ ]*/bin/python[3]?' | head -1)
     if [ -n "$VENV_PYTHON" ] && [ -x "$VENV_PYTHON" ]; then

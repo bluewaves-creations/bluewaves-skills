@@ -1,0 +1,44 @@
+{
+  "brand": {
+    "name": "Wave Artisans",
+    "slug": "wave-artisans",
+    "version": "1.0.0",
+    "description": "Brand kit for Wave Artisans documents and communications"
+  },
+  "fonts": {
+    "heading":  { "regular": "fonts/heading.ttf", "bold": "fonts/heading-bold.ttf" },
+    "body":     { "regular": "fonts/body.ttf", "italic": "fonts/body-italic.ttf", "bold": "fonts/body-bold.ttf", "bold_italic": "fonts/body-bold-italic.ttf" },
+    "mono":     { "regular": "fonts/mono.ttf" }
+  },
+  "logos": {
+    "full":     { "color": "logos/logo-full-color.svg", "white": "logos/logo-full-white.svg" },
+    "mark":     { "color": "logos/logo-mark-color.svg", "white": "logos/logo-mark-white.svg" },
+    "favicon":  "logos/favicon.png",
+    "wordmark": "logos/wordmark.svg"
+  },
+  "templates": {
+    "pdf": {
+      "cover-front":     "templates/pdf/cover-front.pdf",
+      "cover-back":      "templates/pdf/cover-back.pdf",
+      "page-content":    "templates/pdf/page-content.pdf",
+      "page-blank":      "templates/pdf/page-blank.pdf",
+      "section-divider": "templates/pdf/section-divider.pdf",
+      "color-primary":   "templates/pdf/color-primary.pdf",
+      "color-accent":    "templates/pdf/color-accent.pdf",
+      "zones":           "templates/pdf/zones.json"
+    }
+  },
+  "patterns": [
+    "patterns/pattern-01.svg",
+    "patterns/divider-line.svg"
+  ],
+  "icons": {
+    "set": "Phosphor",
+    "weight": "regular"
+  },
+  "defaults": {
+    "language": "en",
+    "date_format": "MMMM D, YYYY",
+    "page_format": "A4"
+  }
+}
