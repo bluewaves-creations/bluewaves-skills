@@ -17,6 +17,7 @@ Exit code 0 on all pass, 1 on any failure.
 import argparse
 import json
 import os
+import struct
 import sys
 from pathlib import Path
 
@@ -110,6 +111,65 @@ def check_metadata(pdf_path: str) -> tuple:
     return True, f"Metadata OK — title: {meta.get('/Title')}, author: {meta.get('/Author')}"
 
 
+def _read_ttf_names(font_path: str) -> set:
+    """Read family (nameID 1) and full name (nameID 4) from a TTF name table.
+
+    Returns a set of lowercased name strings. Uses only stdlib struct —
+    no fonttools or other dependencies required.
+    """
+    names = set()
+    try:
+        with open(font_path, "rb") as f:
+            # Read the offset table header (sfVersion:u32 numTables:u16 ...)
+            header = f.read(12)
+            if len(header) < 12:
+                return names
+            num_tables = struct.unpack(">H", header[4:6])[0]
+            # Scan table directory for 'name'
+            name_offset = name_length = 0
+            for _ in range(num_tables):
+                entry = f.read(16)
+                if len(entry) < 16:
+                    return names
+                tag = entry[:4]
+                if tag == b"name":
+                    _, name_offset, name_length = struct.unpack(">III", entry[4:16])
+                    break
+            if not name_offset:
+                return names
+            # Read the name table
+            f.seek(name_offset)
+            table_data = f.read(name_length)
+            if len(table_data) < 6:
+                return names
+            _, count, string_offset = struct.unpack(">HHH", table_data[:6])
+            for i in range(count):
+                rec_start = 6 + i * 12
+                if rec_start + 12 > len(table_data):
+                    break
+                platform_id, encoding_id, _, name_id, str_length, str_offset = struct.unpack(
+                    ">HHHHHH", table_data[rec_start : rec_start + 12]
+                )
+                if name_id not in (1, 4):
+                    continue
+                abs_offset = string_offset + str_offset
+                raw = table_data[abs_offset : abs_offset + str_length]
+                # Decode: platform 3 (Windows) uses UTF-16-BE, others use latin-1
+                try:
+                    if platform_id == 3 or (platform_id == 0 and encoding_id > 0):
+                        text = raw.decode("utf-16-be")
+                    else:
+                        text = raw.decode("latin-1")
+                except Exception:
+                    continue
+                cleaned = text.strip().lower()
+                if cleaned:
+                    names.add(cleaned)
+    except (OSError, struct.error):
+        pass
+    return names
+
+
 def check_brand_fonts(pdf_path: str, brand_path: str) -> tuple:
     """Verify brand fonts appear in embedded font list."""
     manifest_path = Path(brand_path) / "assets" / "manifest.json"
@@ -137,11 +197,6 @@ def check_brand_fonts(pdf_path: str, brand_path: str) -> tuple:
                 base_font = str(font_obj.get("/BaseFont", ""))
                 found_fonts.add(base_font)
 
-    # Check that each font role is represented in the PDF.
-    # Fonts appear as either Brand-{role}-{variant} (from compose.py zones)
-    # or as the actual typeface name (from xhtml2pdf @font-face).
-    # Both contain the role name (e.g. "body" in "brand-body-regular" or
-    # the font is a non-standard font that replaced the role's generic fallback).
     found_lower = {f.lower().lstrip("/").replace("aaaaaa+", "") for f in found_fonts}
     # Standard 14 fonts that indicate a role was NOT embedded
     standard_fonts = {"helvetica", "times-roman", "courier"}
@@ -150,17 +205,30 @@ def check_brand_fonts(pdf_path: str, brand_path: str) -> tuple:
     if not custom_fonts:
         return False, f"No custom brand fonts embedded for {brand_name} — only standard fonts found"
 
+    # Build role → expected typeface names from actual font files
+    role_typefaces = {}
+    assets_dir = Path(brand_path) / "assets"
+    for role, variants in manifest.get("fonts", {}).items():
+        names = set()
+        if isinstance(variants, dict):
+            for variant_path in variants.values():
+                full_path = assets_dir / variant_path
+                if full_path.exists():
+                    names.update(_read_ttf_names(str(full_path)))
+        role_typefaces[role] = names
+
     # Check role coverage: each role should map to at least one custom font
     matched_roles = set()
     for role in expected_roles:
-        # Match by Brand-{role} convention or by any custom font being present
-        if any(f"brand-{role}" in f or role in f for f in custom_fonts):
+        # Match by Brand-{role} convention (reportlab zones)
+        if any(f"brand-{role}" in f for f in custom_fonts):
             matched_roles.add(role)
-
-    # If we have custom fonts but role matching is ambiguous (e.g., font names
-    # don't contain the role name), accept if we have enough custom fonts
-    if not matched_roles and len(custom_fonts) >= len(expected_roles):
-        return True, f"Brand fonts embedded for {brand_name}: {', '.join(sorted(custom_fonts))}"
+            continue
+        # Match by actual typeface name (xhtml2pdf @font-face)
+        for name in role_typefaces.get(role, set()):
+            if any(name in f for f in custom_fonts):
+                matched_roles.add(role)
+                break
 
     missing = expected_roles - matched_roles
     if missing:
