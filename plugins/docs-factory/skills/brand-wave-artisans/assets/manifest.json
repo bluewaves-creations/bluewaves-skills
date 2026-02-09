@@ -34,7 +34,9 @@
   ],
   "icons": {
     "set": "Phosphor",
-    "weight": "regular"
+    "weight": "regular",
+    "source": "https://unpkg.com/@phosphor-icons/core@2.1.1/assets/regular",
+    "local": "icons/phosphor"
   },
   "tokens": {
     "colors": {

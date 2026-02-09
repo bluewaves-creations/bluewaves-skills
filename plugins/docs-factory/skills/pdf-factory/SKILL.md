@@ -33,6 +33,18 @@ If installation fails with cairo/meson errors, run manually:
 
     uv pip install --no-deps rlpycairo svglib xhtml2pdf
 
+## Icons
+
+Phosphor icons are fetched on demand (not bundled). To pre-download icons:
+
+```bash
+# Fetch specific icons
+python3 scripts/fetch_icons.py arrow-right check-circle warning
+
+# Fetch all 1,500+ icons for offline use
+python3 scripts/fetch_icons.py --all
+```
+
 ## Pipeline
 
 Generate PDFs by following these steps in order:
