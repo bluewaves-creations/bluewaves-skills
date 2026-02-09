@@ -2,7 +2,7 @@
   "name": "bluewaves-skills",
   "metadata": {
     "description": "AI-powered media generation, Athena document exchange, branded document generation, document creation, Swift development, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "1.9.0"
+    "version": "1.9.1"
   },
   "owner": {
     "name": "Bluewaves Team",

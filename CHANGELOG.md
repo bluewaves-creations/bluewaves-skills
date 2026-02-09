@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2026-02-09
+
+### Changed
+
+- **docs-factory** — Replaced 1,512 bundled Phosphor SVG icons with on-demand `fetch_icons.py` script that downloads from unpkg CDN. Reduces plugin file count from 1,625 to 114, unblocking the 200-file validation limit.
+- Updated brand manifests (bluewaves, decathlon, wave-artisans) with CDN `source` URL and `local` path for icon resolution
+- Added Icons section to pdf-factory SKILL.md documenting the fetch workflow
+- Gitignored fetched icons directory
+
 ## [1.9.0] - 2026-02-09
 
 ### Added

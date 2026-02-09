@@ -1,6 +1,6 @@
 {
   "name": "docs-factory",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Branded document generation with three brand kits (Bluewaves, Wave Artisans, Decathlon) and a PDF rendering engine for production-grade typeset output from markdown",
   "author": {
     "name": "Bluewaves Team",
