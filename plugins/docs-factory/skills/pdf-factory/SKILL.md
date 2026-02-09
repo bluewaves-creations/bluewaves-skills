@@ -11,6 +11,8 @@ description: >
   Requires a brand-* kit skill for branded output; falls back to minimal
   defaults without one.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Python 3.8+ with packages from scripts/install_deps.py
 ---
 # PDF Factory
 
@@ -23,7 +25,13 @@ python3 scripts/install_deps.py
 ```
 
 Required packages: xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml,
-pillow, html5lib, cssselect2, python-bidi, arabic-reshaper.
+pillow, html5lib, cssselect2, svglib, python-bidi, arabic-reshaper.
+
+The installer uses `--no-deps` for svglib, rlpycairo, and xhtml2pdf to avoid
+building the `pycairo` C extension (which requires the system `cairo` library).
+If installation fails with cairo/meson errors, run manually:
+
+    uv pip install --no-deps rlpycairo svglib xhtml2pdf
 
 ## Pipeline
 
@@ -36,13 +44,71 @@ Generate PDFs by following these steps in order:
 5. **Validate output** — Run validate_output.py, fix errors, repeat until pass
 6. **Sign (optional)** — Apply digital signature via pyhanko
 
+## How It Works
+
+### Font Registration
+
+The pipeline registers fonts at two levels:
+
+1. **xhtml2pdf** (render.py) — Generates `@font-face` CSS declarations with absolute
+   paths to TTF files. Font families use `Brand-{role}` names (e.g., `Brand-body`,
+   `Brand-heading`, `Brand-mono`). xhtml2pdf resolves these via its own CSS engine.
+   **Do not** use reportlab `TTFont()` names directly in CSS — xhtml2pdf ignores them.
+
+2. **reportlab** (compose.py) — Registers `TTFont("Brand-{role}-{variant}", path)`
+   and `addMapping()` for bold/italic. Used by zone overlays on cover/divider pages.
+
+### Zone Overlays
+
+Zone text on covers and dividers is rendered by compose.py using reportlab canvas,
+NOT xhtml2pdf. Each zone in `zones.json` specifies:
+- `style` → looks up `manifest.tokens.type_scale[style]` for size_pt, weight, font role
+- `color_role` → looks up `manifest.tokens.colors[color_role]` for hex color
+- `align` → left, center, or right
+- `type: "image"` → renders SVG logo via svglib
+
+Text auto-shrinks if it overflows the zone width.
+
+### Section Page Breaks
+
+render.py preprocesses the HTML via `_insert_section_breaks()`, which injects
+`<div style="page-break-before: always;"></div>` before every `<h1>` except
+the first. This is an HTML-level transformation, not a CSS rule. Do NOT add
+`page-break-before` to h1 in base.css — that creates a blank first page.
+
+compose.py auto-detects section boundaries by scanning the rendered content pages for
+text matching the section titles in metadata.json. This means the `page` values in
+metadata sections are only hints — compose.py will find the correct pages from the
+rendered output. You still need section titles in metadata.json to be accurate.
+
+### Orphan Title Prevention
+
+base.css applies `-pdf-keep-with-next: true` to all headings (h1–h4). This is an
+xhtml2pdf-specific property. The standard `page-break-after: avoid` is parsed
+but NOT enforced by xhtml2pdf — do not use it.
+
+### CSS Specifics
+
+Heading spacing (margin-bottom): h1 16pt, h2 12pt, h3 8pt, h4 6pt.
+List indentation: `padding-left: 14pt` on ul/ol.
+Code/table background: `#F0F0F0` (base.css structural default, overridden by
+brand token `background-alt` if different).
+
+### Token Resolution
+
+Scripts read tokens from `manifest.json["tokens"]`, not from `references/tokens.md`.
+The `references/tokens.md` file is for Claude to understand the design system;
+the `manifest.json["tokens"]` section is the machine-readable source for scripts.
+Both must stay in sync.
+
 ## Step 1: Resolve Brand Kit
 
 Locate the brand kit skill directory and read:
-- `assets/manifest.json` — font paths, logo paths, template paths, defaults
+- `assets/manifest.json` — font paths, logo paths, template paths, tokens (colors + type_scale)
 - `assets/templates/pdf/zones.json` — content zones for each template page
 
-Load design tokens from `references/tokens.md` for color and typography values.
+The `manifest.json["tokens"]` section is the machine-readable source of truth for all
+color and typography values used by the pipeline scripts.
 
 If no brand kit is specified, use fallback assets from `assets/fallback/`.
 
@@ -63,9 +129,17 @@ Extract document metadata from markdown frontmatter:
 
 ## Step 3: Render Content Pages
 
+The `--brand` flag is optional. Without it, render.py uses fallback fonts and colors.
+
 ```bash
+# With brand kit:
 python3 scripts/render.py \
   --brand /path/to/brand-{slug} \
+  --input content.html \
+  --output content-pages.pdf
+
+# Fallback (no brand kit):
+python3 scripts/render.py \
   --input content.html \
   --output content-pages.pdf
 ```
@@ -78,13 +152,26 @@ For element rendering details (headings, code blocks, tables, lists), load
 
 ## Step 4: Compose Document
 
+The `--brand` flag is optional. Without it, compose.py produces content-only output
+(no cover pages, section dividers, or zone overlays).
+
 ```bash
+# With brand kit:
 python3 scripts/compose.py \
   --brand /path/to/brand-{slug} \
   --content content-pages.pdf \
   --metadata metadata.json \
   --output final.pdf
+
+# Fallback (no brand kit, metadata only):
+python3 scripts/compose.py \
+  --content content-pages.pdf \
+  --metadata metadata.json \
+  --output final.pdf
 ```
+
+compose.py embeds title, author, and subtitle from metadata.json into the PDF info
+dictionary.
 
 Provide metadata.json with this structure:
 
@@ -157,7 +244,8 @@ We migrated 40 services to the new platform...
 
 ## Fallback Mode
 
-When no brand kit is specified, use `assets/fallback/` assets with hardcoded defaults:
-- Colors: text `#1A1A1A`, headings `#333333`, muted `#7A7A7A`
-- Fonts: Noto Sans (body), Fira Code (code)
+When no brand kit is specified, the pipeline uses `assets/fallback/` assets:
+- Colors: text `#1A1A1A`, headings `#1A1A1A`, muted `#7A7A7A`
+- Fonts: Noto Sans (body/heading), Fira Code (code) — production fonts, not placeholders
 - Layout: A4, 25mm margins, 11pt body
+- No cover pages or section dividers in fallback mode

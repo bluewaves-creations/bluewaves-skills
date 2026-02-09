@@ -2,6 +2,8 @@
 name: liquid-glass-design
 description: iOS 26/macOS 26 Liquid Glass design system with complete API coverage. Use when user asks about iOS 26 design, Liquid Glass, glassEffect modifier, GlassEffectContainer, morphing animations, HIG compliance, visual styling, or the new Apple design language.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Liquid Glass Design System

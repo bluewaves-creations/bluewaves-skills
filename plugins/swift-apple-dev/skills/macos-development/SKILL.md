@@ -2,6 +2,8 @@
 name: macos-development
 description: macOS Tahoe development patterns including window management, menu bars, NSWindow integration, Mac Catalyst, status bar items, document-based apps, and macOS-specific SwiftUI modifiers. Use when user asks about macOS development, window management, menu bar, status items, Mac Catalyst, document apps, or macOS-specific patterns.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # macOS Development Patterns

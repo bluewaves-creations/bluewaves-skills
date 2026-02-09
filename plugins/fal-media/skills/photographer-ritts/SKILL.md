@@ -2,6 +2,8 @@
 name: photographer-ritts
 description: Generate images in Herb Ritts' sculptural black and white style. Use when users ask for Ritts style, classical Greek aesthetic, sculptural body photography, California golden hour, minimalist athletic portraits.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Requires FAL_KEY environment variable (fal.ai API key)
 ---
 
 # Herb Ritts Style Photography

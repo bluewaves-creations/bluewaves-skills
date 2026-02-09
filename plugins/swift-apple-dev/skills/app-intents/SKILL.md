@@ -2,6 +2,8 @@
 name: app-intents
 description: App Intents framework for Siri, Shortcuts, Spotlight, Action Button, and system integration. Use when user asks about Siri, Shortcuts, App Intents, voice commands, Action Button, or system integration.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # App Intents Framework

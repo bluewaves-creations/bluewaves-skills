@@ -2,6 +2,8 @@
 name: photographer-vonunwerth
 description: Generate images in Ellen von Unwerth's playful vintage style. Use when users ask for von Unwerth style, playful sensuality, vintage film noir, whimsical feminine photography, retro glamour, narrative storytelling.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Requires FAL_KEY environment variable (fal.ai API key)
 ---
 
 # Ellen von Unwerth Style Photography

@@ -2,6 +2,8 @@
 name: text-rich-content
 description: SwiftUI Text rendering, AttributedString, native Markdown support, and rich text editing. Use when user asks about Text, Markdown, AttributedString, rich text, TextEditor, text formatting, or localization.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # SwiftUI Text and Rich Content

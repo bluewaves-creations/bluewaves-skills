@@ -14,12 +14,14 @@
 
 ## Headings
 
-| Markdown | Style token | Notes |
-|---|---|---|
-| `# H1` | `h1` | Force page break before |
-| `## H2` | `h2` | |
-| `### H3` | `h3` | |
-| `#### H4` | `h4` | |
+| Markdown | Style token | Margin-bottom | Notes |
+|---|---|---|---|
+| `# H1` | `h1` | 16pt | Page break before (auto, except first) |
+| `## H2` | `h2` | 12pt | |
+| `### H3` | `h3` | 8pt | |
+| `#### H4` | `h4` | 6pt | |
+
+All headings use `-pdf-keep-with-next: true` to prevent orphan titles.
 
 Use `text-heading` color role for all headings.
 Never hyphenate. Always left-align unless zone specifies otherwise.
@@ -30,25 +32,26 @@ Never hyphenate. Always left-align unless zone specifies otherwise.
 - Background: `background-alt` with `sm` padding
 - Left border: 2pt in `highlight` color
 - Line numbers: include for blocks over 5 lines, use `caption` style in `text-muted`, right-aligned in dedicated left column
-- Syntax highlighting via `codehilite` extension: keywords → `primary`, strings → `success`, comments → `text-muted`, numbers → `accent`
+- Syntax highlighting via `codehilite` extension (uses default pygments
+  colors — not configurable via brand tokens)
 - Split at line boundaries when exceeding page height; repeat language label with "(continued)" on next page
 
 ## Blockquotes
 
 - Left border: 3pt in `highlight` color
 - Left padding: `md` spacing
-- Text: `body` style with italic font variant, `neutral-700` color
+- Text: `body` style with italic font variant, `text-muted` color
 - Nested blockquotes: increase left margin by `md` per level
 
 ## Lists
 
 - Unordered: filled circle bullet in `text-muted`
 - Ordered: number + period in `text-muted`
-- Bullet/number indent: `lg` from left margin
-- Text indent: `lg` from bullet/number
-- Between items: `xs` spacing
-- Between list groups: standard paragraph spacing
-- Nested: increase indent by `lg` per level, maximum 3 levels
+- Bullet/number indent: 14pt from left margin
+- Text indent: aligns after bullet/number
+- Between items: `xs` spacing (6pt)
+- Between list groups: standard paragraph spacing (6pt)
+- Nested: increase indent by 14pt per level, maximum 3 levels
 
 ## Horizontal Rules
 

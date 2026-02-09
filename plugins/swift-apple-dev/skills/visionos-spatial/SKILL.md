@@ -2,6 +2,8 @@
 name: visionos-spatial
 description: visionOS spatial computing fundamentals for Vision Pro, including windows, volumes, immersive spaces, RealityKit integration, spatial gestures, and cross-platform spatial patterns. Use when user asks about visionOS, Vision Pro, spatial computing, RealityKit, immersive spaces, 3D UI, or mixed reality development.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # visionOS Spatial Computing

@@ -2,6 +2,8 @@
 name: swift-testing
 description: Swift Testing framework with @Test macro, #expect, #require, test organization, and Xcode Playgrounds. Use when user asks about testing, unit tests, @Test, #expect, #require, test suites, or Xcode Playgrounds.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Swift Testing Framework

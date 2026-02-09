@@ -2,6 +2,8 @@
 name: navigation-menus
 description: Modern SwiftUI navigation patterns, NavigationStack, NavigationSplitView, TabView, toolbars, context menus, and router patterns. Use when user asks about navigation, NavigationStack, TabView, menus, toolbars, routing, or deep linking.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # SwiftUI Navigation and Menus

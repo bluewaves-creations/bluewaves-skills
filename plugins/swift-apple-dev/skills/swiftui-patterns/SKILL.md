@@ -2,6 +2,8 @@
 name: swiftui-patterns
 description: Modern SwiftUI architecture patterns, @Observable, view composition, state management, and the MV vs MVVM debate. Use when user asks about SwiftUI architecture, @Observable vs ObservableObject, state management, view composition, ViewModels, or structuring SwiftUI apps.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # SwiftUI Architecture Patterns

@@ -2,6 +2,8 @@
 name: veo-reference-video
 description: Generate video with consistent subject appearance using reference images via fal.ai Veo 3.1. Use when the user wants to create a video featuring specific people, objects, or characters that should look consistent throughout. Supports multiple reference images for better subject consistency.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Requires FAL_KEY environment variable (fal.ai API key)
 ---
 
 # Veo 3.1 Reference-to-Video

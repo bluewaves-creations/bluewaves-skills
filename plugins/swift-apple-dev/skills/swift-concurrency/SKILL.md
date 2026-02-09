@@ -2,6 +2,8 @@
 name: swift-concurrency
 description: Swift 6 strict concurrency model, async/await, actors, @MainActor, Sendable, and thread safety. Use when user asks about concurrency, async/await, actors, MainActor, thread safety, data races, or migrating from GCD to structured concurrency.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Swift Concurrency

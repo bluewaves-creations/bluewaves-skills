@@ -2,6 +2,8 @@
 name: photographer-testino
 description: Generate images in Mario Testino's glamorous vibrant style. Use when users ask for Testino style, high fashion glamour, bold saturated colors, warm luxurious photography, dynamic sensual energy.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Requires FAL_KEY environment variable (fal.ai API key)
 ---
 
 # Mario Testino Style Photography

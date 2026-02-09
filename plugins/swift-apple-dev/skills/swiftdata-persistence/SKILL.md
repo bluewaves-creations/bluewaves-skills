@@ -2,6 +2,8 @@
 name: swiftdata-persistence
 description: SwiftData framework with @Model macro, @Query, relationships, and NATIVE iCloud sync. Use when user asks about data persistence, SwiftData, @Model, @Query, database storage, iCloud sync, or CoreData migration.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # SwiftData Persistence

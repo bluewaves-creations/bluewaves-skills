@@ -9,6 +9,7 @@ description: >
   Wave Artisans documents, Wave Artisans styling, or Wave Artisans
   identity. Pairs with the pdf-factory skill for PDF output.
 allowed-tools: Bash, Read, Write
+license: MIT
 ---
 # Wave Artisans Brand Kit
 
@@ -24,8 +25,6 @@ allowed-tools: Bash, Read, Write
 ## Assets
 
 Use the manifest at `assets/manifest.json` as the programmatic entry point.
-
-Replace placeholder files in `assets/` with actual brand assets before production use.
 
 ### Fonts
 
@@ -80,7 +79,11 @@ shadows), see [references/tokens.md](references/tokens.md).
 
 ## Usage with PDF Factory
 
-1. Provide `assets/manifest.json` to the engine to discover available resources
-2. Provide `assets/templates/pdf/zones.json` for content zone placement
-3. Load font files from `assets/fonts/`
-4. Merge content onto template PDFs from `assets/templates/pdf/`
+1. Pass this skill's directory path as `--brand` to render.py and compose.py
+2. Scripts read `assets/manifest.json` for fonts, logos, templates, and tokens
+3. The `manifest.json["tokens"]` section drives all styling — colors and type scale
+4. Zone overlays on covers/dividers use tokens for font, size, color, and alignment
+5. SVG logos from `assets/logos/` are rendered as vectors on cover pages
+6. Content pages are styled via dynamically generated CSS from the same tokens
+
+Keep `manifest.json["tokens"]` in sync with `references/tokens.md`.

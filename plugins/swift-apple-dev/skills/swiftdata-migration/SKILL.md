@@ -2,6 +2,8 @@
 name: swiftdata-migration
 description: Advanced CoreData to SwiftData migration patterns, schema versioning strategies, conflict resolution for iCloud sync, and production migration workflows. Use when user asks about migrating from CoreData, SwiftData schema evolution, versioned migrations, iCloud conflict resolution, or production data migration.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # SwiftData Migration Guide

@@ -36,6 +36,33 @@
     "set": "Phosphor",
     "weight": "regular"
   },
+  "tokens": {
+    "colors": {
+      "text-heading": "#1C1C1E",
+      "text-body": "#1C1C1E",
+      "text-muted": "#8E8E93",
+      "text-inverse": "#FFFFFF",
+      "background-page": "#F5F5F7",
+      "background-alt": "#FFFFFF",
+      "border-default": "#C7C7CC",
+      "border-strong": "#48484A",
+      "link": "#0091FF",
+      "highlight": "#6B5DFF"
+    },
+    "type_scale": {
+      "display-lg": { "size_pt": 72, "weight": "bold",  "font": "heading", "line_height": 1.0  },
+      "display":  { "size_pt": 48, "weight": "bold",    "font": "heading", "line_height": 1.1  },
+      "h1":       { "size_pt": 32, "weight": "bold",    "font": "heading", "line_height": 1.15 },
+      "h2":       { "size_pt": 24, "weight": "bold",    "font": "heading", "line_height": 1.2  },
+      "h3":       { "size_pt": 18, "weight": "bold",    "font": "heading", "line_height": 1.25 },
+      "h4":       { "size_pt": 14, "weight": "bold",    "font": "heading", "line_height": 1.3  },
+      "body":     { "size_pt": 11, "weight": "regular",  "font": "body",    "line_height": 1.5  },
+      "body-sm":  { "size_pt": 9,  "weight": "regular",  "font": "body",    "line_height": 1.5  },
+      "caption":  { "size_pt": 8,  "weight": "regular",  "font": "body",    "line_height": 1.4  },
+      "overline": { "size_pt": 8,  "weight": "bold",    "font": "body",    "line_height": 1.4, "transform": "uppercase" },
+      "code":     { "size_pt": 10, "weight": "regular",  "font": "mono",    "line_height": 1.5  }
+    }
+  },
   "defaults": {
     "language": "en",
     "date_format": "MMMM D, YYYY",

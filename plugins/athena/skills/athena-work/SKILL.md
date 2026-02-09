@@ -2,6 +2,8 @@
 name: athena-work
 description: Processes .athenabrief research packages exported from the Athena note-taking app. This skill should be used when the user uploads a .athenabrief file, mentions Athena briefs, research briefings, exported notes, or asks to work with research packages from Athena. Supports zero-instruction processing where the brief itself contains all necessary context. Always packages final results using the athena-package skill.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Python 3.8+ (stdlib only)
 ---
 
 # Athena Brief Processor

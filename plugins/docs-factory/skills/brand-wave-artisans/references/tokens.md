@@ -75,6 +75,7 @@ Used for status, feedback, and categorization across all brands.
 
 | Token | Size (pt) | Size (px) | Weight | Font | Line Height | Letter Spacing |
 |-------|-----------|-----------|--------|------|-------------|----------------|
+| display-lg | 72 | 96 | bold | heading | 1.0 | -0.02em |
 | display | 48 | 64 | bold | heading | 1.1 | -0.02em |
 | h1 | 32 | 42 | bold | heading | 1.15 | -0.01em |
 | h2 | 24 | 32 | bold | heading | 1.2 | 0 |

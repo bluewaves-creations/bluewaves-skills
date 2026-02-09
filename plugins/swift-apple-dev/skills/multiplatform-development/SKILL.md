@@ -2,6 +2,8 @@
 name: multiplatform-development
 description: Cross-platform Apple development patterns for sharing code between iOS, macOS, iPadOS, watchOS, tvOS, and visionOS. Includes conditional compilation, platform-specific extensions, shared packages, and adaptive UI patterns. Use when user asks about multiplatform apps, cross-platform code sharing, platform conditionals, or universal Apple apps.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Multiplatform Development

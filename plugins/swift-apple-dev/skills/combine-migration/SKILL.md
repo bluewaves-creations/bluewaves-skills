@@ -2,6 +2,8 @@
 name: combine-migration
 description: Migrating from Combine to Swift Observation framework and modern async/await patterns. Covers Publisher to AsyncSequence conversion, ObservableObject to @Observable migration, bridging patterns, and reactive code modernization. Use when user asks about Combine migration, ObservableObject to Observable, Publisher to AsyncSequence, or modernizing reactive code.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Combine to Observation Migration

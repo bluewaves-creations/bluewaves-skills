@@ -2,6 +2,8 @@
 name: animations-transitions
 description: SwiftUI animations, @Animatable macro, withAnimation, transitions, PhaseAnimator, KeyframeAnimator, and interactive motion design. Use when user asks about animations, transitions, @Animatable, withAnimation, spring animations, keyframes, or motion design.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # SwiftUI Animations and Transitions

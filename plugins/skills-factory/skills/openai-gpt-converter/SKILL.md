@@ -2,6 +2,7 @@
 name: openai-gpt-converter
 description: Convert Agent Skills to Custom GPT format. Use when the user wants to adapt, port, or transform a Claude skill (SKILL.md-based) into an OpenAI Custom GPT, or when discussing GPT constraints like the 8000-character instruction limit, knowledge file limits, Code Interpreter, Actions, and platform differences between Claude Skills and Custom GPTs.
 allowed-tools: Bash, Read, Write
+license: MIT
 ---
 
 # OpenAI GPT Converter

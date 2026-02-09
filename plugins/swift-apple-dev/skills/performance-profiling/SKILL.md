@@ -2,6 +2,8 @@
 name: performance-profiling
 description: Advanced iOS performance profiling with Xcode Instruments, real-world optimization case studies, memory debugging with ASAN/TSAN, SwiftUI view optimization, and production performance patterns. Use when user asks about profiling, Instruments, memory leaks, performance optimization, ASAN, TSAN, hangs, stutters, or app performance issues.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Performance Profiling & Optimization

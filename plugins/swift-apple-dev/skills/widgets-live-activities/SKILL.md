@@ -2,6 +2,8 @@
 name: widgets-live-activities
 description: WidgetKit for Home Screen widgets, Live Activities, Dynamic Island, and Control Center widgets. Use when user asks about widgets, WidgetKit, Live Activities, Dynamic Island, or interactive widgets.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # WidgetKit and Live Activities

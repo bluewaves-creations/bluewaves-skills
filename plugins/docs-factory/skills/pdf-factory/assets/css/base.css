@@ -1,20 +1,7 @@
 /* Base stylesheet for pdf-factory — xhtml2pdf rendering
-   Brand token values are injected as CSS custom properties at render time. */
-
-:root {
-  --color-text-body: #1A1A1A;
-  --color-text-heading: #1A3B5C;
-  --color-text-muted: #7A7A7A;
-  --color-background-alt: #F0F0F0;
-  --color-border-default: #B0B0B0;
-  --color-border-strong: #4A4A4A;
-  --color-highlight: #E8A838;
-  --color-link: #2E7D8C;
-  --font-body: "Brand Body";
-  --font-heading: "Brand Heading";
-  --font-mono: "Brand Mono";
-  --size-body: 11pt;
-}
+   Structural template: margins, padding, table layout.
+   Brand-specific fonts and colors are prepended by render.py from manifest tokens.
+   These values serve as sensible defaults when no token preamble is applied. */
 
 @page {
   size: A4;
@@ -22,59 +9,58 @@
 }
 
 body {
-  font-family: var(--font-body), serif;
-  font-size: var(--size-body);
-  color: var(--color-text-body);
+  font-family: "Brand-body-regular", serif;
+  font-size: 11pt;
+  color: #1A1A1A;
   line-height: 1.5;
 }
 
 h1, h2, h3, h4 {
-  font-family: var(--font-heading), sans-serif;
-  color: var(--color-text-heading);
+  font-family: "Brand-heading-bold", sans-serif;
+  color: #1A3B5C;
   margin-top: 0;
-  margin-bottom: 6pt;
+  -pdf-keep-with-next: true;
 }
 
-h1 { font-size: 32pt; line-height: 1.15; page-break-before: always; }
-h2 { font-size: 24pt; line-height: 1.2; }
-h3 { font-size: 18pt; line-height: 1.25; }
-h4 { font-size: 14pt; line-height: 1.3; }
+h1 { font-size: 32pt; line-height: 1.15; margin-bottom: 16pt; }
+h2 { font-size: 24pt; line-height: 1.2;  margin-bottom: 12pt; }
+h3 { font-size: 18pt; line-height: 1.25; margin-bottom: 8pt; }
+h4 { font-size: 14pt; line-height: 1.3;  margin-bottom: 6pt; }
 
 p {
   margin-top: 0;
   margin-bottom: 6pt;
-  max-width: 75ch;
 }
 
 a {
-  color: var(--color-link);
+  color: #2E7D8C;
   text-decoration: underline;
 }
 
 code {
-  font-family: var(--font-mono), monospace;
+  font-family: "Brand-mono-regular", monospace;
   font-size: 10pt;
-  background-color: var(--color-background-alt);
+  background-color: #F0F0F0;
   padding: 1pt 4pt;
 }
 
 pre {
-  font-family: var(--font-mono), monospace;
+  font-family: "Brand-mono-regular", monospace;
   font-size: 10pt;
-  background-color: var(--color-background-alt);
+  background-color: #F0F0F0;
   padding: 12pt;
-  border-left: 2pt solid var(--color-highlight);
+  border-left: 2pt solid #E8A838;
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
 blockquote {
-  border-left: 3pt solid var(--color-highlight);
+  border-left: 3pt solid #E8A838;
   padding-left: 18pt;
   margin-left: 0;
   font-style: italic;
-  color: var(--color-border-strong);
+  color: #4A4A4A;
 }
 
 table {
@@ -85,23 +71,19 @@ table {
 
 th {
   font-weight: bold;
-  background-color: var(--color-background-alt);
-  border-bottom: 1pt solid var(--color-border-strong);
+  background-color: #F0F0F0;
+  border-bottom: 1pt solid #4A4A4A;
   padding: 6pt;
   text-align: left;
 }
 
 td {
-  border-bottom: 0.5pt solid var(--color-border-default);
+  border-bottom: 0.5pt solid #B0B0B0;
   padding: 6pt;
 }
 
-tr:nth-child(even) td {
-  background-color: var(--color-background-alt);
-}
-
 ul, ol {
-  padding-left: 24pt;
+  padding-left: 14pt;
   margin-bottom: 6pt;
 }
 
@@ -111,7 +93,7 @@ li {
 
 hr {
   border: none;
-  border-top: 0.5pt solid var(--color-border-default);
+  border-top: 0.5pt solid #B0B0B0;
   margin: 36pt 0;
 }
 

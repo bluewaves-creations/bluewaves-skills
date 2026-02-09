@@ -2,6 +2,8 @@
 name: spotlight-discovery
 description: CoreSpotlight for content indexing, NSUserActivity for handoff and search, and making app content discoverable. Use when user asks about Spotlight search, CoreSpotlight, NSUserActivity, content indexing, or app discoverability.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Spotlight and Content Discovery

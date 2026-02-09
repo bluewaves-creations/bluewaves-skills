@@ -2,6 +2,7 @@
 name: gemini-gem-converter
 description: Convert Agent Skills to Gemini Gems format. Use when the user wants to adapt, port, or transform a Claude skill (SKILL.md-based) into a Google Gemini Gem, or when discussing Gem constraints, knowledge file limits, and platform differences between Claude Skills and Gemini Gems.
 allowed-tools: Bash, Read, Write
+license: MIT
 ---
 
 # Gemini Gem Converter

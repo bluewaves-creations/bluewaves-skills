@@ -2,6 +2,8 @@
 name: foundation-models
 description: Apple Foundation Models framework for on-device AI, @Generable macro, guided generation, tool calling, and streaming. Use when user asks about on-device AI, Apple Intelligence, Foundation Models, @Generable, LLM, or local machine learning.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Apple Foundation Models Framework

@@ -2,6 +2,8 @@
 name: swiftui-colors-modifiers
 description: Modern SwiftUI colors, ShapeStyle, gradients, MeshGradient, and custom ViewModifiers. Use when user asks about colors, foregroundStyle, gradients, hierarchical colors, tint, custom ViewModifiers, or SwiftUI styling.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # SwiftUI Colors and Modifiers

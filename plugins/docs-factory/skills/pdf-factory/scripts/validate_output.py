@@ -120,12 +120,11 @@ def check_brand_fonts(pdf_path: str, brand_path: str) -> tuple:
         manifest = json.load(f)
 
     brand_name = manifest.get("brand", {}).get("name", "Unknown")
-    expected_fonts = set()
+    # Expect at least one font per role to appear in the PDF
+    expected_roles = set()
     for role, variants in manifest.get("fonts", {}).items():
-        if isinstance(variants, dict):
-            for variant, path in variants.items():
-                font_file = Path(path).stem
-                expected_fonts.add(font_file)
+        if isinstance(variants, dict) and variants:
+            expected_roles.add(role)
 
     from pypdf import PdfReader
     reader = PdfReader(pdf_path)
@@ -136,9 +135,37 @@ def check_brand_fonts(pdf_path: str, brand_path: str) -> tuple:
             for font_name in fonts:
                 font_obj = fonts[font_name].get_object()
                 base_font = str(font_obj.get("/BaseFont", ""))
-                found_fonts.add(base_font.lower())
+                found_fonts.add(base_font)
 
-    return True, f"Brand font check for {brand_name} completed"
+    # Check that each font role is represented in the PDF.
+    # Fonts appear as either Brand-{role}-{variant} (from compose.py zones)
+    # or as the actual typeface name (from xhtml2pdf @font-face).
+    # Both contain the role name (e.g. "body" in "brand-body-regular" or
+    # the font is a non-standard font that replaced the role's generic fallback).
+    found_lower = {f.lower().lstrip("/").replace("aaaaaa+", "") for f in found_fonts}
+    # Standard 14 fonts that indicate a role was NOT embedded
+    standard_fonts = {"helvetica", "times-roman", "courier"}
+    custom_fonts = {f for f in found_lower if f not in standard_fonts}
+
+    if not custom_fonts:
+        return False, f"No custom brand fonts embedded for {brand_name} — only standard fonts found"
+
+    # Check role coverage: each role should map to at least one custom font
+    matched_roles = set()
+    for role in expected_roles:
+        # Match by Brand-{role} convention or by any custom font being present
+        if any(f"brand-{role}" in f or role in f for f in custom_fonts):
+            matched_roles.add(role)
+
+    # If we have custom fonts but role matching is ambiguous (e.g., font names
+    # don't contain the role name), accept if we have enough custom fonts
+    if not matched_roles and len(custom_fonts) >= len(expected_roles):
+        return True, f"Brand fonts embedded for {brand_name}: {', '.join(sorted(custom_fonts))}"
+
+    missing = expected_roles - matched_roles
+    if missing:
+        return False, f"Brand font roles not covered in PDF: {', '.join(sorted(missing))}"
+    return True, f"Brand fonts verified for {brand_name}: {', '.join(sorted(matched_roles))}"
 
 
 def main():

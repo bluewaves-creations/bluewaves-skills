@@ -2,6 +2,8 @@
 name: swift-fundamentals
 description: Swift 6.x language best practices, macros, project setup, and modern patterns. Use when user asks about Swift syntax, Package.swift configuration, project structure, macros like @Observable/@Model/@MainActor, property wrappers, or modern Swift development patterns.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Swift Fundamentals

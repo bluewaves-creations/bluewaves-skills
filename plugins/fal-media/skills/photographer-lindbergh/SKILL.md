@@ -2,6 +2,8 @@
 name: photographer-lindbergh
 description: Generate images in Peter Lindbergh's iconic black and white style. Use when users ask for Lindbergh style, raw authentic beauty, emotional B&W portraits, supermodel aesthetic, or unretouched natural photography.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Requires FAL_KEY environment variable (fal.ai API key)
 ---
 
 # Peter Lindbergh Style Photography

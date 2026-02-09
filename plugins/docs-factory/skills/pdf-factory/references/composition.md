@@ -24,15 +24,14 @@ If content width exceeds `paragraph.max_width_chars` at body font size, center t
 
 ## Vertical Rhythm
 
-Base all vertical spacing on `base_unit_pt` from spacing tokens.
-
-Spacing before elements (multiples of base unit):
-- Before h1: 6x
-- Before h2: 4x
-- Before h3: 3x
-- Before h4: 2x
-- Between paragraphs: 1x (use `spacing_after_pt`)
-- After any heading: 1x
+Spacing before elements:
+- Before h1: starts on new page (render.py inserts page break)
+- After h1: 16pt
+- After h2: 12pt
+- After h3: 8pt
+- After h4: 6pt
+- Between paragraphs: 6pt (margin-bottom)
+- After any heading: see values above
 
 ## Content Flow
 
@@ -51,10 +50,17 @@ Atomic elements (move whole to next page if they don't fit):
 - Headings must have at least 2 lines of following content on same page
 - Move heading to next page if it would be the last element on a page
 
+Headings use `-pdf-keep-with-next: true` (xhtml2pdf-specific CSS property) to
+prevent orphan titles. Do NOT use `page-break-after: avoid` — xhtml2pdf parses
+it but does not enforce it.
+
 ## Page Break Rules
 
-Force page break before:
-- h1 headings (new section)
+Prefer page break before:
+- h1 headings (new section) — render.py injects a page-break div before each
+  h1 (except the first) via `_insert_section_breaks()`. This is an HTML
+  transformation, NOT a CSS rule. Do NOT add `page-break-before: always` to
+  h1 in base.css — it creates a blank first page.
 - Elements with explicit page-break-before
 
 Never break inside:

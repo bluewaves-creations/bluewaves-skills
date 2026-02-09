@@ -2,6 +2,8 @@
 name: athena-package
 description: Creates validated .athena import packages for the Athena note-taking app. This skill should be used when the user wants to send notes, research results, or documents back into Athena, when packaging conversation results for Athena, or at the end of an athena-work processing session. Produces ZIP packages conforming to the .athena import specification with manifest, markdown notes, aurora tags, and optional assets.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Python 3.8+ (stdlib only)
 ---
 
 # Athena Package Creator

@@ -2,6 +2,8 @@
 name: veo-image-to-video
 description: Animate a single image into a video using fal.ai Veo 3.1. Use when the user wants to create a video from a still image, animate a photo, or bring an image to life. Supports up to 8 seconds of video with optional audio.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Requires FAL_KEY environment variable (fal.ai API key)
 ---
 
 # Veo 3.1 Image-to-Video

@@ -2,6 +2,8 @@
 name: cloudkit
 description: CloudKit framework for iCloud data storage, sync, and sharing. Covers CKContainer, CKDatabase, CKRecord, CKQuery, subscriptions, CKShare, and UICloudSharingController. Use when user asks about CloudKit, CKRecord, CKDatabase, iCloud public database, CloudKit subscriptions, CKShare, sharing records, or UICloudSharingController.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # CloudKit Framework

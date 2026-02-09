@@ -2,6 +2,8 @@
 name: photographer-lachapelle
 description: Generate images in David LaChapelle's surreal pop art style. Use when users ask for LaChapelle style, pop surrealism, hyper-saturated colors, theatrical staging, baroque maximalism, kitsch aesthetic.
 allowed-tools: Bash, Read, Write
+license: MIT
+compatibility: Requires FAL_KEY environment variable (fal.ai API key)
 ---
 
 # David LaChapelle Style Photography

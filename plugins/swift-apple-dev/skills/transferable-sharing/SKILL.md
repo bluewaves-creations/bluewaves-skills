@@ -2,6 +2,8 @@
 name: transferable-sharing
 description: Transferable protocol for drag and drop, copy/paste, ShareLink, and data transfer. Use when user asks about sharing, drag and drop, copy paste, ShareLink, Transferable, or clipboard operations.
 allowed-tools: Bash, Read, Write, Edit
+license: MIT
+compatibility: Xcode 26+ with Swift 6 toolchain on macOS
 ---
 
 # Transferable and Sharing
