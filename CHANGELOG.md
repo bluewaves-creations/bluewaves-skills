@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All three brand kits share 12 semantic colors for status/feedback/categorization
 - New `"documents"` category entry for the docs-factory plugin
 
+#### Marketplace-wide audit
+- Added `license: MIT` to all 42 SKILL.md frontmatters for standalone distribution
+- Added `compatibility` field to 37 skills with environment requirements (FAL_KEY, Xcode 26+, Python 3.8+, skills-ref)
+- Split epub-creator SKILL.md from 1225 lines to 134 + 5 reference files (500-line best practice)
+- Fixed `quick_validate.py` to accept the `compatibility` property per the skill specification
+- Bundled Phosphor regular-weight icon set in pdf-factory for document iconography
+
 #### Marketplace
 - Marketplace version bumped to 1.9.0
 - Total: 6 plugins, 42 skills
