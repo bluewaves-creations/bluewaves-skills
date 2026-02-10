@@ -41,7 +41,7 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
     # Copy optional resource directories if present
     for resource_dir in scripts references assets; do
         if [[ -d "$skill_dir/$resource_dir" ]]; then
-            cp -r "$skill_dir/$resource_dir" "$tmp_dir/$skill_name/$resource_dir"
+            cp -rL "$skill_dir/$resource_dir" "$tmp_dir/$skill_name/$resource_dir"
         fi
     done
 

@@ -100,7 +100,7 @@ print("Video saved to output.mp4")
 ### CLI Script
 
 ```bash
-python plugins/media-factory/scripts/fal_generate.py \
+python scripts/fal_generate.py \
     --endpoint video-from-frames \
     --prompt "Smooth transition from day to night" \
     --first-frame morning.jpg \

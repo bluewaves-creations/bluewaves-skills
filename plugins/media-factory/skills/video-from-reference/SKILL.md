@@ -99,7 +99,7 @@ print("Video saved to output.mp4")
 ### CLI Script
 
 ```bash
-python plugins/media-factory/scripts/fal_generate.py \
+python scripts/fal_generate.py \
     --endpoint video-from-reference \
     --prompt "The character walks through a sunny park" \
     --images ref-front.jpg ref-side.jpg \

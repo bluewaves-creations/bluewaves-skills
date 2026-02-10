@@ -97,7 +97,7 @@ print("Video saved to output.mp4")
 ### CLI Script
 
 ```bash
-python plugins/media-factory/scripts/fal_generate.py \
+python scripts/fal_generate.py \
     --endpoint video-from-image \
     --prompt "Camera slowly pans across the landscape" \
     --image /path/to/photo.jpg \

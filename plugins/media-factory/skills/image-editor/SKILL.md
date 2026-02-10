@@ -119,7 +119,7 @@ result = fal_client.subscribe(
 ### CLI Script
 
 ```bash
-python plugins/media-factory/scripts/fal_generate.py \
+python scripts/fal_generate.py \
     --endpoint edit \
     --prompt "Add snow to this mountain scene" \
     --image /path/to/mountain.jpg \

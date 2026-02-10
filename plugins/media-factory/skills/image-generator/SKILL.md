@@ -107,7 +107,7 @@ print(f"Uploaded: {uploaded_url}")
 ### CLI Script
 
 ```bash
-python plugins/media-factory/scripts/fal_generate.py \
+python scripts/fal_generate.py \
     --endpoint image \
     --prompt "A mountain landscape at golden hour" \
     --aspect-ratio 16:9 \

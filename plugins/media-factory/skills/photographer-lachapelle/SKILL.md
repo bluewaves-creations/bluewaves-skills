@@ -26,7 +26,7 @@ Set your fal.ai API key:
 export FAL_KEY="your-fal-api-key"
 ```
 
-For Claude.ai users, provide your key via `credentials.json`:
+For Claude.ai users, copy `scripts/credentials.example.json` to `scripts/credentials.json` and add your key:
 ```json
 { "api_key": "your-fal-api-key" }
 ```
