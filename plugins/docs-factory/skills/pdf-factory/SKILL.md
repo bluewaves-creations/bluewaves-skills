@@ -99,6 +99,38 @@ base.css applies `-pdf-keep-with-next: true` to all headings (h1–h4). This is 
 xhtml2pdf-specific property. The standard `page-break-after: avoid` is parsed
 but NOT enforced by xhtml2pdf — do not use it.
 
+### SVG Rendering
+
+render.py preprocesses HTML to convert SVG content to high-DPI PNG before
+xhtml2pdf rendering:
+- `<img src="*.svg">` references → svglib conversion at 300 DPI
+- Inline `<svg>` blocks → extracted, converted, replaced with `<img>` tags
+- Uses svglib + reportlab `renderPM` (no new dependencies)
+- Graceful fallback: on failure, original tag is preserved
+
+### Image Corner Radius
+
+Brand kits define `tokens.imagery.corner_radius_pt`:
+- **Decathlon**: 0pt (no rounding)
+- **Bluewaves**: 6pt
+- **Wave Artisans**: 4pt
+
+render.py applies Pillow-based rounded corners to all raster images when
+`corner_radius_pt > 0`. Radius is converted from pt to pixels at output DPI.
+SVGs and data URIs are excluded.
+
+### Chart Integration
+
+Charts from the `chart-designer` skill embed as standard images. Use `<figure>`
+and `<figcaption>` for captioned charts:
+
+```html
+<figure>
+  <img src="chart.png" alt="Chart title">
+  <figcaption>Figure 1: Description</figcaption>
+</figure>
+```
+
 ### CSS Specifics
 
 Heading spacing (margin-bottom): h1 16pt, h2 12pt, h3 8pt, h4 6pt.

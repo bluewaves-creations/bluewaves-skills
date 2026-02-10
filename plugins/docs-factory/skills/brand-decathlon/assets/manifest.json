@@ -63,6 +63,43 @@
       "caption":  { "size_pt": 8,  "weight": "regular",  "font": "body",    "line_height": 1.4  },
       "overline": { "size_pt": 8,  "weight": "bold",    "font": "body",    "line_height": 1.4, "transform": "uppercase" },
       "code":     { "size_pt": 10, "weight": "regular",  "font": "mono",    "line_height": 1.5  }
+    },
+    "imagery": {
+      "corner_radius_pt": 0,
+      "style": "professional-reportage",
+      "color_treatment": "full-color, natural light",
+      "subject_guidelines": [
+        "Sport activities related to the document topic",
+        "Professional reportage and action photography",
+        "Natural, in-situation photos (no studio setups)",
+        "Authentic athletic moments, diverse participants"
+      ],
+      "avoid": [
+        "Extreme or dangerous situations",
+        "Studio photography",
+        "Stock-photo-looking posed shots"
+      ],
+      "prompt_style": "authentic sports reportage, natural light, dynamic composition, diverse participants, real-world setting, action photography, no rounded corners"
+    },
+    "chart": {
+      "palette": {
+        "categorical": ["#3643BA", "#7AFFA6", "#FF4245", "#FFD600", "#0091FF", "#DB34F2", "#FF9230", "#00DAC3"],
+        "sequential": ["#D6D9F2", "#ADB3E5", "#848DD8", "#5B67CB", "#3643BA", "#2B3695", "#202870"],
+        "diverging": ["#FF4245", "#FF8A8B", "#FFCBCC", "#F0F0F0", "#B8FFD0", "#99FFB8", "#7AFFA6"],
+        "highlight": "#7AFFA6",
+        "highlight_contrast": "#212121"
+      },
+      "axis": { "color": "#4A4A4A", "width": 0.8, "label_color": "#212121", "tick_color": "#7A7A7A" },
+      "grid": { "color": "#B0B0B0", "alpha": 0.3, "width": 0.5, "style": "--" },
+      "typography": {
+        "title": { "style": "h3", "color_role": "text-heading" },
+        "subtitle": { "style": "body", "color_role": "text-muted" },
+        "axis_label": { "style": "body-sm", "color_role": "text-body" },
+        "tick_label": { "style": "caption", "color_role": "text-body" },
+        "annotation": { "style": "caption", "color_role": "text-muted" },
+        "legend": { "style": "caption", "color_role": "text-body" }
+      },
+      "figure": { "background": "#FFFFFF", "plot_background": "#FFFFFF" }
     }
   },
   "defaults": {

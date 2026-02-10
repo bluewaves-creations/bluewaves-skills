@@ -80,6 +80,24 @@ shadows), see [references/tokens.md](references/tokens.md).
 - No rounded corners on any element
 - Apple-minimalist: clean font hierarchy, no decorators/lines, perfect typography and spacing
 
+### Imagery Guidelines
+
+- **Style**: Professional reportage — natural, in-situation photography
+- **Color treatment**: Full-color, natural light
+- **Corner radius**: 0pt (no rounded corners)
+- **Subjects**: Sport activities, action photography, diverse participants
+- **Avoid**: Extreme situations, studio photography, stock-photo poses
+- **AI prompt prefix**: `authentic sports reportage, natural light, dynamic composition, diverse participants, real-world setting, action photography, no rounded corners`
+
+### Chart Guidelines
+
+- **Primary palette**: Blue/purple (#3643BA), green accent (#7AFFA6), then semantic colors
+- **Sequential**: Light-to-dark blue/purple gradient (7 stops)
+- **Diverging**: Red ↔ Green through neutral gray
+- **Highlight color**: #7AFFA6 (green accent) on #212121 contrast
+- **Figure background**: White (#FFFFFF)
+- Charts use brand typography tokens (h3 for titles, body-sm for axis labels, caption for ticks/legends)
+
 ## Usage with PDF Factory
 
 1. Pass this skill's directory path as `--brand` to render.py and compose.py

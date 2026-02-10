@@ -75,7 +75,7 @@ Add your plugin to `.claude-plugin/marketplace.json`:
 ### Skill Naming
 - Use lowercase letters, numbers, and hyphens
 - Maximum 64 characters
-- Be descriptive: `gemini-image` not `img`
+- Be descriptive: `image-generator` not `img`
 
 ### Skill Descriptions
 - Maximum 1024 characters

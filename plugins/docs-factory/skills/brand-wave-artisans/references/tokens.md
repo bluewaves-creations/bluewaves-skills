@@ -93,6 +93,58 @@ Used for status, feedback, and categorization across all brands.
 - Spacing after: 6pt
 - First line indent: none
 
+## Imagery
+
+| Property | Value |
+|----------|-------|
+| Style | Artistic black and white |
+| Color treatment | Black and white exclusively |
+| Corner radius | 4pt |
+| AI prompt prefix | `high-contrast black and white photography in the style of Peter Lindbergh and Ellen von Unwerth, dramatic lighting, editorial fashion composition, breathtaking beauty, raw emotion, film grain, unretouched natural skin, soulful portraits` |
+
+**Subjects**: Surf culture, shapers, young entrepreneurs, top-model-class beauty.
+
+**Restrictions**: No color photography, no corporate imagery, no generic stock photos.
+
+**References**: Peter Lindbergh, Ellen von Unwerth (use with `enable_web_search: true` for grounding).
+
+## Charts
+
+Gray-only palette — no color in charts, matching the brand's monochrome identity.
+
+### Palette
+
+| Role | Colors |
+|------|--------|
+| Categorical (8) | #1C1C1E, #48484A, #8E8E93, #C7C7CC, #636366, #A3A3A8, #3A3A3C, #D1D1D6 |
+| Sequential (7) | #F5F5F7 → #48484A (light-to-dark gray) |
+| Diverging (7) | #1C1C1E ↔ #1C1C1E through #F5F5F7 (symmetric) |
+| Highlight | #1C1C1E on #FFFFFF |
+
+### Chart Styling
+
+| Element | Property | Value |
+|---------|----------|-------|
+| Axis | Color | #48484A |
+| Axis | Width | 0.8pt |
+| Axis labels | Color | #1C1C1E |
+| Tick labels | Color | #8E8E93 |
+| Grid | Color | #C7C7CC at 40% opacity |
+| Grid | Style | Dashed (--) |
+| Figure background | Color | #F5F5F7 |
+| Plot background | Color | #FFFFFF |
+
+### Chart Typography
+
+| Element | Type scale token | Color role |
+|---------|-----------------|------------|
+| Title | h3 | text-heading |
+| Subtitle | body | text-muted |
+| Axis label | body-sm | text-body |
+| Tick label | caption | text-body |
+| Annotation | caption | text-muted |
+| Legend | caption | text-body |
+
 ## Spacing
 
 ### Base Unit

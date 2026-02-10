@@ -241,11 +241,224 @@ def _insert_section_breaks(html: str) -> str:
     return ''.join(result)
 
 
+def _apply_corner_radius(img_path: str, radius_pt: float, output_path: str, dpi: int = 150):
+    """Apply rounded corners to a raster image using Pillow.
+
+    Converts pt radius to pixels based on DPI, creates RGBA image with
+    transparent rounded corners. Only activates when radius_pt > 0.
+    """
+    from PIL import Image, ImageChops, ImageDraw
+
+    radius_px = int(radius_pt * dpi / 72)
+    if radius_px < 1:
+        return img_path
+
+    img = Image.open(img_path).convert("RGBA")
+    w, h = img.size
+
+    mask = Image.new("L", (w, h), 0)
+    draw = ImageDraw.Draw(mask)
+    draw.rounded_rectangle([(0, 0), (w, h)], radius=radius_px, fill=255)
+
+    # Multiply with original alpha to preserve existing transparency (e.g. logos)
+    original_alpha = img.split()[3]
+    combined = ImageChops.multiply(original_alpha, mask)
+    img.putalpha(combined)
+    img.save(output_path, "PNG")
+    return output_path
+
+
+def _preprocess_svg_images(html: str, manifest: dict, work_dir: str) -> str:
+    """Convert SVG references in HTML to high-DPI PNG for xhtml2pdf compatibility.
+
+    Handles both <img src="*.svg"> references and inline <svg>...</svg> blocks.
+    Uses svglib + reportlab (already installed) for conversion at 2x scale.
+    Falls back gracefully on conversion failure (leaves original tag intact).
+    """
+    import re
+    import tempfile
+    from pathlib import Path
+
+    try:
+        from svglib.svglib import svg2rlg
+        from reportlab.graphics import renderPM
+    except ImportError:
+        return html
+
+    svg_count = 0
+
+    # Handle <img src="*.svg"> references
+    def replace_svg_img(match):
+        nonlocal svg_count
+        full_tag = match.group(0)
+        src = match.group(1)
+
+        svg_path = src
+        if not os.path.isabs(svg_path):
+            svg_path = os.path.join(work_dir, svg_path)
+
+        if not os.path.exists(svg_path):
+            return full_tag
+
+        try:
+            drawing = svg2rlg(svg_path)
+            if drawing is None:
+                return full_tag
+            svg_count += 1
+            png_path = os.path.join(work_dir, f"_svg2png_{svg_count}.png")
+            renderPM.drawToFile(drawing, png_path, fmt="PNG", dpi=300)
+            return full_tag.replace(src, png_path)
+        except Exception:
+            return full_tag
+
+    html = re.sub(r'<img\s[^>]*src="([^"]+\.svg)"[^>]*>', replace_svg_img, html)
+
+    # Handle inline <svg>...</svg> blocks
+    def replace_inline_svg(match):
+        nonlocal svg_count
+        svg_content = match.group(0)
+
+        try:
+            svg_count += 1
+            svg_tmp = os.path.join(work_dir, f"_inline_svg_{svg_count}.svg")
+            png_path = os.path.join(work_dir, f"_inline_svg_{svg_count}.png")
+
+            with open(svg_tmp, "w") as f:
+                f.write(svg_content)
+
+            drawing = svg2rlg(svg_tmp)
+            if drawing is None:
+                return svg_content
+            renderPM.drawToFile(drawing, png_path, fmt="PNG", dpi=300)
+            return f'<img src="{png_path}" />'
+        except Exception:
+            return svg_content
+
+    html = re.sub(r'<svg[\s>].*?</svg>', replace_inline_svg, html, flags=re.DOTALL)
+
+    return html
+
+
+def _preprocess_images(html: str, manifest: dict, work_dir: str) -> str:
+    """Apply corner radius to raster images based on brand imagery tokens."""
+    import re
+
+    tokens = manifest.get("tokens", {})
+    imagery = tokens.get("imagery", {})
+    radius_pt = imagery.get("corner_radius_pt", 0)
+
+    if radius_pt <= 0:
+        return html
+
+    img_count = 0
+
+    def apply_radius(match):
+        nonlocal img_count
+        full_tag = match.group(0)
+        src = match.group(1)
+
+        # Skip SVG placeholders and data URIs
+        if src.endswith(".svg") or src.startswith("data:"):
+            return full_tag
+
+        img_path = src if os.path.isabs(src) else os.path.join(work_dir, src)
+        if not os.path.exists(img_path):
+            return full_tag
+
+        try:
+            img_count += 1
+            rounded_path = os.path.join(work_dir, f"_rounded_{img_count}.png")
+            _apply_corner_radius(img_path, radius_pt, rounded_path)
+            return full_tag.replace(src, rounded_path)
+        except Exception:
+            return full_tag
+
+    html = re.sub(r'<img\s[^>]*src="([^"]+)"[^>]*>', apply_radius, html)
+    return html
+
+
+def _preprocess_figures(html: str) -> str:
+    """Convert <figure>/<figcaption> to <div>/<p> for xhtml2pdf compatibility.
+
+    xhtml2pdf does not treat HTML5 <figure> and <figcaption> as block-level
+    elements — it renders them inline regardless of CSS display rules.
+    Replacing with <div class="figure"> and <p class="figcaption"> ensures
+    block layout and allows CSS styling via class selectors.
+
+    Uses regex to handle tags with optional attributes (e.g. <figure class="chart">).
+    """
+    import re
+    html = re.sub(r'<figure(\s[^>]*)?>',  r'<div class="figure"\1>', html)
+    html = html.replace("</figure>", "</div>")
+    html = re.sub(r'<figcaption(\s[^>]*)?>',  r'<p class="figcaption"\1>', html)
+    html = html.replace("</figcaption>", "</p>")
+    return html
+
+
+def _preprocess_code_blocks(html: str) -> str:
+    """Replace newlines with <br/> inside <pre><code> blocks.
+
+    xhtml2pdf's white-space: pre-wrap does not reliably preserve \\n inside
+    <code> elements. Converting newlines to explicit <br/> tags ensures
+    line-per-line formatting in rendered PDF output.
+
+    Preserves any attributes on <pre> and <code> tags, and strips leading/
+    trailing newlines to avoid spurious <br/> whitespace.
+    """
+    import re
+
+    def fix_newlines(match):
+        pre_attrs = match.group(1) or ""
+        code_attrs = match.group(2) or ""
+        content = match.group(3)
+        content = content.strip("\n")
+        content = content.replace("\n", "<br/>")
+        return f"<pre{pre_attrs}><code{code_attrs}>{content}</code></pre>"
+
+    return re.sub(
+        r"<pre(\s[^>]*)?><code(\s[^>]*)?>(.*?)</code></pre>",
+        fix_newlines, html, flags=re.DOTALL,
+    )
+
+
+def _preprocess_image_widths(html: str) -> str:
+    """Convert HTML width attributes on img tags to pt-based inline styles.
+
+    xhtml2pdf interprets bare numeric width attributes as pixels, but content
+    authors specify them in points (matching PDF page geometry). Converting to
+    explicit 'pt' units ensures images render at the intended size.
+    """
+    import re
+
+    def convert_width(match):
+        full_tag = match.group(0)
+        width_val = match.group(1)
+        # Remove the width attribute
+        tag = re.sub(r'\s+width="' + re.escape(width_val) + '"', '', full_tag)
+        # Add pt-based width as inline style
+        if 'style="' in tag:
+            tag = tag.replace('style="', f'style="width: {width_val}pt; ')
+        else:
+            tag = tag.replace("<img ", f'<img style="width: {width_val}pt" ')
+        return tag
+
+    return re.sub(r'<img\s[^>]*width="(\d+)"[^>]*>', convert_width, html)
+
+
 def render_html_to_pdf(html: str, output_path: str, manifest: dict, page_format: str = "A4", debug: bool = False):
     """Render HTML content to PDF pages."""
     from xhtml2pdf import pisa
 
     html = _insert_section_breaks(html)
+    html = _preprocess_figures(html)
+    html = _preprocess_code_blocks(html)
+    html = _preprocess_image_widths(html)
+
+    # Preprocessing: SVG conversion and image corner radius
+    work_dir = os.path.dirname(os.path.abspath(output_path))
+    html = _preprocess_svg_images(html, manifest, work_dir)
+    html = _preprocess_images(html, manifest, work_dir)
+
     css = build_stylesheet(manifest)
     full_html = f"""<!DOCTYPE html>
 <html>

@@ -78,6 +78,24 @@ shadows), see [references/tokens.md](references/tokens.md).
 - White backgrounds with warm neutral text (#2C2C2C)
 - Apple-minimalist: clean font hierarchy, no decorators/lines, perfect typography and spacing
 
+### Imagery Guidelines
+
+- **Style**: Fashion editorial — curated, magazine-cover quality
+- **Color treatment**: Muted palette, Kodachrome film look
+- **Corner radius**: 6pt
+- **Subjects**: Landscapes or people, fashion editorial style, consistently beautiful
+- **Avoid**: Oversaturated/neon colors, amateur-looking shots, inconsistent visual tone
+- **AI prompt prefix**: `editorial photography, desaturated Kodachrome palette, cinematic composition, magazine-cover quality, muted tones, film grain, emotionally evocative`
+
+### Chart Guidelines
+
+- **Primary palette**: Brown sand (#B78A66), teal (#00D2E0), sun red (#FF375F), then semantic colors
+- **Sequential**: Light-to-dark brown sand gradient (7 stops)
+- **Diverging**: Sun red ↔ Teal through neutral (#F5F5F7)
+- **Highlight color**: #FF375F (sun red) on #FFFFFF contrast
+- **Figure background**: White (#FFFFFF)
+- Charts use brand typography tokens (h3 for titles, body-sm for axis labels, caption for ticks/legends)
+
 ## Usage with PDF Factory
 
 1. Pass this skill's directory path as `--brand` to render.py and compose.py

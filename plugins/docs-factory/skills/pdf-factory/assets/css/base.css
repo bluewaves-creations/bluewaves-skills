@@ -101,3 +101,26 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+figure {
+  margin: 12pt 0;
+  text-align: center;
+}
+
+figcaption {
+  font-size: 8pt;
+  color: #7A7A7A;
+  margin-top: 6pt;
+}
+
+.figure {
+  margin: 12pt 0;
+  text-align: center;
+}
+
+.figcaption {
+  font-size: 8pt;
+  color: #7A7A7A;
+  margin-top: 6pt;
+  text-align: center;
+}

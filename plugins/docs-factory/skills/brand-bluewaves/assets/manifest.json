@@ -63,6 +63,44 @@
       "caption":  { "size_pt": 8,  "weight": "regular",  "font": "body",    "line_height": 1.4  },
       "overline": { "size_pt": 8,  "weight": "bold",    "font": "body",    "line_height": 1.4, "transform": "uppercase" },
       "code":     { "size_pt": 10, "weight": "regular",  "font": "mono",    "line_height": 1.5  }
+    },
+    "imagery": {
+      "corner_radius_pt": 6,
+      "style": "fashion-editorial",
+      "color_treatment": "muted palette, Kodachrome film look",
+      "subject_guidelines": [
+        "Very professional curated photography",
+        "Landscape or people, fashion editorial style",
+        "Each photo could be a magazine cover",
+        "People always incredibly beautiful",
+        "Consistency in style across all images"
+      ],
+      "avoid": [
+        "Oversaturated or neon colors",
+        "Casual or amateur-looking shots",
+        "Inconsistent visual tone within a document"
+      ],
+      "prompt_style": "editorial photography, desaturated Kodachrome palette, cinematic composition, magazine-cover quality, muted tones, film grain, emotionally evocative"
+    },
+    "chart": {
+      "palette": {
+        "categorical": ["#B78A66", "#00D2E0", "#FF375F", "#6B5DFF", "#30D158", "#FF9230", "#0091FF", "#DB34F2"],
+        "sequential": ["#F2E6D9", "#E5CDB3", "#D8B48D", "#CB9B67", "#B78A66", "#926E52", "#6D533D"],
+        "diverging": ["#FF375F", "#FF8A9E", "#FFCDD6", "#F5F5F7", "#B3E8EC", "#66D5DE", "#00D2E0"],
+        "highlight": "#FF375F",
+        "highlight_contrast": "#FFFFFF"
+      },
+      "axis": { "color": "#4A4A4A", "width": 0.8, "label_color": "#2C2C2C", "tick_color": "#7A7A7A" },
+      "grid": { "color": "#B0B0B0", "alpha": 0.3, "width": 0.5, "style": "--" },
+      "typography": {
+        "title": { "style": "h3", "color_role": "text-heading" },
+        "subtitle": { "style": "body", "color_role": "text-muted" },
+        "axis_label": { "style": "body-sm", "color_role": "text-body" },
+        "tick_label": { "style": "caption", "color_role": "text-body" },
+        "annotation": { "style": "caption", "color_role": "text-muted" },
+        "legend": { "style": "caption", "color_role": "text-body" }
+      },
+      "figure": { "background": "#FFFFFF", "plot_background": "#FFFFFF" }
     }
   },
   "defaults": {

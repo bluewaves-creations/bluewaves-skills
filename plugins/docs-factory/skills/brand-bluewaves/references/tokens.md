@@ -92,6 +92,54 @@ Used for status, feedback, and categorization across all brands.
 - Spacing after: 6pt
 - First line indent: none
 
+## Imagery
+
+| Property | Value |
+|----------|-------|
+| Style | Fashion editorial |
+| Color treatment | Muted palette, Kodachrome film look |
+| Corner radius | 6pt |
+| AI prompt prefix | `editorial photography, desaturated Kodachrome palette, cinematic composition, magazine-cover quality, muted tones, film grain, emotionally evocative` |
+
+**Subjects**: Landscapes or people, fashion editorial style, magazine-cover quality, consistently beautiful.
+
+**Restrictions**: No oversaturated/neon colors, no amateur-looking shots, no inconsistent visual tone.
+
+## Charts
+
+### Palette
+
+| Role | Colors |
+|------|--------|
+| Categorical (8) | #B78A66, #00D2E0, #FF375F, #6B5DFF, #30D158, #FF9230, #0091FF, #DB34F2 |
+| Sequential (7) | #F2E6D9 → #6D533D (light-to-dark brown sand) |
+| Diverging (7) | #FF375F ↔ #00D2E0 through #F5F5F7 |
+| Highlight | #FF375F on #FFFFFF |
+
+### Chart Styling
+
+| Element | Property | Value |
+|---------|----------|-------|
+| Axis | Color | #4A4A4A |
+| Axis | Width | 0.8pt |
+| Axis labels | Color | #2C2C2C |
+| Tick labels | Color | #7A7A7A |
+| Grid | Color | #B0B0B0 at 30% opacity |
+| Grid | Style | Dashed (--) |
+| Figure background | Color | #FFFFFF |
+| Plot background | Color | #FFFFFF |
+
+### Chart Typography
+
+| Element | Type scale token | Color role |
+|---------|-----------------|------------|
+| Title | h3 | text-heading |
+| Subtitle | body | text-muted |
+| Axis label | body-sm | text-body |
+| Tick label | caption | text-body |
+| Annotation | caption | text-muted |
+| Legend | caption | text-body |
+
 ## Spacing
 
 ### Base Unit

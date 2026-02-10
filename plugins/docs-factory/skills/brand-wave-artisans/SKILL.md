@@ -77,6 +77,25 @@ shadows), see [references/tokens.md](references/tokens.md).
 - Semantic colors used as-needed for accent and categorization
 - Apple-minimalist: clean font hierarchy, no decorators/lines, perfect typography and spacing
 
+### Imagery Guidelines
+
+- **Style**: Artistic black and white — inspired by Peter Lindbergh and Ellen von Unwerth
+- **Color treatment**: Black and white exclusively
+- **Corner radius**: 4pt
+- **Subjects**: Surf culture, shapers, young entrepreneurs, top-model-class beauty
+- **Avoid**: Color photography, corporate imagery, generic stock photos
+- **AI prompt prefix**: `high-contrast black and white photography in the style of Peter Lindbergh and Ellen von Unwerth, dramatic lighting, editorial fashion composition, breathtaking beauty, raw emotion, film grain, unretouched natural skin, soulful portraits`
+- **Grounding references**: Peter Lindbergh, Ellen von Unwerth (use with `enable_web_search: true`)
+
+### Chart Guidelines
+
+- **Palette**: Gray-only — no color in charts, matching the brand's monochrome identity
+- **Sequential**: Light-to-dark gray (7 stops from #F5F5F7 to #48484A)
+- **Diverging**: Symmetric gray gradient through white center
+- **Highlight color**: #1C1C1E (near-black) on #FFFFFF contrast
+- **Figure background**: #F5F5F7 (matches page background), plot area #FFFFFF
+- Charts use brand typography tokens (h3 for titles, body-sm for axis labels, caption for ticks/legends)
+
 ## Usage with PDF Factory
 
 1. Pass this skill's directory path as `--brand` to render.py and compose.py

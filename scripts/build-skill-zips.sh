@@ -5,7 +5,7 @@
 #
 # Usage:
 #   ./scripts/build-skill-zips.sh              # Build all skills
-#   ./scripts/build-skill-zips.sh gemini-image  # Build a single skill
+#   ./scripts/build-skill-zips.sh image-generator  # Build a single skill
 
 set -euo pipefail
 
@@ -44,6 +44,9 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
             cp -r "$skill_dir/$resource_dir" "$tmp_dir/$skill_name/$resource_dir"
         fi
     done
+
+    # Remove Python bytecache (should never ship in ZIPs)
+    find "$tmp_dir" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 
     # Create the ZIP from inside the temp dir so the path is skill-name/SKILL.md
     (cd "$tmp_dir" && zip -q -r "$DIST_DIR/$skill_name.zip" "$skill_name")

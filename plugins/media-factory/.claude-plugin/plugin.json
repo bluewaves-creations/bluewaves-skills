@@ -1,0 +1,13 @@
+{
+  "name": "media-factory",
+  "version": "2.0.0",
+  "description": "AI-powered image and video generation via fal.ai with Python fal_client, queue-based requests, progress logging, and 5 photographer style skills",
+  "author": {
+    "name": "Bluewaves Team",
+    "email": "contact@bluewaves.boutique"
+  },
+  "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/media-factory",
+  "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+  "license": "MIT",
+  "keywords": ["fal.ai", "image-generation", "video-generation", "ai-media", "fal-client", "photographer-styles"]
+}

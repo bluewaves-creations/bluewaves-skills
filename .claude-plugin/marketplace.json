@@ -1,8 +1,8 @@
 {
   "name": "bluewaves-skills",
   "metadata": {
-    "description": "AI-powered media generation, Athena document exchange, branded document generation, document creation, Swift development, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "1.9.3"
+    "description": "AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, Swift development, and skill creation and cross-platform conversion tools for Claude Code",
+    "version": "2.0.0"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -10,18 +10,18 @@
   },
   "plugins": [
     {
-      "name": "fal-media",
-      "source": "./plugins/fal-media",
-      "description": "fal.ai media generation with Gemini images, Veo videos, and 5 photographer style skills",
-      "version": "1.3.0",
+      "name": "media-factory",
+      "source": "./plugins/media-factory",
+      "description": "AI-powered image and video generation via fal.ai with Python fal_client, queue-based requests, progress logging, and 5 photographer style skills",
+      "version": "2.0.0",
       "author": {
         "name": "Bluewaves Team",
         "email": "contact@bluewaves.boutique"
       },
-      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/fal-media",
+      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/media-factory",
       "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
       "license": "MIT",
-      "keywords": ["fal.ai", "image-generation", "video-generation", "gemini", "veo", "ai-media", "photographer-styles"],
+      "keywords": ["fal.ai", "image-generation", "video-generation", "ai-media", "fal-client", "photographer-styles"],
       "category": "media"
     },
     {
@@ -87,8 +87,8 @@
     {
       "name": "docs-factory",
       "source": "./plugins/docs-factory",
-      "description": "Branded document generation with three brand kits (Bluewaves, Wave Artisans, Decathlon) and a PDF rendering engine for production-grade typeset output from markdown",
-      "version": "1.0.3",
+      "description": "Branded document generation with three brand kits (Bluewaves, Wave Artisans, Decathlon), a chart designer for data visualizations, and a PDF rendering engine with SVG support for production-grade typeset output from markdown",
+      "version": "1.1.0",
       "author": {
         "name": "Bluewaves Team",
         "email": "contact@bluewaves.boutique"
@@ -96,7 +96,7 @@
       "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/docs-factory",
       "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
       "license": "MIT",
-      "keywords": ["pdf", "brand-kit", "document-generation", "typography", "design-tokens", "reportlab"],
+      "keywords": ["pdf", "brand-kit", "document-generation", "typography", "design-tokens", "reportlab", "matplotlib", "charts", "data-visualization"],
       "category": "documents"
     }
   ]

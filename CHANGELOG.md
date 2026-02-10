@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-02-10
+
+### Breaking Changes
+
+- **Renamed `fal-media` plugin to `media-factory`** — update install commands from `fal-media@bluewaves-skills` to `media-factory@bluewaves-skills`
+- **Renamed skills**: `gemini-image` → `image-generator`, `gemini-image-edit` → `image-editor`, `veo-image-to-video` → `video-from-image`, `veo-reference-video` → `video-from-reference`, `veo-frames-to-video` → `video-from-frames`
+- **Removed cURL examples** from all media-factory skills — Python `fal_client` is now the only supported approach
+
+### Added
+
+- **`chart-designer` skill** in docs-factory: brand-consistent matplotlib chart generation with 10 chart types (bar, grouped_bar, stacked_bar, horizontal_bar, line, area, pie, donut, scatter, heatmap), `chart_theme.py` brand config loader, and `render_chart.py` CLI renderer
+- **Chart tokens** (`tokens.chart`) in all 3 brand kits: categorical/sequential/diverging color palettes, axis/grid styling, typography mappings referencing brand type_scale and colors
+- **Imagery guidelines** (`tokens.imagery`) in all 3 brand kits: photography style, corner radius, AI prompt templates with grounding references
+- **SVG pre-processing** in PDF Factory: inline and referenced SVGs auto-converted to high-DPI PNG via svglib (no new dependencies)
+- **Image corner radius** support in PDF Factory via Pillow: Decathlon 0pt, Bluewaves 6pt, Wave Artisans 4pt
+- **Python `fal_client` integration** in media-factory: `fal_generate.py` unified generation script and `fal_utils.py` shared utilities (replaces raw cURL)
+- **`install-deps` command** for media-factory: installs `fal-client` package
+- **API key support via `credentials.json`** for Claude.ai standalone ZIP users
+- **`figure`/`figcaption` CSS** in base.css for chart captions
+
+### Fixed
+
+- **pdf-factory** — `_preprocess_figures` now uses regex to handle `<figure>` and `<figcaption>` tags with attributes (e.g. `<figure class="chart">`); previously only matched bare tags
+- **pdf-factory** — `_preprocess_code_blocks` now preserves attributes on `<pre>` and `<code>` tags and strips leading/trailing newlines before `<br/>` conversion to eliminate spurious whitespace
+- **pdf-factory** — `_preprocess_image_widths` uses `re.escape()` on captured width values to prevent latent regex injection
+- **chart-designer** — Legend columns capped at 4 (`ncol=min(len(series_list), 4)`) across bar, horizontal_bar, line, and scatter renderers to prevent horizontal overflow with 5+ series
+
+### Improved
+
+- media-factory skills: queue-based requests via `fal_client.subscribe()`, progress logging via `on_queue_update`, proper error handling with fal_client exception types, timeout support
+- media-factory: timestamped output filenames, platform-aware file opening, `sync_mode` for reliable image delivery, `enable_web_search: true` for style grounding
+- media-factory photographer skills: unified endpoint from `fal-ai/gemini-pro` to `fal-ai/gemini-3-pro-image-preview`, `enable_web_search: true` for photographer style grounding
+- media-factory hooks: credentials file check alongside env var
+
+---
+
 ## [1.9.3] - 2026-02-10
 
 ### Fixed

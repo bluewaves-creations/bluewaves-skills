@@ -13,15 +13,22 @@ bluewaves-skills/
 ├── .claude-plugin/
 │   └── marketplace.json          # Central registry of all plugins
 ├── plugins/
-│   ├── fal-media/                # fal.ai media generation (Gemini/Veo)
+│   ├── media-factory/            # fal.ai media generation (images/videos)
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/             # check-fal-key, generate-image
+│   │   ├── commands/             # check-fal-key, generate-image, install-deps
+│   │   ├── hooks/hooks.json
+│   │   ├── scripts/              # fal_generate.py, fal_utils.py
 │   │   └── skills/
-│   │       ├── gemini-image/SKILL.md
-│   │       ├── gemini-image-edit/SKILL.md
-│   │       ├── veo-image-to-video/SKILL.md
-│   │       ├── veo-reference-video/SKILL.md
-│   │       └── veo-frames-to-video/SKILL.md
+│   │       ├── image-generator/SKILL.md
+│   │       ├── image-editor/SKILL.md
+│   │       ├── video-from-image/SKILL.md
+│   │       ├── video-from-reference/SKILL.md
+│   │       ├── video-from-frames/SKILL.md
+│   │       ├── photographer-lindbergh/SKILL.md
+│   │       ├── photographer-ritts/SKILL.md
+│   │       ├── photographer-testino/SKILL.md
+│   │       ├── photographer-lachapelle/SKILL.md
+│   │       └── photographer-vonunwerth/SKILL.md
 │   ├── epub-generator/           # EPUB ebook generation
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/             # install-deps
@@ -66,7 +73,7 @@ bluewaves-skills/
 │   │       ├── multiplatform-development/SKILL.md
 │   │       ├── combine-migration/SKILL.md
 │   │       └── cloudkit/SKILL.md
-│   ├── docs-factory/              # Branded document generation (4 skills)
+│   ├── docs-factory/              # Branded document generation (5 skills)
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/              # install-deps, generate-pdf
 │   │   ├── hooks/hooks.json
@@ -74,6 +81,7 @@ bluewaves-skills/
 │   │       ├── brand-bluewaves/SKILL.md, references/, assets/
 │   │       ├── brand-wave-artisans/SKILL.md, references/, assets/
 │   │       ├── brand-decathlon/SKILL.md, references/, assets/
+│   │       ├── chart-designer/SKILL.md, references/, scripts/
 │   │       └── pdf-factory/SKILL.md, references/, scripts/, assets/
 │   └── skills-factory/            # Skill creation & cross-platform conversion (3 skills)
 │       ├── .claude-plugin/plugin.json
@@ -143,11 +151,11 @@ bluewaves-skills/
 
 ## Plugin Prerequisites
 
-- **fal-media:** Requires `FAL_KEY` environment variable (fal.ai API key)
+- **media-factory:** Requires `FAL_KEY` environment variable (fal.ai API key), `uv pip install fal-client`
 - **epub-generator:** Requires `uv pip install ebooklib markdown Pillow beautifulsoup4 lxml`
 - **swift-apple-dev:** Requires Xcode 26+ with Swift 6 toolchain
 - **athena:** Python 3.8+ (stdlib only, no additional packages)
-- **docs-factory:** Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2
+- **docs-factory:** Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2, matplotlib, numpy
 - **skills-factory:** `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback for `quick_validate.py`
 
 ## Building
@@ -161,7 +169,7 @@ Generate standalone ZIP files for Claude.ai users (uploads via Settings > Capabi
 bash scripts/build-skill-zips.sh
 
 # Build a single skill
-bash scripts/build-skill-zips.sh gemini-image
+bash scripts/build-skill-zips.sh image-generator
 ```
 
 ZIPs are output to `dist/` (gitignored). Each ZIP contains `skill-name/SKILL.md` plus any `scripts/`, `references/`, and `assets/` directories.
@@ -188,7 +196,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 1.9.3
+Current marketplace version: 2.0.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

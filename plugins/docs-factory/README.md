@@ -1,6 +1,6 @@
 # docs-factory Plugin
 
-Branded document generation with three brand kits and a PDF rendering engine for production-grade typeset output from markdown.
+Branded document generation with three brand kits, a chart designer for data visualizations, and a PDF rendering engine for production-grade typeset output from markdown.
 
 ## Installation
 
@@ -22,6 +22,7 @@ Branded document generation with three brand kits and a PDF rendering engine for
 
 # Or manually with pip
 pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib cssselect2
+pip install matplotlib numpy
 ```
 
 ## Skills Included
@@ -31,6 +32,7 @@ pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib csss
 | **brand-bluewaves** | Brand kit for Bluewaves — Merriweather typography, brown sand primary, teal/red accents |
 | **brand-wave-artisans** | Brand kit for Wave Artisans — Nunito Sans typography, gray-driven minimalist palette |
 | **brand-decathlon** | Brand kit for Decathlon — Inter typography, blue/purple primary, green accent |
+| **chart-designer** | Brand-consistent charts and data visualizations using matplotlib — 10 chart types with automatic brand kit integration |
 | **pdf-factory** | PDF rendering engine — converts markdown to professionally typeset PDF using brand kits |
 
 ## Usage Examples

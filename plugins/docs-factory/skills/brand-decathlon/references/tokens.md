@@ -96,6 +96,54 @@ Used for status, feedback, and categorization across all brands.
 - No rounded corners on any element
 - Accent green (#7AFFA6) only appears on primary blue or dark backgrounds
 
+## Imagery
+
+| Property | Value |
+|----------|-------|
+| Style | Professional reportage |
+| Color treatment | Full-color, natural light |
+| Corner radius | 0pt (no rounded corners) |
+| AI prompt prefix | `authentic sports reportage, natural light, dynamic composition, diverse participants, real-world setting, action photography, no rounded corners` |
+
+**Subjects**: Sport activities, action photography, authentic athletic moments, diverse participants.
+
+**Restrictions**: No extreme situations, no studio photography, no stock-photo poses.
+
+## Charts
+
+### Palette
+
+| Role | Colors |
+|------|--------|
+| Categorical (8) | #3643BA, #7AFFA6, #FF4245, #FFD600, #0091FF, #DB34F2, #FF9230, #00DAC3 |
+| Sequential (7) | #D6D9F2 → #202870 (light-to-dark blue/purple) |
+| Diverging (7) | #FF4245 ↔ #7AFFA6 through #F0F0F0 |
+| Highlight | #7AFFA6 on #212121 |
+
+### Chart Styling
+
+| Element | Property | Value |
+|---------|----------|-------|
+| Axis | Color | #4A4A4A |
+| Axis | Width | 0.8pt |
+| Axis labels | Color | #212121 |
+| Tick labels | Color | #7A7A7A |
+| Grid | Color | #B0B0B0 at 30% opacity |
+| Grid | Style | Dashed (--) |
+| Figure background | Color | #FFFFFF |
+| Plot background | Color | #FFFFFF |
+
+### Chart Typography
+
+| Element | Type scale token | Color role |
+|---------|-----------------|------------|
+| Title | h3 | text-heading |
+| Subtitle | body | text-muted |
+| Axis label | body-sm | text-body |
+| Tick label | caption | text-body |
+| Annotation | caption | text-muted |
+| Legend | caption | text-body |
+
 ## Spacing
 
 ### Base Unit

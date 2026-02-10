@@ -2,10 +2,10 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-1.9.0-blue)
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation, document creation, enterprise-grade Swift development, and skill creation and cross-platform conversion tools.
+A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, enterprise-grade Swift development, and skill creation and cross-platform conversion tools.
 
 ## Installation
 
@@ -47,20 +47,20 @@ Enterprise-grade Apple Swift development skills for iOS 26, macOS Tahoe, visionO
 
 ---
 
-### fal-media
+### media-factory
 
-AI-powered media generation using fal.ai's Gemini and Veo models, plus 5 photographer style skills.
+AI-powered image and video generation using fal.ai with Python fal_client and 5 photographer style skills.
 
 ```bash
-/plugin install fal-media@bluewaves-skills
+/plugin install media-factory@bluewaves-skills
 ```
 
 **10 Skills:**
 
 | Category | Skills |
 |----------|--------|
-| **Image Generation** | `gemini-image`, `gemini-image-edit` |
-| **Video Generation** | `veo-image-to-video`, `veo-reference-video`, `veo-frames-to-video` |
+| **Image Generation** | `image-generator`, `image-editor` |
+| **Video Generation** | `video-from-image`, `video-from-reference`, `video-from-frames` |
 | **Photographer Styles** | `photographer-lindbergh`, `photographer-ritts`, `photographer-testino`, `photographer-lachapelle`, `photographer-vonunwerth` |
 
 **Photographer Styles:**
@@ -70,7 +70,7 @@ AI-powered media generation using fal.ai's Gemini and Veo models, plus 5 photogr
 - **LaChapelle** - Pop surrealism, fluorescent colors, baroque maximalism
 - **von Unwerth** - Playful vintage, film noir, feminine empowerment
 
-**Prerequisites:** Set `FAL_KEY` environment variable in `~/.zshrc`
+**Prerequisites:** `uv pip install fal-client`, set `FAL_KEY` environment variable in `~/.zshrc`
 
 ---
 
@@ -120,25 +120,27 @@ Bidirectional document exchange with the Athena note-taking app. Process `.athen
 
 ### docs-factory
 
-Branded document generation with three brand kits and a PDF rendering engine.
+Branded document generation with three brand kits, a chart designer, and a PDF rendering engine.
 
 ```bash
 /plugin install docs-factory@bluewaves-skills
 ```
 
-**4 Skills:**
+**5 Skills:**
 
 | Category | Skills |
 |----------|--------|
 | **Brand Kits** | `brand-bluewaves`, `brand-wave-artisans`, `brand-decathlon` |
+| **Charts** | `chart-designer` |
 | **PDF Engine** | `pdf-factory` |
 
-- **brand-bluewaves** - Merriweather typography, brown sand primary, teal/red accents
-- **brand-wave-artisans** - Nunito Sans typography, gray-driven minimalist palette
-- **brand-decathlon** - Inter typography, blue/purple primary, green accent
-- **pdf-factory** - Production-grade PDF rendering from markdown using brand kits
+- **brand-bluewaves** - Merriweather typography, brown sand primary, teal/red accents, imagery + chart tokens
+- **brand-wave-artisans** - Nunito Sans typography, gray-driven minimalist palette, B&W imagery + gray charts
+- **brand-decathlon** - Inter typography, blue/purple primary, green accent, imagery + chart tokens
+- **chart-designer** - Brand-consistent matplotlib chart generation with 10 chart types
+- **pdf-factory** - Production-grade PDF rendering from markdown with SVG support and image corner radius
 
-**Prerequisites:** Python 3.8+ with `pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib cssselect2`
+**Prerequisites:** Python 3.8+ with `pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib cssselect2 matplotlib numpy`
 
 ---
 
@@ -176,12 +178,13 @@ Explicit commands you can invoke from the Claude Code prompt. These complement s
 | `/validate-skills` | Validate marketplace skills via skills-ref |
 | `/build-skill-zips` | Build standalone skill ZIP files for Claude.ai users |
 
-### fal-media
+### media-factory
 
 | Command | Description |
 |---------|-------------|
-| `/fal-media:check-fal-key` | Check if FAL_KEY is set and test API connectivity |
-| `/fal-media:generate-image <prompt>` | Quick image generation from a text prompt |
+| `/media-factory:check-fal-key` | Check if FAL_KEY is set and test API connectivity |
+| `/media-factory:generate-image <prompt>` | Quick image generation from a text prompt |
+| `/media-factory:install-deps` | Install fal-client Python package |
 
 ### epub-generator
 
@@ -230,7 +233,7 @@ Individual skills are available as standalone ZIP files for **Claude.ai** (web/d
 3. Click **Upload skill** and select the downloaded ZIP
 4. Toggle the skill **ON**
 
-Each ZIP contains a single skill with its instructions. All 42 skills are available individually.
+Each ZIP contains a single skill with its instructions. All 43 skills are available individually.
 
 > **Note:** Plugin hooks (API key validation, Xcode version checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
 
@@ -264,9 +267,12 @@ Each ZIP contains a single skill with its instructions. All 42 skills are availa
 "Package these meeting notes for Athena"
 "Turn this conversation into Athena notes"
 
-# Generate branded PDF
+# Generate branded PDF with charts
 "Generate a PDF report for Bluewaves from this markdown"
-"Create a Decathlon-branded proposal from proposal.md"
+"Create a Decathlon-branded proposal with revenue charts"
+
+# Create a chart
+"Create a bar chart of quarterly revenue using the Decathlon brand"
 
 # Create a skill
 "Help me create a skill for processing CSV files"
@@ -314,7 +320,7 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
   },
   "enabledPlugins": {
     "swift-apple-dev@bluewaves-skills": true,
-    "fal-media@bluewaves-skills": true,
+    "media-factory@bluewaves-skills": true,
     "epub-generator@bluewaves-skills": true,
     "athena@bluewaves-skills": true,
     "skills-factory@bluewaves-skills": true,
@@ -357,10 +363,10 @@ If using a private repository, use the SSH URL:
 
 - Claude Code CLI
 - For swift-apple-dev: Xcode 26+ with Swift 6
-- For fal-media: fal.ai API key (`FAL_KEY`)
+- For media-factory: fal.ai API key (`FAL_KEY`), `fal-client` Python package
 - For epub-generator: Python 3.8+ with ebooklib, markdown, Pillow, beautifulsoup4, lxml, PyYAML
 - For athena: Python 3.8+ (stdlib only, no additional packages)
-- For docs-factory: Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2
+- For docs-factory: Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2, matplotlib, numpy
 - For skills-factory: `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback
 
 ## License
