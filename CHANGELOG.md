@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-02-10
+
+### Removed
+
+- **`swift-apple-dev` plugin** (22 skills, 4 agents) — Apple has integrated Claude Code with Xcode and provides complete Swift documentation access via MCP, making this plugin redundant. Users who need Swift development support should use Xcode's built-in Claude Code integration instead.
+
+### Changed
+
+- Marketplace version bumped to 2.1.0
+- Total: 5 plugins, 21 skills
+
+---
+
 ## [2.0.0] - 2026-02-10
 
 ### Breaking Changes

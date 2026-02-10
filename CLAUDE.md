@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Bluewaves Skills is a Claude Code plugin marketplace featuring AI-powered media generation, document creation, and Swift development skills. It contains production-grade plugins that extend Claude's capabilities.
+Bluewaves Skills is a Claude Code plugin marketplace featuring AI-powered media generation, document creation, and skill creation and cross-platform conversion tools. It contains production-grade plugins that extend Claude's capabilities.
 
 ## Architecture
 
@@ -41,38 +41,6 @@ bluewaves-skills/
 │   │   └── skills/
 │   │       ├── athena-work/SKILL.md, references/
 │   │       └── athena-package/SKILL.md, references/, scripts/
-│   ├── swift-apple-dev/          # Apple Swift development (22 skills, 4 agents)
-│   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/             # check-environment
-│   │   ├── hooks/hooks.json
-│   │   ├── agents/
-│   │   │   ├── swift-architect.md
-│   │   │   ├── swift-designer.md
-│   │   │   ├── swift-qa.md
-│   │   │   └── swift-performance.md
-│   │   └── skills/
-│   │       ├── swift-fundamentals/SKILL.md
-│   │       ├── swift-concurrency/SKILL.md
-│   │       ├── swift-testing/SKILL.md
-│   │       ├── liquid-glass-design/SKILL.md
-│   │       ├── swiftui-patterns/SKILL.md
-│   │       ├── swiftui-colors-modifiers/SKILL.md
-│   │       ├── animations-transitions/SKILL.md
-│   │       ├── navigation-menus/SKILL.md
-│   │       ├── text-rich-content/SKILL.md
-│   │       ├── swiftdata-persistence/SKILL.md
-│   │       ├── swiftdata-migration/SKILL.md
-│   │       ├── foundation-models/SKILL.md
-│   │       ├── app-intents/SKILL.md
-│   │       ├── widgets-live-activities/SKILL.md
-│   │       ├── spotlight-discovery/SKILL.md
-│   │       ├── transferable-sharing/SKILL.md
-│   │       ├── performance-profiling/SKILL.md
-│   │       ├── macos-development/SKILL.md
-│   │       ├── visionos-spatial/SKILL.md
-│   │       ├── multiplatform-development/SKILL.md
-│   │       ├── combine-migration/SKILL.md
-│   │       └── cloudkit/SKILL.md
 │   ├── docs-factory/              # Branded document generation (5 skills)
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/              # install-deps, generate-pdf
@@ -153,7 +121,6 @@ bluewaves-skills/
 
 - **media-factory:** Requires `FAL_KEY` environment variable (fal.ai API key), `uv pip install fal-client`
 - **epub-generator:** Requires `uv pip install ebooklib markdown Pillow beautifulsoup4 lxml`
-- **swift-apple-dev:** Requires Xcode 26+ with Swift 6 toolchain
 - **athena:** Python 3.8+ (stdlib only, no additional packages)
 - **docs-factory:** Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2, matplotlib, numpy
 - **skills-factory:** `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback for `quick_validate.py`
@@ -196,7 +163,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 2.0.0
+Current marketplace version: 2.1.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

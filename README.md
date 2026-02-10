@@ -2,10 +2,10 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.1.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, enterprise-grade Swift development, and skill creation and cross-platform conversion tools.
+A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools.
 
 ## Installation
 
@@ -16,36 +16,6 @@ Add this marketplace to Claude Code:
 ```
 
 ## Available Plugins
-
-### swift-apple-dev
-
-Enterprise-grade Apple Swift development skills for iOS 26, macOS Tahoe, visionOS, and cross-platform apps.
-
-```bash
-/plugin install swift-apple-dev@bluewaves-skills
-```
-
-**22 Skills organized by category:**
-
-| Category | Skills |
-|----------|--------|
-| **Core Swift** | `swift-fundamentals`, `swift-concurrency`, `swift-testing` |
-| **SwiftUI & Design** | `liquid-glass-design`, `swiftui-patterns`, `swiftui-colors-modifiers`, `animations-transitions` |
-| **Data & AI** | `swiftdata-persistence`, `swiftdata-migration`, `foundation-models` |
-| **Cloud & Sync** | `cloudkit` |
-| **Navigation & Content** | `navigation-menus`, `text-rich-content`, `app-intents`, `widgets-live-activities`, `spotlight-discovery`, `transferable-sharing` |
-| **Platform-Specific** | `macos-development`, `visionos-spatial`, `multiplatform-development` |
-| **Migration & Performance** | `combine-migration`, `performance-profiling` |
-
-**4 Specialized Agents:**
-- `swift-architect` - Architecture design and code review
-- `swift-designer` - UI/UX review and HIG compliance
-- `swift-qa` - Quality assurance and test strategy
-- `swift-performance` - Profiling with Instruments
-
-**Prerequisites:** Xcode 26+ with Swift 6 toolchain
-
----
 
 ### media-factory
 
@@ -192,12 +162,6 @@ Explicit commands you can invoke from the Claude Code prompt. These complement s
 |---------|-------------|
 | `/epub-generator:install-deps` | Install Python dependencies (uses `uv` by default, `--pip` for pip) |
 
-### swift-apple-dev
-
-| Command | Description |
-|---------|-------------|
-| `/swift-apple-dev:check-environment` | Audit Xcode, Swift, SDKs, and simulators |
-
 ### athena
 
 | Command | Description |
@@ -233,20 +197,15 @@ Individual skills are available as standalone ZIP files for **Claude.ai** (web/d
 3. Click **Upload skill** and select the downloaded ZIP
 4. Toggle the skill **ON**
 
-Each ZIP contains a single skill with its instructions. All 43 skills are available individually.
+Each ZIP contains a single skill with its instructions. All 21 skills are available individually.
 
-> **Note:** Plugin hooks (API key validation, Xcode version checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
+> **Note:** Plugin hooks (API key validation, dependency checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
 
 ---
 
 ## Usage Examples
 
 ```
-# Swift development
-"Create a SwiftUI view with Liquid Glass design"
-"Help me migrate from CoreData to SwiftData"
-"Profile my app for memory leaks"
-
 # Generate an image
 "Create a 4K image of a cyberpunk city at night"
 
@@ -296,7 +255,7 @@ This pulls the latest changes from the repository.
 
 Remove a plugin:
 ```bash
-/plugin uninstall swift-apple-dev@bluewaves-skills
+/plugin uninstall media-factory@bluewaves-skills
 ```
 
 Remove the marketplace entirely:
@@ -319,7 +278,6 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
     }
   },
   "enabledPlugins": {
-    "swift-apple-dev@bluewaves-skills": true,
     "media-factory@bluewaves-skills": true,
     "epub-generator@bluewaves-skills": true,
     "athena@bluewaves-skills": true,
@@ -349,8 +307,8 @@ Then restart your terminal or run `source ~/.zshrc`.
 ### "Plugin not loading"
 Try reinstalling:
 ```bash
-/plugin uninstall swift-apple-dev@bluewaves-skills
-/plugin install swift-apple-dev@bluewaves-skills
+/plugin uninstall media-factory@bluewaves-skills
+/plugin install media-factory@bluewaves-skills
 ```
 
 ### "HTTPS authentication failed"
@@ -362,7 +320,6 @@ If using a private repository, use the SSH URL:
 ## Requirements
 
 - Claude Code CLI
-- For swift-apple-dev: Xcode 26+ with Swift 6
 - For media-factory: fal.ai API key (`FAL_KEY`), `fal-client` Python package
 - For epub-generator: Python 3.8+ with ebooklib, markdown, Pillow, beautifulsoup4, lxml, PyYAML
 - For athena: Python 3.8+ (stdlib only, no additional packages)
