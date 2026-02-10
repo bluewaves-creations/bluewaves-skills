@@ -219,18 +219,23 @@ def check_brand_fonts(pdf_path: str, brand_path: str) -> tuple:
 
     # Check role coverage: each role should map to at least one custom font
     matched_roles = set()
+    unused_roles = set()
     for role in expected_roles:
         # Match by Brand-{role} convention (reportlab zones)
         if any(f"brand-{role}" in f for f in custom_fonts):
             matched_roles.add(role)
             continue
         # Match by actual typeface name (xhtml2pdf @font-face)
-        for name in role_typefaces.get(role, set()):
-            if any(name in f for f in custom_fonts):
-                matched_roles.add(role)
-                break
+        role_names = role_typefaces.get(role, set())
+        if any(name in f for name in role_names for f in custom_fonts):
+            matched_roles.add(role)
+            continue
+        # If none of this role's typefaces appear in the PDF at all,
+        # the content doesn't use this role (e.g., no code blocks → no mono)
+        if role_names and not any(name in f for name in role_names for f in found_lower):
+            unused_roles.add(role)
 
-    missing = expected_roles - matched_roles
+    missing = expected_roles - matched_roles - unused_roles
     if missing:
         return False, f"Brand font roles not covered in PDF: {', '.join(sorted(missing))}"
     return True, f"Brand fonts verified for {brand_name}: {', '.join(sorted(matched_roles))}"

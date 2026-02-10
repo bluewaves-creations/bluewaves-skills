@@ -2,7 +2,7 @@
   "name": "bluewaves-skills",
   "metadata": {
     "description": "AI-powered media generation, Athena document exchange, branded document generation, document creation, Swift development, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "1.9.2"
+    "version": "1.9.3"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -88,7 +88,7 @@
       "name": "docs-factory",
       "source": "./plugins/docs-factory",
       "description": "Branded document generation with three brand kits (Bluewaves, Wave Artisans, Decathlon) and a PDF rendering engine for production-grade typeset output from markdown",
-      "version": "1.0.0",
+      "version": "1.0.3",
       "author": {
         "name": "Bluewaves Team",
         "email": "contact@bluewaves.boutique"

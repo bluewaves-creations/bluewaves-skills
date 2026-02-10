@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.3] - 2026-02-10
+
+### Fixed
+
+- **docs-factory** — Forgive unused font roles in pdf-factory validator. When a role's font (e.g., `mono`/Fira Code) isn't embedded because the PDF content doesn't use it (no code blocks), the validator no longer flags it as missing. Added `unused_roles` set that detects when none of a role's typeface names appear anywhere in the PDF fonts, treating the role as unused rather than unmatched.
+
+## [1.9.2] - 2026-02-09
+
+### Fixed
+
+- **docs-factory** — Fixed false-negative font-role validation in `validate_output.py`. The brand fonts check incorrectly flagged fonts as missing because xhtml2pdf embeds fonts by their internal typeface name (e.g. `Inter-Bold`) rather than the role-based registration name (e.g. `Brand-heading-bold`). Added `_read_ttf_names()` helper that reads TTF name tables (stdlib `struct`, no new dependencies) to build a role-to-typeface mapping, matching embedded PDF font names against expected typeface names. Removed the broad `len(custom_fonts) >= len(expected_roles)` fallback that masked the issue.
+
 ## [1.9.1] - 2026-02-09
 
 ### Changed
