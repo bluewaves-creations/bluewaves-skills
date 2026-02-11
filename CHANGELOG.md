@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-02-11
+
+### Changed
+
+- **docs-factory (chart-designer)** — Stripped to design-system core. Removed `render_chart.py` JSON CLI renderer (261 lines, 10 hardcoded chart type functions) that constrained rather than empowered. The skill now follows pdf-factory's philosophy: provide the design system (`load_theme()`, `theme.apply()`, named figure sizes), get out of the way. Claude writes standard matplotlib code; the theme handles brand colors, typography, and sizing.
+- **docs-factory (chart-designer)** — Rewrote SKILL.md as Python-first design-system documentation with How It Works (3 value-props), compact API Reference, and references to the chart-types cookbook.
+- **docs-factory (chart-designer)** — Rewrote `references/chart-types.md` as pure matplotlib cookbook: removed all JSON spec blocks, added complete runnable Python examples for all 10 chart types within `with theme.apply():`, added practical tips per chart type.
+- **docs-factory (chart-designer)** — Cleaned up `chart_theme.py`: removed CLI `main()` function and `if __name__` block (~25 lines). Public API unchanged: `load_theme()`, `ChartTheme.apply()`, `BrandPalette`, `FIGURE_SIZES`.
+
+### Removed
+
+- **docs-factory (chart-designer)** — `scripts/render_chart.py` deleted entirely. The JSON spec parser, 10 chart renderer functions, and CLI dispatcher are no longer needed.
+
+---
+
 ## [2.1.2] - 2026-02-11
 
 ### Fixed

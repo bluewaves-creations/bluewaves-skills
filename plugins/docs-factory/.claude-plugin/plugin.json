@@ -1,7 +1,7 @@
 {
   "name": "docs-factory",
-  "version": "1.1.0",
-  "description": "Branded document generation with three brand kits, a chart designer for data visualizations, and a PDF rendering engine for production-grade typeset output from markdown",
+  "version": "1.2.0",
+  "description": "Branded document generation with three brand kits, a chart design system for data visualizations, and a PDF rendering engine for production-grade typeset output from markdown",
   "author": {
     "name": "Bluewaves Team",
     "email": "contact@bluewaves.boutique"

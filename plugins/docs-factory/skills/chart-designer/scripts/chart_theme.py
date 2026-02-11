@@ -4,15 +4,12 @@
 Reads tokens.chart and tokens.colors from a brand kit's manifest.json
 and produces a ready-to-apply matplotlib configuration.
 
-Usage as library:
+Usage:
     from chart_theme import load_theme
     theme = load_theme(brand_path="path/to/brand-decathlon")
     with theme.apply():
         fig, ax = plt.subplots(figsize=theme.sizes["full-width"])
         ax.bar(...)
-
-Usage as CLI (info mode):
-    python chart_theme.py --brand path/to/brand-decathlon --info
 """
 import json
 import os
@@ -255,30 +252,3 @@ def load_theme(brand_path: Optional[str] = None, dpi: int = 200) -> ChartTheme:
         dpi=dpi,
         brand_name=brand_name,
     )
-
-
-def main():
-    """CLI entry point for theme inspection."""
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Inspect brand chart theme")
-    parser.add_argument("--brand", default=None, help="Path to brand kit directory (omit for defaults)")
-    parser.add_argument("--info", action="store_true", help="Print theme info")
-    parser.add_argument("--dpi", type=int, default=200, help="Output DPI")
-    args = parser.parse_args()
-
-    theme = load_theme(args.brand, dpi=args.dpi)
-
-    if args.info:
-        print(f"Brand: {theme.brand_name}")
-        print(f"DPI: {theme.dpi}")
-        print(f"Categorical colors ({len(theme.palette.categorical)}): {theme.palette.categorical}")
-        print(f"Sequential colors ({len(theme.palette.sequential)}): {theme.palette.sequential}")
-        print(f"Diverging colors ({len(theme.palette.diverging)}): {theme.palette.diverging}")
-        print(f"Highlight: {theme.palette.highlight} on {theme.palette.highlight_contrast}")
-        print(f"Figure sizes: {list(theme.sizes.keys())}")
-        print(f"rcParams keys: {len(theme.rcparams)}")
-
-
-if __name__ == "__main__":
-    main()

@@ -1,18 +1,20 @@
 ---
 name: chart-designer
 description: >
-  Brand-consistent chart and data visualization generation using matplotlib.
-  Use when the user asks to create charts, graphs, plots, data visualizations,
-  or any visual representation of data. Supports 10 chart types with automatic
-  brand kit integration for colors, typography, and sizing. Pairs with brand-*
-  kits for branded output and pdf-factory for PDF embedding.
+  Brand-consistent chart design system for matplotlib. Provides load_theme(),
+  theme.apply(), and named figure sizes — brand guardrails that get out of
+  the way. Use when the user asks to create charts, graphs, plots, data
+  visualizations, or any visual representation of data. Standard matplotlib
+  code works as-is; the theme handles colors, typography, and sizing. Pairs
+  with brand-* kits for branded output and pdf-factory for PDF embedding.
 allowed-tools: Bash, Read, Write
 license: MIT
 compatibility: Python 3.8+ with matplotlib, numpy
 ---
 # Chart Designer
 
-Generate brand-consistent charts and data visualizations using matplotlib.
+A design-system for matplotlib charts. You get brand colors, typography, and
+named figure sizes — then write standard matplotlib code for everything else.
 
 ## Dependencies
 
@@ -21,8 +23,6 @@ uv pip install matplotlib numpy cycler
 ```
 
 ## Quick Start
-
-### Python API (recommended)
 
 ```python
 import sys; sys.path.insert(0, "scripts")
@@ -40,61 +40,66 @@ with theme.apply():
     plt.close()
 ```
 
-### JSON CLI (alternative)
+## How It Works
 
-```bash
-python3 scripts/render_chart.py \
-  --spec chart-spec.json \
-  --brand path/to/brand-decathlon \
-  --output chart.png
+### 1. `load_theme()` — Load brand tokens
+
+```python
+from chart_theme import load_theme
+
+theme = load_theme(brand_path="path/to/brand-decathlon")
+# Reads manifest.json → tokens.chart → palette, typography, axis, grid
+# Without a brand kit, returns sensible defaults.
 ```
 
-JSON spec format:
+### 2. `theme.apply()` — Activate brand rcParams
 
-```json
-{
-  "type": "bar",
-  "title": "Revenue by Quarter",
-  "subtitle": "FY 2026",
-  "size": "full-width",
-  "x_label": "Quarter",
-  "y_label": "Revenue ($M)",
-  "data": {
-    "categories": ["Q1", "Q2", "Q3", "Q4"],
-    "series": [
-      {"name": "Revenue", "values": [120, 150, 180, 210]}
-    ]
-  }
-}
+```python
+with theme.apply():
+    fig, ax = plt.subplots(...)
+    # Inside this block, matplotlib uses brand fonts, colors, grid style.
+    # All standard matplotlib code works — bar, plot, scatter, imshow, etc.
+    fig.savefig("output.png")
+# Outside the block, rcParams are restored to previous values.
 ```
 
-## Brand Integration
+### 3. `theme.sizes` — Named figure dimensions
 
-The theme loader reads `tokens.chart` from a brand kit's `manifest.json`:
+```python
+fig, ax = plt.subplots(figsize=theme.sizes["full-width"])
+```
 
-1. **Colors** — categorical, sequential, diverging palettes from `tokens.chart.palette`
-2. **Typography** — font sizes and colors resolved from `tokens.type_scale` + `tokens.colors`
-3. **Axis/Grid** — styling from `tokens.chart.axis` and `tokens.chart.grid`
-4. **Fonts** — TTF files registered with matplotlib from `assets/fonts/`
+Pre-defined sizes optimized for A4 PDF integration. See the table below.
 
-Without a brand kit, sensible defaults are used.
+## API Reference
 
-## Chart Types
+### `load_theme(brand_path=None, dpi=200) → ChartTheme`
 
-| Type | JSON `type` | Best for |
-|------|-------------|----------|
-| Bar | `bar` | Comparing categories |
-| Grouped bar | `grouped_bar` | Multi-series category comparison |
-| Stacked bar | `stacked_bar` | Part-to-whole by category |
-| Horizontal bar | `horizontal_bar` | Long category labels |
-| Line | `line` | Trends over time |
-| Area | `area` | Volume trends over time |
-| Pie | `pie` | Simple part-to-whole (≤6 slices) |
-| Donut | `donut` | Part-to-whole with center stat |
-| Scatter | `scatter` | Correlation between variables |
-| Heatmap | `heatmap` | Matrix/grid intensity |
+Loads a brand kit's `manifest.json` and returns a configured theme.
+Pass `None` for sensible defaults without a brand kit.
 
-For complete code templates, see [references/chart-types.md](references/chart-types.md).
+### `ChartTheme`
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `palette` | `BrandPalette` | Color palettes (categorical, sequential, diverging) |
+| `rcparams` | `dict` | matplotlib rcParams dict (applied by `theme.apply()`) |
+| `sizes` | `dict` | Named figure size tuples — see table below |
+| `dpi` | `int` | Output resolution (default 200) |
+| `brand_name` | `str` | Brand name from manifest |
+
+### `BrandPalette`
+
+| Attribute / Method | Description |
+|--------------------|-------------|
+| `categorical` | `list[str]` — 8 hex colors for discrete series |
+| `sequential` | `list[str]` — 7 hex colors light→dark |
+| `diverging` | `list[str]` — 7 hex colors neg↔pos |
+| `highlight` | `str` — call-out emphasis color |
+| `highlight_contrast` | `str` — text on highlight background |
+| `categorical_colormap()` | `ListedColormap` from categorical palette |
+| `sequential_colormap()` | `LinearSegmentedColormap` from sequential palette |
+| `diverging_colormap()` | `LinearSegmentedColormap` from diverging palette |
 
 ## Figure Sizes
 
@@ -106,7 +111,7 @@ Named sizes optimized for A4 PDF integration (25mm margins):
 | `full-width-tall` | 6.29" × 5.24" | Complex charts needing height |
 | `half-width` | 3.0" × 2.5" | Side-by-side pairs |
 | `two-thirds` | 4.19" × 3.0" | Medium placement |
-| `square` | 4.0" × 4.0" | Pie, donut |
+| `square` | 4.0" × 4.0" | Pie, donut, heatmap |
 | `spark` | 3.0" × 1.0" | Inline sparkline |
 
 ## PDF Factory Integration
@@ -136,6 +141,7 @@ After generating any chart, open the output image and verify:
 5. **Contextual fit** — Chart type suits the data story (don't use pie for > 6 categories; use horizontal bar for long labels)
 6. **Brand consistent** — When using a brand kit, chart uses brand palette and typography
 
-## Token Reference
+## References
 
-For the full `tokens.chart` schema, see [references/chart-tokens.md](references/chart-tokens.md).
+- [Chart type cookbook](references/chart-types.md) — Complete matplotlib examples for every chart type
+- [Chart token schema](references/chart-tokens.md) — Full `tokens.chart` manifest.json specification

@@ -2,7 +2,7 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-2.1.2-blue)
+![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools.
@@ -107,7 +107,7 @@ Branded document generation with three brand kits, a chart designer, and a PDF r
 - **brand-bluewaves** - Merriweather typography, brown sand primary, teal/red accents, imagery + chart tokens
 - **brand-wave-artisans** - Nunito Sans typography, gray-driven minimalist palette, B&W imagery + gray charts
 - **brand-decathlon** - Inter typography, blue/purple primary, green accent, imagery + chart tokens
-- **chart-designer** - Brand-consistent matplotlib chart generation with 10 chart types
+- **chart-designer** - Brand-consistent chart design system for matplotlib (load_theme, apply, named sizes)
 - **pdf-factory** - Production-grade PDF rendering from markdown with SVG support and image corner radius
 
 **Prerequisites:** Python 3.8+ with `pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib cssselect2 matplotlib numpy`
