@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-02-11
+
+### Added
+
+#### web-factory v1.0.0 (new plugin)
+- **Hono gateway Worker** — Single Cloudflare Worker on `*.bluewaves-athena.app` serving password-protected branded websites from R2 with HMAC cookie-based authentication
+- **Admin API** (`/_api/`) — RESTful endpoints for publishing, updating, listing, deleting sites, and rotating passwords. Bearer token auth with support for super-admin secret and per-user API keys stored in KV
+- **`site-factory` skill** — Build branded single-page HTML from markdown using docs-factory brand kits. Maps design tokens to CSS custom properties, generates responsive layout with header, TOC, content, attachments, and footer
+- **`site-publisher` skill** — Publish and manage sites via Python HTTP client (`site_api.py`, stdlib-only). Works in both Claude Code and Claude.ai standalone ZIPs
+- **Python HTTP client** (`site_api.py`) — Stdlib-only admin API client supporting publish, update, list, info, delete, and rotate-password operations
+- **Credential utilities** (`cf_utils.py`) — Dual-mode credential resolution (credentials.json for Claude.ai, env vars for Claude Code) for both gateway and Cloudflare API access
+- **6 slash commands:** `/web-factory:install-deps`, `/web-factory:check-cf-key`, `/web-factory:setup-gateway`, `/web-factory:create-api-key`, `/web-factory:list-api-keys`, `/web-factory:revoke-api-key`
+- **PreToolUse hook** — Validates credentials before wrangler/site_api commands
+- **Passphrase generator** — System-generated 4-word passphrases (e.g. `coral-sunset-tide-2026`) using CSPRNG
+- **Branded login page** — Clean, mobile-friendly form with CSS custom properties from brand kit tokens
+
+#### Marketplace
+- Marketplace version bumped to 2.3.0
+- Total: 6 plugins, 23 skills
+
+---
+
 ## [2.2.0] - 2026-02-11
 
 ### Changed

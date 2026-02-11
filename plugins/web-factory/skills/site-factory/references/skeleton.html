@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}} — {{BRAND_NAME}}</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── CSS Custom Properties (populated from brand manifest) ── */
+    :root {
+      /* Colors */
+      --color-heading: {{text-heading}};
+      --color-body: {{text-body}};
+      --color-muted: {{text-muted}};
+      --color-inverse: {{text-inverse}};
+      --bg-page: {{background-page}};
+      --bg-alt: {{background-alt}};
+      --border: {{border-default}};
+      --border-strong: {{border-strong}};
+      --color-link: {{link}};
+      --color-highlight: {{highlight}};
+
+      /* Typography (pt → px: multiply by 1.333) */
+      --font-size-h1: {{h1-size-px}};
+      --font-size-h2: {{h2-size-px}};
+      --font-size-h3: {{h3-size-px}};
+      --font-size-h4: {{h4-size-px}};
+      --font-size-body: {{body-size-px}};
+      --font-size-small: {{body-sm-size-px}};
+      --font-size-code: {{code-size-px}};
+      --line-height-body: 1.5;
+
+      /* Spacing */
+      --border-radius: {{corner-radius-px}};
+    }
+
+    /* ── Font Faces ── */
+    @font-face {
+      font-family: "Brand-Heading";
+      src: url("assets/fonts/heading-bold.ttf") format("truetype");
+      font-weight: 700;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Brand-Body";
+      src: url("assets/fonts/body.ttf") format("truetype");
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Brand-Body";
+      src: url("assets/fonts/body-bold.ttf") format("truetype");
+      font-weight: 700;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Brand-Body";
+      src: url("assets/fonts/body-italic.ttf") format("truetype");
+      font-weight: 400;
+      font-style: italic;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Brand-Mono";
+      src: url("assets/fonts/mono.ttf") format("truetype");
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Brand-Body", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-body);
+      color: var(--color-body);
+      background: var(--bg-page);
+    }
+
+    /* ── Layout Grid ── */
+    .page {
+      display: grid;
+      grid-template-columns: 240px 1fr 240px;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "header  header  header"
+        "nav     main    aside"
+        "footer  footer  footer";
+      min-height: 100vh;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    header {
+      grid-area: header;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    header .logo { height: 40px; width: auto; }
+    header h1 {
+      font-family: "Brand-Heading", serif;
+      font-size: var(--font-size-h1);
+      color: var(--color-heading);
+      line-height: 1.15;
+    }
+
+    /* ── Navigation (TOC) ── */
+    nav {
+      grid-area: nav;
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    nav h2 {
+      font-family: "Brand-Heading", serif;
+      font-size: var(--font-size-small);
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    nav ul { list-style: none; }
+    nav li { margin-bottom: 0.375rem; }
+    nav a {
+      color: var(--color-body);
+      text-decoration: none;
+      font-size: var(--font-size-small);
+      transition: color 0.15s;
+    }
+    nav a:hover { color: var(--color-link); }
+    nav li.toc-h3 { padding-left: 1rem; }
+
+    /* ── Main Content ── */
+    main {
+      grid-area: main;
+      padding: 2rem 2.5rem;
+      max-width: 720px;
+    }
+    main h2 {
+      font-family: "Brand-Heading", serif;
+      font-size: var(--font-size-h2);
+      color: var(--color-heading);
+      margin: 2.5rem 0 1rem;
+      scroll-margin-top: 1rem;
+    }
+    main h3 {
+      font-family: "Brand-Heading", serif;
+      font-size: var(--font-size-h3);
+      color: var(--color-heading);
+      margin: 2rem 0 0.75rem;
+      scroll-margin-top: 1rem;
+    }
+    main h4 {
+      font-family: "Brand-Heading", serif;
+      font-size: var(--font-size-h4);
+      color: var(--color-heading);
+      margin: 1.5rem 0 0.5rem;
+    }
+    main p { margin-bottom: 1rem; }
+    main a { color: var(--color-link); }
+    main img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--border-radius);
+      margin: 1rem 0;
+    }
+    main ul, main ol { margin: 0 0 1rem 1.5rem; }
+    main li { margin-bottom: 0.25rem; }
+    main blockquote {
+      border-left: 3px solid var(--color-highlight);
+      padding: 0.75rem 1.25rem;
+      margin: 1rem 0;
+      background: var(--bg-alt);
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+    main pre {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    main code {
+      font-family: "Brand-Mono", "SF Mono", Menlo, monospace;
+      font-size: var(--font-size-code);
+    }
+    main :not(pre) > code {
+      background: var(--bg-alt);
+      padding: 0.15em 0.35em;
+      border-radius: 3px;
+    }
+    main table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    main th, main td {
+      text-align: left;
+      padding: 0.625rem 0.875rem;
+      border-bottom: 1px solid var(--border);
+    }
+    main th {
+      font-weight: 700;
+      background: var(--bg-alt);
+    }
+
+    /* ── Aside (Attachments) ── */
+    aside {
+      grid-area: aside;
+      padding: 2rem 1.5rem;
+    }
+    aside h2 {
+      font-family: "Brand-Heading", serif;
+      font-size: var(--font-size-small);
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    aside ul { list-style: none; }
+    aside li { margin-bottom: 0.5rem; }
+    aside a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-link);
+      text-decoration: none;
+      font-size: var(--font-size-small);
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      transition: background 0.15s;
+    }
+    aside a:hover { background: var(--bg-alt); }
+
+    /* ── Footer ── */
+    footer {
+      grid-area: footer;
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: var(--font-size-small);
+      color: var(--color-muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .page {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "header"
+          "nav"
+          "main"
+          "aside"
+          "footer";
+      }
+      nav {
+        position: static;
+        max-height: none;
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 1.5rem;
+      }
+      main { padding: 1.5rem; max-width: none; }
+      aside {
+        border-top: 1px solid var(--border);
+        padding: 1.5rem;
+      }
+    }
+
+    /* ── Print ── */
+    @media print {
+      .page { display: block; }
+      nav, aside { display: none; }
+      main { max-width: none; padding: 0; }
+      header { border-bottom: 2px solid var(--color-heading); }
+      footer { border-top: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <img class="logo" src="assets/images/logo.svg" alt="{{BRAND_NAME}}">
+      <h1>{{TITLE}}</h1>
+    </header>
+
+    <nav>
+      <h2>Contents</h2>
+      <ul>
+        <!-- Auto-generated TOC from H2/H3 headings -->
+        {{TOC_ITEMS}}
+      </ul>
+    </nav>
+
+    <main>
+      {{CONTENT}}
+    </main>
+
+    <aside>
+      <h2>Attachments</h2>
+      <ul>
+        <!-- Download links for attached files -->
+        {{ATTACHMENT_ITEMS}}
+      </ul>
+    </aside>
+
+    <footer>
+      {{BRAND_NAME}} &middot; {{DATE}}
+    </footer>
+  </div>
+</body>
+</html>

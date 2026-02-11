@@ -2,7 +2,7 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-2.2.0-blue)
+![Version](https://img.shields.io/badge/version-2.3.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools.
@@ -137,6 +137,30 @@ Skill creation, validation, and cross-platform conversion tools for Agent Skills
 
 ---
 
+### web-factory
+
+Password-protected branded websites on Cloudflare. A Hono gateway Worker serves sites from R2 with HMAC cookie auth and an admin API.
+
+```bash
+/plugin install web-factory@bluewaves-skills
+```
+
+**2 Skills:**
+
+| Category | Skills |
+|----------|--------|
+| **Site Building** | `site-factory` |
+| **Site Management** | `site-publisher` |
+
+- **site-factory** - Build branded single-page HTML from markdown using docs-factory brand kits
+- **site-publisher** - Publish/manage password-protected sites via admin API
+
+URL pattern: `https://{brand}.bluewaves-athena.app/{site-name}/`
+
+**Prerequisites:** bun + wrangler for gateway deployment, `WEB_FACTORY_ADMIN_TOKEN` or `credentials.json` for publishing, Python 3.8+ (stdlib only for site_api.py)
+
+---
+
 ## Slash Commands
 
 Explicit commands you can invoke from the Claude Code prompt. These complement skills (which trigger automatically).
@@ -184,6 +208,17 @@ Explicit commands you can invoke from the Claude Code prompt. These complement s
 | `/skills-factory:validate-skill <path>` | Validate a skill folder |
 | `/skills-factory:package-skill <path> [output-dir]` | Package a skill into a `.skill` ZIP |
 
+### web-factory
+
+| Command | Description |
+|---------|-------------|
+| `/web-factory:install-deps` | Install Worker dependencies (`bun install`) |
+| `/web-factory:check-cf-key` | Validate Cloudflare and gateway credentials |
+| `/web-factory:setup-gateway` | One-time: deploy Worker + create R2/KV + DNS |
+| `/web-factory:create-api-key` | Generate a user API key for the admin API |
+| `/web-factory:list-api-keys` | List registered API key users |
+| `/web-factory:revoke-api-key` | Revoke a user's API key |
+
 ---
 
 ## Use Without Claude Code
@@ -197,7 +232,7 @@ Individual skills are available as standalone ZIP files for **Claude.ai** (web/d
 3. Click **Upload skill** and select the downloaded ZIP
 4. Toggle the skill **ON**
 
-Each ZIP contains a single skill with its instructions. All 21 skills are available individually.
+Each ZIP contains a single skill with its instructions. All 23 skills are available individually.
 
 > **Note:** Plugin hooks (API key validation, dependency checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
 
@@ -239,6 +274,12 @@ Each ZIP contains a single skill with its instructions. All 21 skills are availa
 # Convert a skill to other platforms
 "Convert my pdf-processor skill to a Gemini Gem"
 "Adapt this skill for use as a Custom GPT"
+
+# Build and publish a branded website
+"Create a branded website from this markdown for Bluewaves"
+"Publish the site as bluewaves/q1-proposal"
+"List all published sites"
+"Rotate the password for bluewaves/q1-proposal"
 ```
 
 ## Updating
@@ -282,7 +323,8 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
     "epub-generator@bluewaves-skills": true,
     "athena@bluewaves-skills": true,
     "skills-factory@bluewaves-skills": true,
-    "docs-factory@bluewaves-skills": true
+    "docs-factory@bluewaves-skills": true,
+    "web-factory@bluewaves-skills": true
   }
 }
 ```
@@ -325,6 +367,7 @@ If using a private repository, use the SSH URL:
 - For athena: Python 3.8+ (stdlib only, no additional packages)
 - For docs-factory: Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2, matplotlib, numpy
 - For skills-factory: `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback
+- For web-factory: bun + wrangler for gateway deployment, Cloudflare API token, `WEB_FACTORY_ADMIN_TOKEN` or `credentials.json`
 
 ## License
 

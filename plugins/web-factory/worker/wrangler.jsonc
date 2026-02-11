@@ -1,0 +1,14 @@
+{
+  "name": "web-factory-gateway",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-02-11",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [{ "pattern": "*.bluewaves-athena.app/*", "zone_name": "bluewaves-athena.app" }],
+  "r2_buckets": [{ "binding": "SITES_BUCKET", "bucket_name": "web-factory-sites" }],
+  "kv_namespaces": [{ "binding": "SITE_CONFIG", "id": "07345ed3915e43978d4ec3e66dcfa0c2" }],
+  "vars": {
+    "COOKIE_NAME": "wf_session",
+    "SESSION_TTL_SECONDS": "86400"
+  }
+  // ADMIN_TOKEN set via: bunx wrangler secret put ADMIN_TOKEN
+}

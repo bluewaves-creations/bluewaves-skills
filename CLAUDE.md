@@ -51,13 +51,23 @@ bluewaves-skills/
 │   │       ├── brand-decathlon/SKILL.md, references/, assets/
 │   │       ├── chart-designer/SKILL.md, references/, scripts/
 │   │       └── pdf-factory/SKILL.md, references/, scripts/, assets/
-│   └── skills-factory/            # Skill creation & cross-platform conversion (3 skills)
+│   ├── skills-factory/            # Skill creation & cross-platform conversion (3 skills)
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/              # init-skill, validate-skill, package-skill
+│   │   └── skills/
+│   │       ├── skill-shaper/SKILL.md, scripts/, references/
+│   │       ├── gemini-gem-converter/SKILL.md, references/
+│   │       └── openai-gpt-converter/SKILL.md, references/
+│   └── web-factory/               # Branded websites on Cloudflare (2 skills)
 │       ├── .claude-plugin/plugin.json
-│       ├── commands/              # init-skill, validate-skill, package-skill
+│       ├── commands/              # install-deps, check-cf-key, setup-gateway, api-key mgmt
+│       ├── hooks/hooks.json
+│       ├── worker/                # Hono gateway Worker (bun + wrangler)
+│       │   └── src/               # index.ts, auth.ts, admin.ts, r2.ts, login.ts, words.ts
+│       ├── scripts/               # site_api.py, cf_utils.py
 │       └── skills/
-│           ├── skill-shaper/SKILL.md, scripts/, references/
-│           ├── gemini-gem-converter/SKILL.md, references/
-│           └── openai-gpt-converter/SKILL.md, references/
+│           ├── site-factory/SKILL.md, references/
+│           └── site-publisher/SKILL.md, references/
 ├── deps/
 │   └── agentskills/              # Git submodule: github.com/agentskills/agentskills
 │       └── skills-ref/           # Official skill validation library
@@ -124,6 +134,7 @@ bluewaves-skills/
 - **athena:** Python 3.8+ (stdlib only, no additional packages)
 - **docs-factory:** Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2, matplotlib, numpy
 - **skills-factory:** `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback for `quick_validate.py`
+- **web-factory:** bun + wrangler for gateway deployment, Cloudflare API token with Workers/R2/KV/DNS permissions, `WEB_FACTORY_ADMIN_TOKEN` or `credentials.json` for publishing
 
 ## Building
 
@@ -163,7 +174,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 2.2.0
+Current marketplace version: 2.3.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

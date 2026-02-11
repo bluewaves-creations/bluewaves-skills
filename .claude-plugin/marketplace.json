@@ -2,7 +2,7 @@
   "name": "bluewaves-skills",
   "metadata": {
     "description": "AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -83,6 +83,21 @@
       "license": "MIT",
       "keywords": ["pdf", "brand-kit", "document-generation", "typography", "design-tokens", "reportlab", "matplotlib", "charts", "data-visualization"],
       "category": "documents"
+    },
+    {
+      "name": "web-factory",
+      "source": "./plugins/web-factory",
+      "description": "Password-protected branded websites on Cloudflare. Hono gateway Worker serves sites from R2 with HMAC cookie auth, admin API, and Python HTTP client for standalone use.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Bluewaves Team",
+        "email": "contact@bluewaves.boutique"
+      },
+      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/web-factory",
+      "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
+      "license": "MIT",
+      "keywords": ["cloudflare", "workers", "r2", "hono", "branded-websites", "password-protected", "web-publishing"],
+      "category": "web"
     }
   ]
 }
