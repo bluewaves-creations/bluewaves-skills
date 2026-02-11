@@ -79,7 +79,12 @@
         "Studio photography",
         "Stock-photo-looking posed shots"
       ],
-      "prompt_style": "authentic sports reportage, natural light, dynamic composition, diverse participants, real-world setting, action photography, no rounded corners"
+      "prompt_style": "authentic sports reportage, natural light, dynamic composition, diverse participants, real-world setting, action photography, no rounded corners",
+      "pdf_defaults": {
+        "resolution": "2K",
+        "output_format": "jpeg",
+        "enable_web_search": true
+      }
     },
     "chart": {
       "palette": {

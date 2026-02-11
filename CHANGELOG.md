@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] - 2026-02-11
+
+### Fixed
+
+- **media-factory** — Credential lookup order flipped: `credentials.json` is now checked before `$FAL_KEY` env var in `fal_utils.py`, `validate-fal-key.sh` hook, and all 10 SKILL.md files. Standalone ZIP users no longer need an env var when a bundled `credentials.json` is present.
+- **docs-factory (chart-designer)** — Pie/donut charts with small slices (< 5%) now use legend mode instead of inline labels, preventing text overlap. Percentage labels are suppressed on tiny slices; a below-chart legend shows `"Category (X%)"` or `"Category (<1%)"` per entry.
+- **docs-factory (pdf-factory)** — H1 titles no longer duplicate between section divider pages and content pages. New `--sections` CLI flag on `render.py` replaces matched H1 headings with invisible text markers so compose.py still detects sections while the visible title appears only on the divider.
+
+### Added
+
+- **docs-factory** — `tokens.imagery.pdf_defaults` added to all 3 brand kit manifests (`resolution: "2K"`, `output_format: "jpeg"`, `enable_web_search: true`) so the image generation skill produces PDF-optimized images instead of 7MB PNGs.
+- **docs-factory (pdf-factory)** — New "Image Generation" section documenting how to read `tokens.imagery.pdf_defaults` from the active brand kit for PDF-optimized image settings.
+- **docs-factory (chart-designer)** — QA checklist: 6-point verification for labels, data accuracy, legends, clipping, contextual fit, and brand consistency.
+- **docs-factory (pdf-factory)** — Enhanced Step 5 with 7-point manual QA checklist covering H1 duplication, image relevance, brand alignment, chart readability, file size, page flow, and cover/divider zones.
+
+---
+
 ## [2.1.1] - 2026-02-10
 
 ### Fixed

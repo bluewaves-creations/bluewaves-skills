@@ -88,6 +88,12 @@ render.py preprocesses the HTML via `_insert_section_breaks()`, which injects
 the first. This is an HTML-level transformation, not a CSS rule. Do NOT add
 `page-break-before` to h1 in base.css — that creates a blank first page.
 
+When `--sections` is passed to render.py, h1 headings that match a section title
+are replaced with invisible text markers (1pt white text). This prevents the title
+from appearing on both the section divider page and the content page. The invisible
+text is still detected by compose.py's pypdf text extraction, so section detection
+continues to work. Section titles must exactly match the H1 text in the HTML.
+
 compose.py auto-detects section boundaries by scanning the rendered content pages for
 text matching the section titles in metadata.json. This means the `page` values in
 metadata sections are only hints — compose.py will find the correct pages from the
@@ -130,6 +136,22 @@ and `<figcaption>` for captioned charts:
   <figcaption>Figure 1: Description</figcaption>
 </figure>
 ```
+
+### Image Generation
+
+When generating images for a document, read the brand kit's `tokens.imagery`
+for creative direction and `tokens.imagery.pdf_defaults` for technical settings:
+
+| Token | Purpose |
+|-------|---------|
+| `prompt_style` | Append to image prompts for brand-consistent style |
+| `color_treatment` | Color/B&W guidance |
+| `pdf_defaults.resolution` | Resolution to request (typically `"2K"`) |
+| `pdf_defaults.output_format` | Format to request (typically `"jpeg"`) |
+| `pdf_defaults.enable_web_search` | Whether to enable web search grounding |
+
+Apply these settings when calling the image generation skill. The `subject_guidelines`
+and `avoid` arrays provide editorial direction for prompt crafting.
 
 ### CSS Specifics
 
@@ -180,13 +202,18 @@ The `--brand` flag is optional. Without it, render.py uses fallback fonts and co
 python3 scripts/render.py \
   --brand /path/to/brand-{slug} \
   --input content.html \
-  --output content-pages.pdf
+  --output content-pages.pdf \
+  --sections '["Executive Summary", "Technical Achievements"]'
 
 # Fallback (no brand kit):
 python3 scripts/render.py \
   --input content.html \
   --output content-pages.pdf
 ```
+
+The `--sections` flag accepts a JSON array of section titles. H1 headings matching
+these titles are hidden from content pages (they appear on section divider pages instead).
+Omit `--sections` when not using section dividers.
 
 For composition rules (grid, spacing, page breaks, widows/orphans), load
 [references/composition.md](references/composition.md).
@@ -234,6 +261,8 @@ Provide metadata.json with this structure:
 
 ## Step 5: Validate Output
 
+Run automated validation:
+
 ```bash
 python3 scripts/validate_output.py final.pdf --brand /path/to/brand-{slug}
 ```
@@ -245,6 +274,16 @@ If validation fails, check these common issues:
 - **"Brand font missing"** — Confirm all fonts declared in manifest exist on disk
 
 Fix errors and re-run validation. Only proceed when all checks pass.
+
+Then perform manual QA:
+
+1. **No H1 duplication** — Section titles appear only on divider pages, not repeated on content pages (use `--sections` in Step 3 to prevent this)
+2. **Images contextually relevant** — Each image matches its section topic; no nonsensical compositions or artifacts
+3. **Images brand-aligned** — Style matches `tokens.imagery` guidelines (B&W for Wave Artisans, editorial for Bluewaves, reportage for Decathlon)
+4. **Charts readable** — Labels don't overlap, legends are clear, data is accurate, no clipping
+5. **File size** — Total PDF under 50MB; if over, regenerate images with JPEG format and 2K resolution
+6. **Page flow** — No orphaned headings at page bottoms, no widowed single lines at page tops
+7. **Cover/divider zones** — Title, subtitle, date, and author render correctly in their zones
 
 ## Step 6: Sign (Optional)
 

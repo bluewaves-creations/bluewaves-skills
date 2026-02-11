@@ -106,12 +106,40 @@ def render_pie(ax, data, theme, donut=False):
     colors = theme.palette.categorical[:len(values)]
     wedge_props = {"edgecolor": "white", "linewidth": 1.5}
 
-    wedges, texts, autotexts = ax.pie(
-        values, labels=categories, autopct="%1.0f%%",
-        colors=colors, wedgeprops=wedge_props, startangle=90,
-    )
-    for text in autotexts:
-        text.set_fontsize(7)
+    total = sum(values) if values else 1
+    pcts = [(v / total) * 100 for v in values]
+    has_small_slice = any(p < 5 for p in pcts)
+
+    if has_small_slice:
+        def smart_autopct(pct):
+            return f"{pct:.0f}%" if pct >= 5 else ""
+
+        pct_distance = 0.78 if donut else 0.7
+        wedges, _, autotexts = ax.pie(
+            values, labels=None, autopct=smart_autopct,
+            pctdistance=pct_distance,
+            colors=colors, wedgeprops=wedge_props, startangle=90,
+        )
+        for text in autotexts:
+            text.set_fontsize(7)
+
+        legend_labels = []
+        for cat, pct in zip(categories, pcts):
+            if pct < 1:
+                legend_labels.append(f"{cat} (<1%)")
+            else:
+                legend_labels.append(f"{cat} ({pct:.0f}%)")
+
+        ncol = min(len(categories), 3)
+        ax.legend(wedges, legend_labels, loc="upper center",
+                  bbox_to_anchor=(0.5, -0.12), ncol=ncol, frameon=False)
+    else:
+        wedges, texts, autotexts = ax.pie(
+            values, labels=categories, autopct="%1.0f%%",
+            colors=colors, wedgeprops=wedge_props, startangle=90,
+        )
+        for text in autotexts:
+            text.set_fontsize(7)
 
     if donut:
         centre_circle = __import__("matplotlib.patches", fromlist=["Circle"]).Circle(

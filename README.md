@@ -2,7 +2,7 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-2.1.0-blue)
+![Version](https://img.shields.io/badge/version-2.1.2-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools.
@@ -40,7 +40,7 @@ AI-powered image and video generation using fal.ai with Python fal_client and 5 
 - **LaChapelle** - Pop surrealism, fluorescent colors, baroque maximalism
 - **von Unwerth** - Playful vintage, film noir, feminine empowerment
 
-**Prerequisites:** `uv pip install fal-client`, set `FAL_KEY` environment variable in `~/.zshrc`
+**Prerequisites:** `uv pip install fal-client`, provide `credentials.json` in scripts/ directory or set `FAL_KEY` environment variable in `~/.zshrc`
 
 ---
 

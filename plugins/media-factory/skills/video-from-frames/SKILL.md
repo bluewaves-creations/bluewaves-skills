@@ -6,7 +6,7 @@ description: >
   between scenes, or generate smooth video connecting a starting and ending frame.
 allowed-tools: Bash, Read, Write
 license: MIT
-compatibility: Requires FAL_KEY environment variable or credentials.json (fal.ai API key), fal-client Python package
+compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai API key), fal-client Python package
 ---
 
 # Video from Frames
@@ -15,7 +15,7 @@ Generate smooth video transitions between two frames using Google DeepMind's Veo
 
 ## Prerequisites
 
-- **API key**: `FAL_KEY` environment variable (add to `~/.zshrc`) or `credentials.json` with `{"api_key": "..."}` in the scripts/ directory (Claude.ai standalone ZIPs)
+- **API key**: `credentials.json` with `{"api_key": "..."}` in the scripts/ directory (Claude.ai standalone ZIPs), or `FAL_KEY` environment variable (add to `~/.zshrc`)
 - **Python package**: `uv pip install fal-client`
 
 ## API Endpoint

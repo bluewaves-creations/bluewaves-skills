@@ -19,19 +19,14 @@ from urllib.request import urlopen, Request
 
 
 def resolve_api_key() -> str:
-    """Resolve fal.ai API key from environment or credentials file.
+    """Resolve fal.ai API key from credentials file or environment.
 
     Checks in order:
-    1. $FAL_KEY environment variable (Claude Code)
-    2. credentials.json in the skill's scripts/ directory (Claude.ai)
+    1. credentials.json in the skill's scripts/ directory (Claude.ai standalone ZIPs)
+    2. $FAL_KEY environment variable (Claude Code)
     3. Raises RuntimeError with instructions
     """
-    # 1. Environment variable
-    key = os.environ.get("FAL_KEY")
-    if key:
-        return key
-
-    # 2. Credentials file (for Claude.ai standalone ZIPs)
+    # 1. Credentials file (for Claude.ai standalone ZIPs)
     creds_path = Path(__file__).parent / "credentials.json"
     if creds_path.exists():
         try:
@@ -43,10 +38,15 @@ def resolve_api_key() -> str:
         except (json.JSONDecodeError, KeyError):
             pass
 
+    # 2. Environment variable
+    key = os.environ.get("FAL_KEY")
+    if key:
+        return key
+
     raise RuntimeError(
         "FAL_KEY not found. Set it via:\n"
-        "  export FAL_KEY='your-api-key'  (add to ~/.zshrc)\n"
-        "Or place credentials.json with {\"api_key\": \"...\"} in the scripts/ directory."
+        "  Place credentials.json with {\"api_key\": \"...\"} in the scripts/ directory\n"
+        "  Or: export FAL_KEY='your-api-key'  (add to ~/.zshrc)"
     )
 
 
@@ -125,7 +125,20 @@ def main():
         try:
             key = resolve_api_key()
             print(f"API key resolved ({len(key)} characters)")
-            print(f"Source: {'$FAL_KEY env var' if os.environ.get('FAL_KEY') else 'credentials.json'}")
+            creds_path = Path(__file__).parent / "credentials.json"
+            if creds_path.exists():
+                try:
+                    with open(creds_path) as f:
+                        creds = json.load(f)
+                    cred_key = creds.get("api_key", "")
+                    if cred_key and cred_key != "USER_KEY_HERE":
+                        print("Source: credentials.json")
+                    else:
+                        print("Source: $FAL_KEY env var")
+                except (json.JSONDecodeError, KeyError):
+                    print("Source: $FAL_KEY env var")
+            else:
+                print("Source: $FAL_KEY env var")
         except RuntimeError as e:
             print(f"Error: {e}", file=sys.stderr)
             sys.exit(1)

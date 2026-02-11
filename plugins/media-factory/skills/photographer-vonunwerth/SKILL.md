@@ -3,7 +3,7 @@ name: photographer-vonunwerth
 description: Generate images in Ellen von Unwerth's playful vintage style. Use when users ask for von Unwerth style, playful sensuality, vintage film noir, whimsical feminine photography, retro glamour, narrative storytelling.
 allowed-tools: Bash, Read, Write
 license: MIT
-compatibility: Requires FAL_KEY environment variable (fal.ai API key). Claude.ai users can provide credentials via credentials.json.
+compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai API key). Claude.ai users provide credentials via credentials.json.
 ---
 
 # Ellen von Unwerth Style Photography
@@ -21,14 +21,14 @@ Ellen von Unwerth's photography is defined by:
 
 ## Prerequisites
 
-Set your fal.ai API key:
-```bash
-export FAL_KEY="your-fal-api-key"
-```
-
 For Claude.ai users, copy `scripts/credentials.example.json` to `scripts/credentials.json` and add your key:
 ```json
 { "api_key": "your-fal-api-key" }
+```
+
+Alternatively, set the environment variable:
+```bash
+export FAL_KEY="your-fal-api-key"
 ```
 
 Install the fal client:

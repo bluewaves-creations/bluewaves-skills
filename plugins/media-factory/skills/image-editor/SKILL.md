@@ -6,7 +6,7 @@ description: >
   description. Supports multiple input images and local file upload.
 allowed-tools: Bash, Read, Write
 license: MIT
-compatibility: Requires FAL_KEY environment variable or credentials.json (fal.ai API key), fal-client Python package
+compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai API key), fal-client Python package
 ---
 
 # Image Editor
@@ -15,7 +15,7 @@ Edit and transform existing images using text prompts with Google's Gemini 3 Pro
 
 ## Prerequisites
 
-- **API key**: `FAL_KEY` environment variable (add to `~/.zshrc`) or `credentials.json` with `{"api_key": "..."}` in the scripts/ directory (Claude.ai standalone ZIPs)
+- **API key**: `credentials.json` with `{"api_key": "..."}` in the scripts/ directory (Claude.ai standalone ZIPs), or `FAL_KEY` environment variable (add to `~/.zshrc`)
 - **Python package**: `uv pip install fal-client`
 
 ## API Endpoint

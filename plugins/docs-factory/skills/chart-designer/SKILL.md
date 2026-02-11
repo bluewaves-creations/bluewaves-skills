@@ -125,6 +125,17 @@ Use `<figure>` and `<figcaption>` for captioned charts:
 </figure>
 ```
 
+## QA Checklist
+
+After generating any chart, open the output image and verify:
+
+1. **Labels readable** — No overlapping text on any element: axis labels, tick labels, legends, annotations, pie/donut category names, percentage values. If labels overlap, adjust the chart type, font size, rotation, or layout
+2. **Data accurate** — Values in the chart match the source data; spot-check at least two data points
+3. **Legend clear** — Multi-series charts have a legend with all series labeled
+4. **No clipping** — Title, subtitle, axis labels, and legend are fully visible, not cut off at edges
+5. **Contextual fit** — Chart type suits the data story (don't use pie for > 6 categories; use horizontal bar for long labels)
+6. **Brand consistent** — When using a brand kit, chart uses brand palette and typography
+
 ## Token Reference
 
 For the full `tokens.chart` schema, see [references/chart-tokens.md](references/chart-tokens.md).

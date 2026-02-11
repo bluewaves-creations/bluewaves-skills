@@ -80,7 +80,12 @@
         "Casual or amateur-looking shots",
         "Inconsistent visual tone within a document"
       ],
-      "prompt_style": "editorial photography, desaturated Kodachrome palette, cinematic composition, magazine-cover quality, muted tones, film grain, emotionally evocative"
+      "prompt_style": "editorial photography, desaturated Kodachrome palette, cinematic composition, magazine-cover quality, muted tones, film grain, emotionally evocative",
+      "pdf_defaults": {
+        "resolution": "2K",
+        "output_format": "jpeg",
+        "enable_web_search": true
+      }
     },
     "chart": {
       "palette": {

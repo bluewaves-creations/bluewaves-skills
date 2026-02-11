@@ -19,13 +19,7 @@ COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
 
 # Only validate if the command involves fal.ai
 if echo "$COMMAND" | grep -qE "fal[._](run|ai|client|generate)|FAL_KEY"; then
-  # Check env var first
-  if [ -n "$FAL_KEY" ]; then
-    echo '{"decision": "allow"}'
-    exit 0
-  fi
-
-  # Check credentials file
+  # Check credentials file first
   SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)/scripts"
   CREDS_FILE="$SCRIPT_DIR/credentials.json"
   if [ -f "$CREDS_FILE" ]; then
@@ -36,8 +30,14 @@ if echo "$COMMAND" | grep -qE "fal[._](run|ai|client|generate)|FAL_KEY"; then
     fi
   fi
 
+  # Check env var
+  if [ -n "$FAL_KEY" ]; then
+    echo '{"decision": "allow"}'
+    exit 0
+  fi
+
   # No key found
-  echo '{"decision": "block", "message": "fal.ai API key not found. Set FAL_KEY in ~/.zshrc or place credentials.json in scripts/ directory. Run /media-factory:check-fal-key for help."}'
+  echo '{"decision": "block", "message": "fal.ai API key not found. Place credentials.json in scripts/ directory or set FAL_KEY in ~/.zshrc. Run /media-factory:check-fal-key for help."}'
   exit 0
 fi
 

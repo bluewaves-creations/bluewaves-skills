@@ -217,7 +217,7 @@ td {{ border-bottom-color: {colors.get("border-default", "#B0B0B0")}; }}
     return font_face_css + "\n" + base_css + "\n" + overrides
 
 
-def _insert_section_breaks(html: str) -> str:
+def _insert_section_breaks(html: str, section_titles: list = None) -> str:
     """Insert page breaks before h1 headings (except the first).
 
     Without this, xhtml2pdf renders all content as a continuous flow and
@@ -225,11 +225,18 @@ def _insert_section_breaks(html: str) -> str:
     ensures each top-level section starts on a fresh page.
 
     We skip the first h1 to avoid a blank leading page.
+
+    When section_titles is provided, h1s matching a section title are
+    replaced with invisible text markers (for compose.py detection)
+    since the section divider page already displays the title.
     """
     import re
+
+    section_set = set(section_titles or [])
+
+    # First pass: insert page breaks before h1s (existing logic)
     h1_re = re.compile(r'(<h1[\s>])')
     parts = h1_re.split(html)
-    # split produces: [before_first_h1, '<h1', after, '<h1', after, ...]
     result = []
     h1_count = 0
     for part in parts:
@@ -238,7 +245,25 @@ def _insert_section_breaks(html: str) -> str:
             if h1_count > 1:
                 result.append('<div style="page-break-before: always;"></div>')
         result.append(part)
-    return ''.join(result)
+    html = ''.join(result)
+
+    # Second pass: replace matched h1s with invisible markers
+    if section_set:
+        h1_full_re = re.compile(r'<h1[^>]*>(.*?)</h1>', re.DOTALL)
+
+        def replace_h1(match):
+            inner_html = match.group(1)
+            plain_text = re.sub(r'<[^>]+>', '', inner_html).strip()
+            if plain_text in section_set:
+                return (
+                    '<p style="font-size:1pt; line-height:1pt; margin:0; '
+                    f'padding:0; color:white;">{plain_text}</p>'
+                )
+            return match.group(0)
+
+        html = h1_full_re.sub(replace_h1, html)
+
+    return html
 
 
 def _apply_corner_radius(img_path: str, radius_pt: float, output_path: str, dpi: int = 150):
@@ -445,11 +470,11 @@ def _preprocess_image_widths(html: str) -> str:
     return re.sub(r'<img\s[^>]*width="(\d+)"[^>]*>', convert_width, html)
 
 
-def render_html_to_pdf(html: str, output_path: str, manifest: dict, page_format: str = "A4", debug: bool = False):
+def render_html_to_pdf(html: str, output_path: str, manifest: dict, page_format: str = "A4", debug: bool = False, section_titles: list = None):
     """Render HTML content to PDF pages."""
     from xhtml2pdf import pisa
 
-    html = _insert_section_breaks(html)
+    html = _insert_section_breaks(html, section_titles=section_titles)
     html = _preprocess_figures(html)
     html = _preprocess_code_blocks(html)
     html = _preprocess_image_widths(html)
@@ -483,6 +508,7 @@ def main():
     parser.add_argument("--output", required=True, help="Output PDF path")
     parser.add_argument("--format", default="A4", choices=["A4", "Letter"], help="Page format")
     parser.add_argument("--debug", action="store_true", help="Show grid lines and zone boundaries")
+    parser.add_argument("--sections", default=None, help="JSON array of section titles to hide from content pages (shown on divider pages instead)")
     args = parser.parse_args()
 
     if args.brand:
@@ -499,7 +525,8 @@ def main():
     with open(args.input) as f:
         html = f.read()
 
-    render_html_to_pdf(html, args.output, manifest, page_format=args.format, debug=args.debug)
+    section_titles = json.loads(args.sections) if args.sections else None
+    render_html_to_pdf(html, args.output, manifest, page_format=args.format, debug=args.debug, section_titles=section_titles)
 
 
 if __name__ == "__main__":

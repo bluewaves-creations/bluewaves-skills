@@ -6,7 +6,7 @@ description: >
   image to life. Supports up to 8 seconds of video with optional audio.
 allowed-tools: Bash, Read, Write
 license: MIT
-compatibility: Requires FAL_KEY environment variable or credentials.json (fal.ai API key), fal-client Python package
+compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai API key), fal-client Python package
 ---
 
 # Video from Image
@@ -15,7 +15,7 @@ Animate a single image into a dynamic video using Google DeepMind's Veo 3.1 mode
 
 ## Prerequisites
 
-- **API key**: `FAL_KEY` environment variable (add to `~/.zshrc`) or `credentials.json` with `{"api_key": "..."}` in the scripts/ directory (Claude.ai standalone ZIPs)
+- **API key**: `credentials.json` with `{"api_key": "..."}` in the scripts/ directory (Claude.ai standalone ZIPs), or `FAL_KEY` environment variable (add to `~/.zshrc`)
 - **Python package**: `uv pip install fal-client`
 - **Input image**: Should be 720p or higher resolution for best results
 

@@ -3,7 +3,7 @@ name: photographer-ritts
 description: Generate images in Herb Ritts' sculptural black and white style. Use when users ask for Ritts style, classical Greek aesthetic, sculptural body photography, California golden hour, minimalist athletic portraits.
 allowed-tools: Bash, Read, Write
 license: MIT
-compatibility: Requires FAL_KEY environment variable (fal.ai API key). Claude.ai users can provide credentials via credentials.json.
+compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai API key). Claude.ai users provide credentials via credentials.json.
 ---
 
 # Herb Ritts Style Photography
@@ -21,14 +21,14 @@ Herb Ritts defined a distinctive aesthetic through:
 
 ## Prerequisites
 
-Set your fal.ai API key:
-```bash
-export FAL_KEY="your-fal-api-key"
-```
-
 For Claude.ai users, copy `scripts/credentials.example.json` to `scripts/credentials.json` and add your key:
 ```json
 { "api_key": "your-fal-api-key" }
+```
+
+Alternatively, set the environment variable:
+```bash
+export FAL_KEY="your-fal-api-key"
 ```
 
 Install the fal client:
