@@ -74,6 +74,7 @@ def api_request(method: str, path: str, domain: str, token: str,
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
+        "User-Agent": "site-publisher/1.0",
     }
     req = Request(url, data=data, headers=headers, method=method)
     try:

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.2] - 2026-02-12
+
+### Fixed
+
+- **web-factory** — Added `User-Agent: site-publisher/1.0` header to `site_api.py` HTTP requests, fixing Cloudflare **error 1010** (bot detected) that blocked Python's default `User-Agent: Python-urllib/3.x`.
+- **web-factory** — Fixed missed apex domain default in `cf_utils.py`: `"bluewaves-athena.app"` → `"api.bluewaves-athena.app"` (same fix applied to `site_api.py` in v2.3.1).
+
+---
+
 ## [2.3.1] - 2026-02-12
 
 ### Fixed

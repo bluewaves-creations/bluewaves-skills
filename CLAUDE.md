@@ -174,7 +174,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 2.3.1
+Current marketplace version: 2.3.2
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

@@ -41,7 +41,7 @@ def resolve_gateway_credentials() -> tuple:
 
     # 2. Environment variables
     if not domain:
-        domain = os.environ.get("WEB_FACTORY_DOMAIN", "bluewaves-athena.app")
+        domain = os.environ.get("WEB_FACTORY_DOMAIN", "api.bluewaves-athena.app")
     if not token:
         token = os.environ.get("WEB_FACTORY_ADMIN_TOKEN")
 
