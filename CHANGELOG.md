@@ -5,21 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.0] - 2026-02-11
+## [2.3.0] - 2026-02-12
 
 ### Added
 
 #### web-factory v1.0.0 (new plugin)
 - **Hono gateway Worker** — Single Cloudflare Worker on `*.bluewaves-athena.app` serving password-protected branded websites from R2 with HMAC cookie-based authentication
-- **Admin API** (`/_api/`) — RESTful endpoints for publishing, updating, listing, deleting sites, and rotating passwords. Bearer token auth with support for super-admin secret and per-user API keys stored in KV
-- **`site-factory` skill** — Build branded single-page HTML from markdown using docs-factory brand kits. Maps design tokens to CSS custom properties, generates responsive layout with header, TOC, content, attachments, and footer
+- **Admin API** (`/_api/`) — RESTful endpoints for publishing, updating, listing, downloading, deleting sites, and rotating passwords. Bearer token auth with support for super-admin secret and per-user API keys stored in KV
+- **`site-factory` skill** — Build single-page HTML from markdown with a built-in neutral default brand (system fonts, gray palette) or optional docs-factory brand kit. Maps design tokens to CSS custom properties, generates responsive layout with header, TOC, content, attachments, and footer
 - **`site-publisher` skill** — Publish and manage sites via Python HTTP client (`site_api.py`, stdlib-only). Works in both Claude Code and Claude.ai standalone ZIPs
-- **Python HTTP client** (`site_api.py`) — Stdlib-only admin API client supporting publish, update, list, info, delete, and rotate-password operations
+- **Python HTTP client** (`site_api.py`) — Stdlib-only admin API client supporting publish, update, download, list, info, delete, and rotate-password operations
+- **Download endpoint** (`GET /sites/{brand}/{name}/files`) — Download all site files as base64 for round-trip editing workflows
 - **Credential utilities** (`cf_utils.py`) — Dual-mode credential resolution (credentials.json for Claude.ai, env vars for Claude Code) for both gateway and Cloudflare API access
 - **6 slash commands:** `/web-factory:install-deps`, `/web-factory:check-cf-key`, `/web-factory:setup-gateway`, `/web-factory:create-api-key`, `/web-factory:list-api-keys`, `/web-factory:revoke-api-key`
 - **PreToolUse hook** — Validates credentials before wrangler/site_api commands
 - **Passphrase generator** — System-generated 4-word passphrases (e.g. `coral-sunset-tide-2026`) using CSPRNG
 - **Branded login page** — Clean, mobile-friendly form with CSS custom properties from brand kit tokens
+- **Default brand** — Built-in neutral brand (gray palette, system fonts, Bluewaves logo) so sites work without a docs-factory brand kit
+- **Skeleton template polish** — Smooth scrolling for TOC navigation, floating back-to-top button (icon-only, appears after 300px scroll), smaller header title (h2 size), logo-left/text-right footer layout, print-safe (button hidden in print media)
 
 #### Marketplace
 - Marketplace version bumped to 2.3.0
