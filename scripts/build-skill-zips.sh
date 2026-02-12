@@ -45,8 +45,9 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
         fi
     done
 
-    # Remove Python bytecache (should never ship in ZIPs)
+    # Remove files that must never ship in ZIPs
     find "$tmp_dir" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+    find "$tmp_dir" -name "credentials.json" -delete 2>/dev/null || true
 
     # Create the ZIP from inside the temp dir so the path is skill-name/SKILL.md
     (cd "$tmp_dir" && zip -q -r "$DIST_DIR/$skill_name.zip" "$skill_name")
