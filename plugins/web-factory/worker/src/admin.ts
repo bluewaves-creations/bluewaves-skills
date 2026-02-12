@@ -254,6 +254,61 @@ export async function getSite(
   });
 }
 
+/** GET /_api/sites/{brand}/{name}/files — Download all site files as base64. */
+export async function downloadSite(
+  c: Context<{ Bindings: Env }>,
+  brand: string,
+  siteName: string
+): Promise<Response> {
+  const paramErr = validateParams(c, brand, siteName);
+  if (paramErr) return paramErr;
+
+  const configRaw = await c.env.SITE_CONFIG.get(`${brand}/${siteName}`);
+  if (!configRaw) {
+    return c.json({ error: "Site not found" }, 404);
+  }
+  const config: SiteConfig = JSON.parse(configRaw);
+
+  // Paginate through all R2 objects for this site
+  const prefix = `${brand}/${siteName}/`;
+  const files: Record<string, string> = {};
+  let objectCount = 0;
+  let cursor: string | undefined;
+
+  do {
+    const listed = await c.env.SITES_BUCKET.list({ prefix, cursor });
+    for (const obj of listed.objects) {
+      objectCount++;
+      if (objectCount > MAX_FILE_COUNT) {
+        return c.json(
+          { error: `Site exceeds maximum file count of ${MAX_FILE_COUNT}` },
+          500
+        );
+      }
+      const r2Obj = await c.env.SITES_BUCKET.get(obj.key);
+      if (!r2Obj) continue;
+      const buf = await r2Obj.arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      // Convert to base64
+      let binary = "";
+      for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      const relativePath = obj.key.slice(prefix.length);
+      files[relativePath] = btoa(binary);
+    }
+    cursor = listed.truncated ? listed.cursor : undefined;
+  } while (cursor);
+
+  return c.json({
+    files,
+    metadata: {
+      title: config.title,
+      brand_tokens: config.brand_tokens,
+    },
+  });
+}
+
 /** DELETE /_api/sites/{brand}/{name} — Delete site and all R2 objects. */
 export async function deleteSite(
   c: Context<{ Bindings: Env }>,

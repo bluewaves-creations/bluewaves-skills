@@ -262,6 +262,56 @@ describe("Site CRUD", () => {
     expect(getRes.status).toBe(404);
   });
 
+  it("downloads all site files as base64", async () => {
+    await publishTestSite("brandx", "dlsite", {
+      brand_tokens: { highlight: "#FF0000" },
+    });
+
+    const res = await adminFetch("/sites/brandx/dlsite/files");
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      files: Record<string, string>;
+      metadata: { title: string; brand_tokens?: Record<string, string> };
+    };
+    expect(Object.keys(body.files)).toHaveLength(2);
+    expect(body.files["index.html"]).toBe(btoa("<h1>Hello</h1>"));
+    expect(body.files["style.css"]).toBe(btoa("body { color: red; }"));
+    expect(body.metadata.title).toBe("Test Site");
+    expect(body.metadata.brand_tokens?.highlight).toBe("#FF0000");
+  });
+
+  it("download returns 404 for nonexistent site", async () => {
+    const res = await adminFetch("/sites/brandx/nosite/files");
+    expect(res.status).toBe(404);
+  });
+
+  it("download → update round-trip preserves content", async () => {
+    await publishTestSite("brandx", "roundtrip");
+
+    // Download
+    const dlRes = await adminFetch("/sites/brandx/roundtrip/files");
+    const dlBody = (await dlRes.json()) as {
+      files: Record<string, string>;
+      metadata: { title: string };
+    };
+
+    // Re-upload via update
+    const updateRes = await adminFetch("/sites/brandx/roundtrip", {
+      method: "PUT",
+      body: JSON.stringify({
+        title: dlBody.metadata.title,
+        files: dlBody.files,
+      }),
+    });
+    expect(updateRes.status).toBe(200);
+
+    // Verify files match
+    const dl2Res = await adminFetch("/sites/brandx/roundtrip/files");
+    const dl2Body = (await dl2Res.json()) as { files: Record<string, string> };
+    expect(dl2Body.files["index.html"]).toBe(dlBody.files["index.html"]);
+    expect(dl2Body.files["style.css"]).toBe(dlBody.files["style.css"]);
+  });
+
   it("rotates password", async () => {
     const { json: publishJson } = await publishTestSite("brandx", "rotateme");
 

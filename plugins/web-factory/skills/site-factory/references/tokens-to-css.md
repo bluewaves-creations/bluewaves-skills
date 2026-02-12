@@ -1,5 +1,7 @@
 # Brand Tokens → CSS Custom Properties
 
+> **Note:** This mapping is only needed when using a docs-factory brand kit. The default brand has all values baked into `skeleton.html`'s `:root` block — see `references/default-brand.md`.
+
 Mapping table for converting `manifest.json` brand tokens to CSS custom properties used in `skeleton.html`.
 
 ## Color Tokens

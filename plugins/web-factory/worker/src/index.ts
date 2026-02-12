@@ -13,6 +13,7 @@ import {
   updateSite,
   listSites,
   getSite,
+  downloadSite,
   deleteSite,
   rotatePassword,
 } from "./admin";
@@ -58,6 +59,11 @@ api.get("/sites/:brand/:name", async (c) => {
   const brand = c.req.param("brand");
   const name = c.req.param("name");
   return getSite(c, brand, name);
+});
+api.get("/sites/:brand/:name/files", async (c) => {
+  const brand = c.req.param("brand");
+  const name = c.req.param("name");
+  return downloadSite(c, brand, name);
 });
 api.delete("/sites/:brand/:name", async (c) => {
   const brand = c.req.param("brand");

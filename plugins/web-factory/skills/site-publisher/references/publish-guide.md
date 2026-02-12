@@ -93,6 +93,24 @@ Get site metadata (without secrets).
 }
 ```
 
+### GET /sites/{brand}/{name}/files
+
+Download all site files as base64.
+
+**Response:**
+```json
+{
+  "files": {
+    "index.html": "<base64>",
+    "assets/images/logo.svg": "<base64>"
+  },
+  "metadata": {
+    "title": "Hello World",
+    "brand_tokens": { "text-heading": "#B78A66" }
+  }
+}
+```
+
 ### DELETE /sites/{brand}/{name}
 
 Delete a site and all R2 objects.

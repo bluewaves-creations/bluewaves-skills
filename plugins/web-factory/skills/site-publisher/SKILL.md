@@ -33,21 +33,27 @@ Credentials must be configured via one of:
    ```
 
 2. **Collect** from the user:
-   - **Brand** (subdomain): e.g. `bluewaves`, `wave-artisans`, `decathlon`
+   - **Brand slug** (subdomain): e.g. `bluewaves`, `mycompany`, `acme-corp`
+     - Must match `^[a-z0-9]([a-z0-9-]*[a-z0-9])?$`, 1–63 characters
+     - Suggest options based on context; validate format before proceeding
    - **Site name** (URL path): e.g. `q1-proposal`, `annual-report` (lowercase, hyphens)
    - **Title**: Human-readable title for the site
 
-3. **Optionally** read brand kit manifest for login page styling:
+3. **Check availability**:
    ```bash
-   # If a brand kit is available
-   python3 scripts/site_api.py publish ./build {brand} {site-name} \
-     --title "Document Title" \
-     --brand-kit plugins/docs-factory/skills/brand-{brand}/assets/manifest.json
+   python3 scripts/site_api.py info {brand} {site-name}
    ```
+   A 404 means the name is available. Confirm with the user before publishing.
 
-4. **Publish**:
+4. **Publish** (with optional brand kit for login page styling):
    ```bash
+   # Default brand (no brand kit)
    python3 scripts/site_api.py publish ./build {brand} {site-name} --title "Title"
+
+   # With brand kit (optional — styles the login page)
+   python3 scripts/site_api.py publish ./build {brand} {site-name} \
+     --title "Title" \
+     --brand-kit plugins/docs-factory/skills/brand-{brand}/assets/manifest.json
    ```
 
 5. **Report** to the user:
@@ -62,6 +68,16 @@ Replace the content of an existing site without changing the password:
 ```bash
 python3 scripts/site_api.py update ./build {brand} {site-name}
 ```
+
+### Download Site Files
+
+Download all files from a published site to a local directory:
+
+```bash
+python3 scripts/site_api.py download {brand} {site-name} [output-dir]
+```
+
+Default output directory is `./build`. This creates a build directory that can be modified and re-published via `update`.
 
 ### List Sites
 

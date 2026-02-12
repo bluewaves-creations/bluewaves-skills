@@ -4,11 +4,12 @@
 Stdlib-only — works in Claude.ai sandbox without pip packages.
 
 Usage:
-  python3 site_api.py publish <build-dir> <brand> <site-name> [--title "..."] [--brand-kit <path>]
-  python3 site_api.py update  <build-dir> <brand> <site-name> [--title "..."] [--brand-kit <path>]
-  python3 site_api.py list    [<brand>]
-  python3 site_api.py info    <brand> <site-name>
-  python3 site_api.py delete  <brand> <site-name>
+  python3 site_api.py publish  <build-dir> <brand> <site-name> [--title "..."] [--brand-kit <path>]
+  python3 site_api.py update   <build-dir> <brand> <site-name> [--title "..."] [--brand-kit <path>]
+  python3 site_api.py download <brand> <site-name> [output-dir]
+  python3 site_api.py list     [<brand>]
+  python3 site_api.py info     <brand> <site-name>
+  python3 site_api.py delete   <brand> <site-name>
   python3 site_api.py rotate-password <brand> <site-name>
 
 Environment / credentials.json:
@@ -180,6 +181,32 @@ def cmd_delete(args):
     print(f"Deleted: {result.get('deleted')}")
 
 
+def cmd_download(args):
+    domain, token = resolve_credentials()
+    result = api_request("GET", f"/sites/{args.brand}/{args.site_name}/files",
+                         domain, token)
+    files = result.get("files", {})
+    if not files:
+        print("No files found.", file=sys.stderr)
+        sys.exit(1)
+
+    out_dir = Path(args.output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    total_bytes = 0
+    for rel_path, b64_content in files.items():
+        file_path = out_dir / rel_path
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        data = base64.b64decode(b64_content)
+        with open(file_path, "wb") as f:
+            f.write(data)
+        total_bytes += len(data)
+
+    print(f"Downloaded {len(files)} file(s) to {out_dir}/ ({total_bytes:,} bytes)")
+    metadata = result.get("metadata", {})
+    if metadata.get("title"):
+        print(f"Title: {metadata['title']}")
+
+
 def cmd_rotate(args):
     domain, token = resolve_credentials()
     result = api_request("POST", f"/sites/{args.brand}/{args.site_name}/password",
@@ -220,6 +247,14 @@ def main():
     p.add_argument("brand", help="Brand subdomain")
     p.add_argument("site_name", help="Site path segment")
     p.set_defaults(func=cmd_info)
+
+    # download
+    p = sub.add_parser("download", help="Download all site files")
+    p.add_argument("brand", help="Brand subdomain")
+    p.add_argument("site_name", help="Site path segment")
+    p.add_argument("output_dir", nargs="?", default="./build",
+                   help="Output directory (default: ./build)")
+    p.set_defaults(func=cmd_download)
 
     # delete
     p = sub.add_parser("delete", help="Delete a site")
