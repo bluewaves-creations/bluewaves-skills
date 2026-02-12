@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2026-02-12
+
+### Fixed
+
+- **web-factory** — Default gateway domain changed from `bluewaves-athena.app` (apex, no DNS record) to `api.bluewaves-athena.app` (matches wildcard `*.bluewaves-athena.app`), fixing `dns_no_records` errors for Claude.ai standalone ZIP users calling `site_api.py`.
+
+---
+
 ## [2.3.0] - 2026-02-12
 
 ### Added

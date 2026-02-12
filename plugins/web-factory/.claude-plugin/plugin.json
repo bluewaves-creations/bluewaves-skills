@@ -1,6 +1,6 @@
 {
   "name": "web-factory",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Password-protected branded websites on Cloudflare. Hono gateway Worker serves sites from R2 with HMAC cookie auth, admin API, and Python HTTP client for standalone use.",
   "author": {
     "name": "Bluewaves Team",
