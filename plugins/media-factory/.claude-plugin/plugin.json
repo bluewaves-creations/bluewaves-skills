@@ -1,6 +1,6 @@
 {
   "name": "media-factory",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "AI-powered image and video generation via fal.ai, podcast generation via Gemini TTS, Python fal_client, queue-based requests, progress logging, and 5 photographer style skills",
   "author": {
     "name": "Bluewaves Team",

@@ -2,7 +2,7 @@
   "name": "bluewaves-skills",
   "metadata": {
     "description": "AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "2.7.0"
+    "version": "2.7.1"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -13,7 +13,7 @@
       "name": "media-factory",
       "source": "./plugins/media-factory",
       "description": "AI-powered image and video generation via fal.ai, podcast generation via Gemini TTS, Python fal_client, queue-based requests, progress logging, and 5 photographer style skills",
-      "version": "2.3.0",
+      "version": "2.3.1",
       "author": {
         "name": "Bluewaves Team",
         "email": "contact@bluewaves.boutique"

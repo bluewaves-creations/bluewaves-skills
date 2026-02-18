@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.1] - 2026-02-18
+
+### Fixed
+
+- **podcast-generator** — Use foreground execution for Claude.ai sandbox (nohup background processes silently die in the container); Claude Code retains the nohup background approach
+
+### Marketplace
+
+- Marketplace version bumped to 2.7.1
+
+---
+
 ## [2.7.0] - 2026-02-18
 
 ### Added

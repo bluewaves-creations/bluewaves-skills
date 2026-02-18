@@ -119,13 +119,21 @@ Using the source content, write a complete dialog file with all four sections: A
 
 ### Step 3: Generate audio
 
-Run the generation in the background to avoid timeout kills (generation takes 2-8 minutes depending on length):
+Generation takes 2-8 minutes depending on dialog length.
+
+**Claude.ai:** Run directly in the foreground. The sandbox does not reliably support background processes — `nohup ... &` silently dies. A blocking foreground call works fine:
+
+```bash
+python3 scripts/generate_audio.py --source-file /tmp/podcast-dialog.txt --output /tmp/podcast.wav
+```
+
+**Claude Code:** Run in the background to avoid timeout kills, then poll the log:
 
 ```bash
 nohup python3 scripts/generate_audio.py --source-file /tmp/podcast-dialog.txt --output /tmp/podcast.wav > /tmp/podcast-log.txt 2>&1 &
 ```
 
-Then poll the log every 30-60 seconds until `"Audio saved to"` appears:
+Poll every 30-60 seconds until `"Audio saved to"` appears:
 
 ```bash
 tail -5 /tmp/podcast-log.txt
