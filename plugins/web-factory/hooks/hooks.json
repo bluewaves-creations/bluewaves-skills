@@ -5,8 +5,8 @@
         "matcher": "Bash",
         "hooks": [
           {
-            "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/validate-cf-key.sh"
+            "type": "prompt",
+            "prompt": "Check if the Bash command involves Cloudflare or web-factory operations (wrangler, site_api.py, cf_utils.py, CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, WEB_FACTORY_ADMIN_TOKEN, WEB_FACTORY_DOMAIN). If it does NOT involve any of these, respond with: ALLOW. If it DOES involve these operations, check whether the environment variables CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, and WEB_FACTORY_ADMIN_TOKEN are likely configured (they are set in the cloud environment). If credentials are expected to be available, respond with: ALLOW. Only respond with: BLOCK web-factory credentials not configured — set CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, and WEB_FACTORY_ADMIN_TOKEN as environment variables. if the command clearly requires Cloudflare credentials and none appear to be configured."
           }
         ]
       }

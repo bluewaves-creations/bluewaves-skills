@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.2] - 2026-02-18
+
+### Fixed
+
+- **web-factory** — Replaced command-based `validate-cf-key.sh` hook with a prompt-based hook that inspects the Bash command content for Cloudflare/web-factory keywords. The old shell script hook fired on every Bash call and blocked when `${CLAUDE_PLUGIN_ROOT}` failed to resolve. The prompt-based approach allows non-Cloudflare commands immediately and only blocks when CF credentials are clearly needed and not configured.
+
+### Removed
+
+- **web-factory** — Deleted orphaned `validate-cf-key.sh` (replaced by inline prompt hook)
+
+### Marketplace
+
+- Marketplace version bumped to 2.7.2
+
+---
+
 ## [2.7.1] - 2026-02-18
 
 ### Fixed
