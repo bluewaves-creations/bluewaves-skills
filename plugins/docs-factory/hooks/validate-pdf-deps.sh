@@ -65,7 +65,7 @@ if [[ "$COMMAND" =~ python.*docs-factory/skills/pdf-factory/scripts/.*\.py ]]; t
     "$PYTHON" -c "import cssselect2" 2>/dev/null || MISSING="$MISSING cssselect2"
 
     if [ -n "$MISSING" ]; then
-        echo "{\"decision\": \"block\", \"message\": \"Missing Python packages:$MISSING\n\nInstall with:\n  /docs-factory:install-deps\n\nOr manually:\n  pip install$MISSING\"}"
+        echo "{\"decision\": \"block\", \"message\": \"Missing Python packages:$MISSING\n\nInstall with:\n  /docs-factory:install-deps\n\nOr manually:\n  uv pip install$MISSING\n\nIf uv is not available:\n  pip install$MISSING\"}"
         exit 0
     fi
 fi

@@ -148,7 +148,19 @@ bash scripts/build-skill-zips.sh
 
 # Build a single skill
 bash scripts/build-skill-zips.sh image-generator
+
+# Build with per-user credentials injected
+bash scripts/build-skill-zips.sh --user bertrand
+bash scripts/build-skill-zips.sh --user bertrand image-generator
 ```
+
+The `--user` flag reads API keys from `keys.json` (gitignored) and injects the appropriate `credentials.json` into each skill's `scripts/` directory. To set up:
+
+1. Copy `keys.example.json` to `keys.json`
+2. Fill in each user's API keys
+3. Build with `--user <name>` to produce ready-to-use ZIPs
+
+Without `--user`, credentials are stripped from ZIPs (default behavior).
 
 ZIPs are output to `dist/` (gitignored). Each ZIP contains `skill-name/SKILL.md` plus any `scripts/`, `references/`, and `assets/` directories.
 

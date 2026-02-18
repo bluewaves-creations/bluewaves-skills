@@ -33,8 +33,9 @@ export FAL_KEY="your-fal-api-key"
 
 Install the fal client:
 ```bash
-pip install fal-client
+uv pip install fal-client
 ```
+If `uv` is not available, fall back to: `pip install fal-client`
 
 ## API Endpoint
 

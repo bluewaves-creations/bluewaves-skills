@@ -1,0 +1,34 @@
+{
+  "bertrand": {
+    "fal_key": "",
+    "gemini_api_key": "",
+    "web_factory_admin_token": "",
+    "cloudflare_api_token": "",
+    "cloudflare_account_id": "",
+    "gateway_domain": "api.bluewaves-athena.app"
+  },
+  "erica": {
+    "fal_key": "",
+    "gemini_api_key": "",
+    "web_factory_admin_token": "",
+    "cloudflare_api_token": "",
+    "cloudflare_account_id": "",
+    "gateway_domain": "api.bluewaves-athena.app"
+  },
+  "bernardo": {
+    "fal_key": "",
+    "gemini_api_key": "",
+    "web_factory_admin_token": "",
+    "cloudflare_api_token": "",
+    "cloudflare_account_id": "",
+    "gateway_domain": "api.bluewaves-athena.app"
+  },
+  "jacques": {
+    "fal_key": "",
+    "gemini_api_key": "",
+    "web_factory_admin_token": "",
+    "cloudflare_api_token": "",
+    "cloudflare_account_id": "",
+    "gateway_domain": "api.bluewaves-athena.app"
+  }
+}
