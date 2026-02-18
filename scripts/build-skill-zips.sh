@@ -81,7 +81,7 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
 
     # Remove files that must never ship in ZIPs
     find "$tmp_dir" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-    find "$tmp_dir" \( -name "*.pyc" -o -name "*.pyo" -o -name ".DS_Store" \) -delete 2>/dev/null || true
+    find "$tmp_dir" \( -name "*.pyc" -o -name "*.pyo" -o -name ".DS_Store" -o -name "credentials.example.json" \) -delete 2>/dev/null || true
 
     # Handle credentials.json: inject per-user keys or strip
     if [[ -n "$USER_NAME" && -d "$tmp_dir/$skill_name/scripts" ]]; then
