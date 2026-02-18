@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-02-18
+
+### Changed
+
+- **build script** — Output files now use `.skill` extension instead of `.zip` (still ZIP archives internally), aligning with skills-factory `package_skill.py` convention.
+- **Marketplace-wide skill audit** — Refactored all 10 fal.ai skills to extract shared boilerplate (prerequisites, Python examples, response formats, error handling) into `plugins/media-factory/references/fal-api.md`. Each skill now references the shared file via symlink, reducing per-skill line count by ~50%. Follows progressive disclosure best practices from skill-shaper v2.4.0.
+- **pdf-factory** — Extracted 110-line "How It Works" internals section to `references/internals.md` with on-demand load condition. SKILL.md reduced from 335 to ~225 lines.
+- **chart-designer** — Added "when to read" load conditions to reference file links per progressive disclosure rules.
+- **Brand kit descriptions** — Tightened brand-bluewaves, brand-decathlon, and brand-wave-artisans YAML descriptions to single-line format, removing implementation detail.
+- **site-factory / site-publisher** — Tightened YAML descriptions, removing implementation detail.
+- **podcast-generator** — Condensed Dialog Crafting Guidelines from ~52 lines to ~15 lines with pointer to `references/tts-prompting-guide.md`.
+- media-factory plugin version bumped to 2.2.0
+
+### Marketplace
+
+- Marketplace version bumped to 2.6.0
+
+---
+
+## [2.5.0] - 2026-02-18
+
+### Added
+
+- **media-factory (podcast-generator)** — New skill for generating two-host podcast episodes using Google Gemini TTS. Features Athena & Gizmo AI co-hosts with distinct voices, automatic long-dialog splitting and concatenation, source document extraction (.md/.pdf), and expressive director's notes system for natural-sounding dialog delivery.
+- **media-factory** — Gemini API key validation hook (`validate-gemini-key.sh`) mirroring the existing fal.ai key validation pattern
+- **build script** — Gemini credential injection support for podcast-generator skill ZIPs (`--user` flag)
+
+### Changed
+
+- media-factory plugin version bumped to 2.1.0
+- media-factory description and keywords updated to include podcast/Gemini TTS/audio generation
+
+### Marketplace
+
+- Marketplace version bumped to 2.5.0
+
+---
+
 ## [2.4.0] - 2026-02-18
 
 ### Added

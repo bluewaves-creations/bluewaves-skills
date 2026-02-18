@@ -10,6 +10,8 @@ compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai
 
 Generate images in the iconic style of Mario Testino - vibrant, glamorous photography with bold colors and luxurious sensuality.
 
+See `references/fal-api.md` for setup, Python patterns, and error handling.
+
 ## Style Characteristics
 
 Mario Testino's photography is defined by:
@@ -19,29 +21,9 @@ Mario Testino's photography is defined by:
 - **Spontaneous elegance** - authentic connection with genuine emotion
 - **Dynamic movement** - sense of liveliness and joyful energy
 
-## Prerequisites
-
-For Claude.ai users, copy `scripts/credentials.example.json` to `scripts/credentials.json` and add your key:
-```json
-{ "api_key": "your-fal-api-key" }
-```
-
-Alternatively, set the environment variable:
-```bash
-export FAL_KEY="your-fal-api-key"
-```
-
-Install the fal client:
-```bash
-uv pip install fal-client
-```
-If `uv` is not available, fall back to: `pip install fal-client`
-
 ## API Endpoint
 
-```
-fal-ai/gemini-3-pro-image-preview
-```
+`fal-ai/gemini-3-pro-image-preview`
 
 ## Prompt Construction
 
@@ -65,69 +47,14 @@ luxurious atmosphere, vibrant and luminous
 | Color | `bold colors`, `saturated`, `vibrant`, `rich hues`, `warm tones` |
 | Light | `natural light`, `sun-kissed`, `luminous`, `warm`, `golden` |
 
-## Usage
+## CLI Script
 
-### Fashion Portrait Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "supermodel in flowing red dress, laughing in motion, in the style of Mario Testino, natural light photography, glamorous fashion, bold saturated colors, warm sun-kissed skin, dynamic composition, spontaneous joyful energy, luxurious Peruvian setting, vibrant and radiant",
-        "aspect_ratio": "2:3",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-### Celebrity Portrait Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "celebrity portrait with confident smile, in the style of Mario Testino, natural light photography, glamorous high fashion, bold saturated colors, luminous warm skin tones, dynamic energy, sensual elegance, spontaneous charm, luxurious atmosphere, vibrant color palette",
-        "aspect_ratio": "3:4",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-## Response Format
-
-```json
-{
-  "images": [
-    {
-      "url": "https://fal.media/files/...",
-      "content_type": "image/png"
-    }
-  ]
-}
+```bash
+python3 scripts/fal_generate.py \
+    --endpoint image \
+    --prompt "supermodel in flowing red dress, laughing in motion, in the style of Mario Testino, natural light, glamorous fashion, bold saturated colors, warm skin, dynamic composition, spontaneous joyful energy" \
+    --aspect-ratio 2:3 \
+    --output testino-portrait.png
 ```
 
 ## Examples
@@ -191,16 +118,6 @@ vibrant contrast, alluring presence
 5. **Skin quality** - Add "luminous skin", "glowing complexion", "radiant"
 6. **Fashion context** - Reference high fashion, designer, editorial styling
 7. **Web search grounding** - `enable_web_search: True` lets Gemini look up Testino's actual style for authentic results
-
-## Error Handling
-
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `fal_client.AuthenticationError` | Invalid FAL_KEY | Verify key at fal.ai dashboard |
-| `fal_client.RateLimitError` | Rate limit exceeded | Wait 60 seconds, retry |
-| `fal_client.ValidationError` | Invalid parameters | Check aspect_ratio format (e.g., "2:3") |
-| `fal_client.ServerError` | API temporary issue | Retry after 30 seconds |
-| `fal_client.TimeoutError` | Generation taking too long | Simplify prompt or reduce resolution |
 
 ## Reference
 

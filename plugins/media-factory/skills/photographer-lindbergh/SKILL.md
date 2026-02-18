@@ -10,6 +10,8 @@ compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai
 
 Generate images in the iconic style of Peter Lindbergh - raw, authentic black and white photography that celebrates natural beauty and emotional depth.
 
+See `references/fal-api.md` for setup, Python patterns, and error handling.
+
 ## Style Characteristics
 
 Peter Lindbergh revolutionized fashion photography by:
@@ -19,29 +21,9 @@ Peter Lindbergh revolutionized fashion photography by:
 - **Emotional depth** - focus on personality and inner character over glamour
 - **Timeless elegance** - avoids trends, captures enduring beauty
 
-## Prerequisites
-
-For Claude.ai users, copy `scripts/credentials.example.json` to `scripts/credentials.json` and add your key:
-```json
-{ "api_key": "your-fal-api-key" }
-```
-
-Alternatively, set the environment variable:
-```bash
-export FAL_KEY="your-fal-api-key"
-```
-
-Install the fal client:
-```bash
-uv pip install fal-client
-```
-If `uv` is not available, fall back to: `pip install fal-client`
-
 ## API Endpoint
 
-```
-fal-ai/gemini-3-pro-image-preview
-```
+`fal-ai/gemini-3-pro-image-preview`
 
 ## Prompt Construction
 
@@ -64,69 +46,14 @@ film grain texture, intimate portrait, emotional depth, unretouched skin
 | Technical | `high contrast`, `film grain`, `black and white` |
 | Style | `cinematic`, `timeless`, `verite`, `documentary` |
 
-## Usage
+## CLI Script
 
-### Portrait Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "woman with freckles looking into camera, in the style of Peter Lindbergh, black and white photography, natural light, minimal makeup, raw authentic beauty, high contrast, film grain texture, intimate portrait, emotional depth, unretouched skin",
-        "aspect_ratio": "3:4",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-### Editorial Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "mature model with silver hair, in the style of Peter Lindbergh, black and white photography, natural light, minimal makeup, raw authentic beauty, high contrast, film grain texture, intimate portrait, emotional depth, unretouched skin, soulful expression, timeless elegance",
-        "aspect_ratio": "2:3",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-## Response Format
-
-```json
-{
-  "images": [
-    {
-      "url": "https://fal.media/files/...",
-      "content_type": "image/png"
-    }
-  ]
-}
+```bash
+python3 scripts/fal_generate.py \
+    --endpoint image \
+    --prompt "woman with freckles, in the style of Peter Lindbergh, black and white, natural light, raw authentic beauty, high contrast, film grain, intimate portrait" \
+    --aspect-ratio 3:4 \
+    --output lindbergh-portrait.png
 ```
 
 ## Examples
@@ -176,16 +103,6 @@ humanistic photography, unretouched character study
 5. **Add grain** - Always include "film grain texture" or "analog film aesthetic"
 6. **Use portrait ratios** - 2:3, 3:4, or 4:5 work best for the classic Lindbergh look
 7. **Web search grounding** - `enable_web_search: True` lets Gemini look up Lindbergh's actual style for authentic results
-
-## Error Handling
-
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `fal_client.AuthenticationError` | Invalid FAL_KEY | Verify key at fal.ai dashboard |
-| `fal_client.RateLimitError` | Rate limit exceeded | Wait 60 seconds, retry |
-| `fal_client.ValidationError` | Invalid parameters | Check aspect_ratio format (e.g., "3:4") |
-| `fal_client.ServerError` | API temporary issue | Retry after 30 seconds |
-| `fal_client.TimeoutError` | Generation taking too long | Simplify prompt or reduce resolution |
 
 ## Reference
 

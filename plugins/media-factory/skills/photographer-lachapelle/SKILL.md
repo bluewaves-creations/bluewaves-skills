@@ -10,6 +10,8 @@ compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai
 
 Generate images in the iconic style of David LaChapelle - surreal, hyper-saturated pop art photography with theatrical staging and cultural commentary.
 
+See `references/fal-api.md` for setup, Python patterns, and error handling.
+
 ## Style Characteristics
 
 David LaChapelle's photography is defined by:
@@ -19,29 +21,9 @@ David LaChapelle's photography is defined by:
 - **Cultural commentary** - themes of consumerism, fame, divine vs profane
 - **Over-the-top maximalism** - visually opulent excess
 
-## Prerequisites
-
-For Claude.ai users, copy `scripts/credentials.example.json` to `scripts/credentials.json` and add your key:
-```json
-{ "api_key": "your-fal-api-key" }
-```
-
-Alternatively, set the environment variable:
-```bash
-export FAL_KEY="your-fal-api-key"
-```
-
-Install the fal client:
-```bash
-uv pip install fal-client
-```
-If `uv` is not available, fall back to: `pip install fal-client`
-
 ## API Endpoint
 
-```
-fal-ai/gemini-3-pro-image-preview
-```
+`fal-ai/gemini-3-pro-image-preview`
 
 ## Prompt Construction
 
@@ -65,69 +47,14 @@ kitsch aesthetic, provocative staging, fantasy scenario
 | Style | `baroque`, `maximalist`, `kitsch`, `pop art`, `theatrical` |
 | Theme | `provocative`, `satirical`, `religious`, `consumerist`, `celebrity` |
 
-## Usage
+## CLI Script
 
-### Pop Culture Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "woman as modern Madonna surrounded by fast food and luxury items, in the style of David LaChapelle, pop surrealism, hyper-saturated fluorescent colors, elaborate theatrical set design, baroque maximalism, surreal dreamlike composition, kitsch aesthetic, religious iconography meets consumer culture",
-        "aspect_ratio": "3:4",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-### Underwater Fantasy Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "celebrity figure in fantastical underwater scene, in the style of David LaChapelle, pop surrealism, hyper-saturated electric colors, elaborate theatrical staging, baroque abundance of decorative elements, surreal dreamlike floating composition, kitsch aesthetic with mermaids and treasure, provocative fantasy scenario",
-        "aspect_ratio": "2:3",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-## Response Format
-
-```json
-{
-  "images": [
-    {
-      "url": "https://fal.media/files/...",
-      "content_type": "image/png"
-    }
-  ]
-}
+```bash
+python3 scripts/fal_generate.py \
+    --endpoint image \
+    --prompt "woman as modern Madonna surrounded by fast food and luxury items, in the style of David LaChapelle, pop surrealism, hyper-saturated fluorescent colors, baroque maximalism, kitsch aesthetic" \
+    --aspect-ratio 3:4 \
+    --output lachapelle-scene.png
 ```
 
 ## Examples
@@ -194,16 +121,6 @@ kitsch satirical take on wealth and celebrity
 5. **Add commentary** - Reference themes like "consumer culture", "celebrity worship", "sacred vs profane"
 6. **Think kitsch** - Use "pop art", "kitsch aesthetic", "over-the-top"
 7. **Web search grounding** - `enable_web_search: True` lets Gemini look up LaChapelle's actual style for authentic results
-
-## Error Handling
-
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `fal_client.AuthenticationError` | Invalid FAL_KEY | Verify key at fal.ai dashboard |
-| `fal_client.RateLimitError` | Rate limit exceeded | Wait 60 seconds, retry |
-| `fal_client.ValidationError` | Invalid parameters | Check aspect_ratio format (e.g., "3:4") |
-| `fal_client.ServerError` | API temporary issue | Retry after 30 seconds |
-| `fal_client.TimeoutError` | Generation taking too long | Simplify prompt or reduce resolution |
 
 ## Reference
 

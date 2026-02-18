@@ -1,15 +1,6 @@
 ---
 name: site-factory
-description: >
-  Build single-page websites from markdown content with an optional docs-factory
-  brand kit. Ships with a built-in neutral default brand (gray palette, system
-  fonts, Bluewaves logo) so users can create clean websites without installing
-  any brand kit. Reads skeleton.html, maps design tokens to CSS custom
-  properties, generates responsive HTML with header, TOC, content, attachments,
-  and footer. Outputs a build/ directory ready for site-publisher. This skill
-  should be used when the user wants to create a branded website, web page,
-  or HTML site from markdown content. Triggers on requests mentioning website
-  creation, branded web pages, HTML generation from markdown, or web publishing.
+description: Build single-page branded websites from markdown content with optional docs-factory brand kit. Use when the user wants to create a website, web page, or HTML site from markdown.
 allowed-tools: Bash, Read, Write
 license: MIT
 compatibility: Python 3.8+ (stdlib only for site_api.py)

@@ -1,7 +1,7 @@
 ---
-description: Build standalone skill ZIP files for Claude.ai users
+description: Build standalone .skill files for Claude.ai users
 ---
-Run the build script to generate standalone skill ZIP files that Claude.ai users can upload via Settings > Capabilities.
+Run the build script to generate standalone `.skill` files that Claude.ai users can upload via Settings > Capabilities.
 
 $ARGUMENTS
 

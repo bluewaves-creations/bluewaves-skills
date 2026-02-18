@@ -1,13 +1,6 @@
 ---
 name: brand-decathlon
-description: >
-  Brand kit for Decathlon. Provides design tokens (colors, typography,
-  spacing), Inter font files, logo variants, PDF page templates with
-  content zones, and decorative patterns. This skill should be used
-  whenever generating documents, presentations, web pages, or images for
-  Decathlon. It triggers on requests mentioning Decathlon brand, Decathlon
-  documents, Decathlon styling, or Decathlon identity. Pairs with the
-  pdf-factory skill for PDF output.
+description: Brand kit for Decathlon. Provides design tokens (colors, typography, spacing), Inter font files, logo variants, and PDF page templates. Use whenever generating documents, presentations, or web pages for the Decathlon brand.
 allowed-tools: Bash, Read, Write
 license: MIT
 ---

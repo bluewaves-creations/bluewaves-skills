@@ -138,9 +138,9 @@ bluewaves-skills/
 
 ## Building
 
-### Standalone Skill ZIPs
+### Standalone .skill Files
 
-Generate standalone ZIP files for Claude.ai users (uploads via Settings > Capabilities):
+Generate standalone `.skill` files for Claude.ai users (uploads via Settings > Capabilities):
 
 ```bash
 # Build all skills
@@ -158,11 +158,11 @@ The `--user` flag reads API keys from `keys.json` (gitignored) and injects the a
 
 1. Copy `keys.example.json` to `keys.json`
 2. Fill in each user's API keys
-3. Build with `--user <name>` to produce ready-to-use ZIPs
+3. Build with `--user <name>` to produce ready-to-use `.skill` files
 
-Without `--user`, credentials are stripped from ZIPs (default behavior).
+Without `--user`, credentials are stripped from `.skill` files (default behavior).
 
-ZIPs are output to `dist/` (gitignored). Each ZIP contains `skill-name/SKILL.md` plus any `scripts/`, `references/`, and `assets/` directories.
+Files are output to `dist/` (gitignored). Each `.skill` file contains `skill-name/SKILL.md` plus any `scripts/`, `references/`, and `assets/` directories.
 
 You can also use the slash command `/build-skill-zips` from Claude Code.
 
@@ -186,7 +186,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 2.4.0
+Current marketplace version: 2.6.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

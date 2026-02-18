@@ -1,14 +1,6 @@
 ---
 name: site-publisher
-description: >
-  Publish and manage password-protected branded websites on Cloudflare via the
-  web-factory admin API. Publishes build directories as live sites, manages
-  passwords, lists and deletes sites. Works in both Claude Code and Claude.ai
-  (via Python HTTP client). This skill should be used when the user wants to
-  publish a website, deploy a site to Cloudflare, manage hosted sites, rotate
-  site passwords, or list/delete published sites. Triggers on requests
-  mentioning site publishing, web deployment, Cloudflare hosting, or
-  site management.
+description: Publish and manage password-protected branded websites on Cloudflare. Use when the user wants to publish a website, deploy a site, manage hosted sites, list or delete published sites, or rotate site passwords.
 allowed-tools: Bash, Read, Write
 license: MIT
 compatibility: Python 3.8+ (stdlib only)

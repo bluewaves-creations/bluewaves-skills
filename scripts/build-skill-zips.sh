@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Build standalone skill ZIP files for Claude.ai users.
-# Each ZIP contains a single skill folder with its SKILL.md file.
+# Build standalone .skill files (ZIP archives) for Claude.ai users.
+# Each .skill file contains a single skill folder with its SKILL.md file.
 #
 # Usage:
 #   ./scripts/build-skill-zips.sh                              # Build all skills
@@ -89,12 +89,21 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
         creds_file="$tmp_dir/$skill_name/scripts/credentials.json"
         case "$plugin_name" in
             media-factory)
-                python3 -c "
+                if [[ "$skill_name" == "podcast-generator" ]]; then
+                    python3 -c "
+import json, sys
+keys = json.load(open(sys.argv[1]))
+user = keys[sys.argv[2]]
+json.dump({'gemini_api_key': user['gemini_api_key']}, open(sys.argv[3], 'w'), indent=2)
+" "$KEYS_FILE" "$USER_NAME" "$creds_file"
+                else
+                    python3 -c "
 import json, sys
 keys = json.load(open(sys.argv[1]))
 user = keys[sys.argv[2]]
 json.dump({'api_key': user['fal_key']}, open(sys.argv[3], 'w'), indent=2)
 " "$KEYS_FILE" "$USER_NAME" "$creds_file"
+                fi
                 ;;
             web-factory)
                 python3 -c "
@@ -120,24 +129,24 @@ json.dump({
     fi
 
     # Create the ZIP from inside the temp dir so the path is skill-name/SKILL.md
-    (cd "$tmp_dir" && zip -q -r "$DIST_DIR/$skill_name.zip" "$skill_name")
+    (cd "$tmp_dir" && zip -q -r "$DIST_DIR/$skill_name.skill" "$skill_name")
 
     rm -rf "$tmp_dir"
 
-    size=$(stat -f%z "$DIST_DIR/$skill_name.zip" 2>/dev/null || stat -c%s "$DIST_DIR/$skill_name.zip" 2>/dev/null)
+    size=$(stat -f%z "$DIST_DIR/$skill_name.skill" 2>/dev/null || stat -c%s "$DIST_DIR/$skill_name.skill" 2>/dev/null)
     total_size=$((total_size + size))
     count=$((count + 1))
 
     size_kb="$((size / 1024)).$((size % 1024 * 10 / 1024))"
-    printf "  %-40s %s KB\n" "$skill_name.zip" "$size_kb"
+    printf "  %-40s %s KB\n" "$skill_name.skill" "$size_kb"
 done
 
 echo ""
 total_kb="$((total_size / 1024)).$((total_size % 1024 * 10 / 1024))"
 if [[ -n "$USER_NAME" ]]; then
-    echo "$count ZIP(s) generated in dist/ for user '$USER_NAME' (total: ${total_kb} KB)"
+    echo "$count .skill file(s) generated in dist/ for user '$USER_NAME' (total: ${total_kb} KB)"
 else
-    echo "$count ZIP(s) generated in dist/ (total: ${total_kb} KB)"
+    echo "$count .skill file(s) generated in dist/ (total: ${total_kb} KB)"
 fi
 
 if [[ -n "$FILTER" && $count -eq 0 ]]; then

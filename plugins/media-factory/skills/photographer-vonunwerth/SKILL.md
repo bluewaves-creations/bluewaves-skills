@@ -10,6 +10,8 @@ compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai
 
 Generate images in the iconic style of Ellen von Unwerth - playful, vintage-inspired photography celebrating feminine empowerment and whimsical sensuality.
 
+See `references/fal-api.md` for setup, Python patterns, and error handling.
+
 ## Style Characteristics
 
 Ellen von Unwerth's photography is defined by:
@@ -19,29 +21,9 @@ Ellen von Unwerth's photography is defined by:
 - **Empowered femininity** - women as subjects, not objects
 - **High-energy dynamism** - movement, spontaneity, joy
 
-## Prerequisites
-
-For Claude.ai users, copy `scripts/credentials.example.json` to `scripts/credentials.json` and add your key:
-```json
-{ "api_key": "your-fal-api-key" }
-```
-
-Alternatively, set the environment variable:
-```bash
-export FAL_KEY="your-fal-api-key"
-```
-
-Install the fal client:
-```bash
-uv pip install fal-client
-```
-If `uv` is not available, fall back to: `pip install fal-client`
-
 ## API Endpoint
 
-```
-fal-ai/gemini-3-pro-image-preview
-```
+`fal-ai/gemini-3-pro-image-preview`
 
 ## Prompt Construction
 
@@ -65,69 +47,14 @@ retro glamour, storytelling composition, dramatic light and shadow
 | Femininity | `empowering`, `sensual`, `feminine`, `provocative`, `confident` |
 | Narrative | `storytelling`, `character`, `scene`, `dramatic`, `theatrical` |
 
-## Usage
+## CLI Script
 
-### Vintage Portrait Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "woman in vintage lingerie looking mischievously over shoulder, in the style of Ellen von Unwerth, playful fashion photography, vintage cinematic aesthetic, film noir dramatic lighting, whimsical flirtatious mood, feminine empowerment, retro Hollywood glamour, storytelling narrative scene",
-        "aspect_ratio": "2:3",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-### Narrative Scene Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "two women in 1950s style dresses, sharing secret and laughing, in the style of Ellen von Unwerth, playful fashion photography, vintage cinematic black and white, film noir lighting, whimsical feminine narrative, best friends moment, retro glamour aesthetic, mischievous energy, storytelling composition, dramatic shadows",
-        "aspect_ratio": "3:4",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-## Response Format
-
-```json
-{
-  "images": [
-    {
-      "url": "https://fal.media/files/...",
-      "content_type": "image/png"
-    }
-  ]
-}
+```bash
+python3 scripts/fal_generate.py \
+    --endpoint image \
+    --prompt "woman in vintage lingerie looking mischievously over shoulder, in the style of Ellen von Unwerth, playful fashion photography, vintage cinematic aesthetic, film noir lighting, whimsical flirtatious mood, feminine empowerment" \
+    --aspect-ratio 2:3 \
+    --output vonunwerth-portrait.png
 ```
 
 ## Examples
@@ -196,16 +123,6 @@ flirtatious energy, mischievous charm
 5. **Lighting drama** - Specify "film noir lighting", "dramatic shadows", "vintage aesthetic"
 6. **Movement and life** - Add "dynamic", "caught moment", "spontaneous", "wind-blown"
 7. **Web search grounding** - `enable_web_search: True` lets Gemini look up von Unwerth's actual style for authentic results
-
-## Error Handling
-
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `fal_client.AuthenticationError` | Invalid FAL_KEY | Verify key at fal.ai dashboard |
-| `fal_client.RateLimitError` | Rate limit exceeded | Wait 60 seconds, retry |
-| `fal_client.ValidationError` | Invalid parameters | Check aspect_ratio format (e.g., "2:3") |
-| `fal_client.ServerError` | API temporary issue | Retry after 30 seconds |
-| `fal_client.TimeoutError` | Generation taking too long | Simplify prompt or reduce resolution |
 
 ## Reference
 

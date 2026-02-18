@@ -13,10 +13,7 @@ compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai
 
 Edit and transform existing images using text prompts with Google's Gemini 3 Pro model via fal.ai.
 
-## Prerequisites
-
-- **API key**: `credentials.json` with `{"api_key": "..."}` in the scripts/ directory (Claude.ai standalone ZIPs), or `FAL_KEY` environment variable (add to `~/.zshrc`)
-- **Python package**: `uv pip install fal-client`
+See `references/fal-api.md` for setup, Python patterns, and error handling.
 
 ## API Endpoint
 
@@ -43,126 +40,15 @@ Edit and transform existing images using text prompts with Google's Gemini 3 Pro
 
 Note: `aspect_ratio` defaults to "auto" for editing, which preserves the original image proportions.
 
-## Usage
-
-### Python (fal_client)
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(f"  [{log.get('level', 'info')}] {log.get('message', '')}")
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview/edit",
-    arguments={
-        "prompt": "Add snow to this mountain scene and make it winter",
-        "image_urls": ["https://example.com/mountain.jpg"],
-        "num_images": 1,
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-
-edited_url = result["images"][0]["url"]
-print(f"Edited image: {edited_url}")
-```
-
-### Editing a Local File
-
-```python
-import fal_client
-
-# Upload local image to fal.ai CDN first
-uploaded_url = fal_client.upload_file("/path/to/local/photo.jpg")
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview/edit",
-    arguments={
-        "prompt": "Convert this photo to a watercolor painting style",
-        "image_urls": [uploaded_url],
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-)
-
-edited_url = result["images"][0]["url"]
-print(f"Edited image: {edited_url}")
-```
-
-### Multiple Input Images
-
-Provide multiple images in `image_urls` to combine elements or provide additional context.
-
-```python
-import fal_client
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview/edit",
-    arguments={
-        "prompt": "Combine elements from these images into a cohesive scene",
-        "image_urls": [
-            "https://example.com/background.jpg",
-            "https://example.com/subject.jpg",
-        ],
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-)
-```
-
-### CLI Script
+## CLI Script
 
 ```bash
-python scripts/fal_generate.py \
+python3 scripts/fal_generate.py \
     --endpoint edit \
     --prompt "Add snow to this mountain scene" \
     --image /path/to/mountain.jpg \
     --output edited.png
 ```
-
-## Response Format
-
-```json
-{
-  "images": [
-    {
-      "file_name": "edited_image.png",
-      "content_type": "image/png",
-      "url": "https://storage.googleapis.com/..."
-    }
-  ],
-  "description": "A description of the edited image"
-}
-```
-
-## Error Handling
-
-```python
-import fal_client
-
-try:
-    result = fal_client.subscribe("fal-ai/gemini-3-pro-image-preview/edit", arguments={...})
-except fal_client.FalClientError as e:
-    print(f"API error: {e}")         # Auth failures, invalid params, bad image URLs
-except fal_client.FalClientTimeoutError as e:
-    print(f"Timeout: {e}")           # Generation took too long
-except Exception as e:
-    print(f"Unexpected error: {e}")
-```
-
-| Symptom | Cause | Solution |
-|---------|-------|----------|
-| `FalClientError` (401) | Invalid FAL_KEY | Verify key at fal.ai dashboard |
-| `FalClientError` (429) | Rate limit exceeded | Wait 60 seconds, retry |
-| `FalClientError` (400) | Invalid image URL or parameters | Ensure image URLs are publicly accessible or use `upload_file()` |
-| `FalClientTimeoutError` | Generation too slow | Reduce resolution or simplify edit |
-| Empty `images` array | Content filtered | Rephrase prompt |
 
 ## Tips
 

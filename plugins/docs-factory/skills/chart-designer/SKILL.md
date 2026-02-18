@@ -143,5 +143,5 @@ After generating any chart, open the output image and verify:
 
 ## References
 
-- [Chart type cookbook](references/chart-types.md) — Complete matplotlib examples for every chart type
-- [Chart token schema](references/chart-tokens.md) — Full `tokens.chart` manifest.json specification
+- [Chart type cookbook](references/chart-types.md) — Read when implementing a specific chart type. Complete matplotlib examples for bar, line, pie, scatter, heatmap, and more.
+- [Chart token schema](references/chart-tokens.md) — Read when creating a custom brand kit or debugging token resolution. Full `tokens.chart` manifest.json specification.

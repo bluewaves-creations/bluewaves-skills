@@ -1,13 +1,6 @@
 ---
 name: brand-bluewaves
-description: >
-  Brand kit for Bluewaves. Provides design tokens (colors, typography,
-  spacing), Merriweather font files, logo variants, PDF page templates
-  with content zones, and decorative patterns. This skill should be used
-  whenever generating documents, presentations, web pages, or images for
-  Bluewaves. It triggers on requests mentioning Bluewaves brand, Bluewaves
-  documents, Bluewaves styling, or Bluewaves identity. Pairs with the
-  pdf-factory skill for PDF output.
+description: Brand kit for Bluewaves. Provides design tokens (colors, typography, spacing), Merriweather font files, logo variants, and PDF page templates. Use whenever generating documents, presentations, or web pages for the Bluewaves brand.
 allowed-tools: Bash, Read, Write
 license: MIT
 ---

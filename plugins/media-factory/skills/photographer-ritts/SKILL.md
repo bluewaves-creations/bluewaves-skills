@@ -10,6 +10,8 @@ compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai
 
 Generate images in the iconic style of Herb Ritts - sculptural, minimalist photography that treats the human form like classical Greek marble.
 
+See `references/fal-api.md` for setup, Python patterns, and error handling.
+
 ## Style Characteristics
 
 Herb Ritts defined a distinctive aesthetic through:
@@ -19,29 +21,9 @@ Herb Ritts defined a distinctive aesthetic through:
 - **Graphic bold contours** - strong shadows defining form and shape
 - **Desert/beach aesthetic** - outdoor locations with stark, simple backgrounds
 
-## Prerequisites
-
-For Claude.ai users, copy `scripts/credentials.example.json` to `scripts/credentials.json` and add your key:
-```json
-{ "api_key": "your-fal-api-key" }
-```
-
-Alternatively, set the environment variable:
-```bash
-export FAL_KEY="your-fal-api-key"
-```
-
-Install the fal client:
-```bash
-uv pip install fal-client
-```
-If `uv` is not available, fall back to: `pip install fal-client`
-
 ## API Endpoint
 
-```
-fal-ai/gemini-3-pro-image-preview
-```
+`fal-ai/gemini-3-pro-image-preview`
 
 ## Prompt Construction
 
@@ -64,69 +46,14 @@ strong shadows, clean lines, minimalist composition, athletic form
 | Aesthetic | `classical`, `Greek`, `minimalist`, `heroic`, `eternal` |
 | Setting | `desert`, `beach`, `outdoor`, `stark background`, `negative space` |
 
-## Usage
+## CLI Script
 
-### Desert Portrait Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "athletic male figure in desert landscape, in the style of Herb Ritts, black and white photography, sculptural lighting, California golden hour, classical Greek influence, strong shadows defining muscles, clean lines, minimalist composition, heroic pose",
-        "aspect_ratio": "2:3",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-### Beach Editorial Example
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "dancer in flowing fabric on beach, in the style of Herb Ritts, black and white photography, sculptural lighting, golden hour, classical Greek marble aesthetic, dramatic backlighting, silhouette with rim light, minimalist composition, eternal beauty, elegant movement captured",
-        "aspect_ratio": "3:4",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-print(result["images"][0]["url"])
-```
-
-## Response Format
-
-```json
-{
-  "images": [
-    {
-      "url": "https://fal.media/files/...",
-      "content_type": "image/png"
-    }
-  ]
-}
+```bash
+python3 scripts/fal_generate.py \
+    --endpoint image \
+    --prompt "athletic figure in desert, in the style of Herb Ritts, black and white, sculptural lighting, California golden hour, classical Greek influence, strong shadows, minimalist composition" \
+    --aspect-ratio 2:3 \
+    --output ritts-portrait.png
 ```
 
 ## Examples
@@ -189,16 +116,6 @@ eternal beauty, strong graphic shadows
 5. **Strong shadows** - Use "shadows defining form", "high contrast", "bold contours"
 6. **Simple compositions** - Keep backgrounds minimal, focus on the figure
 7. **Web search grounding** - `enable_web_search: True` lets Gemini look up Ritts' actual style for authentic results
-
-## Error Handling
-
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `fal_client.AuthenticationError` | Invalid FAL_KEY | Verify key at fal.ai dashboard |
-| `fal_client.RateLimitError` | Rate limit exceeded | Wait 60 seconds, retry |
-| `fal_client.ValidationError` | Invalid parameters | Check aspect_ratio format (e.g., "2:3") |
-| `fal_client.ServerError` | API temporary issue | Retry after 30 seconds |
-| `fal_client.TimeoutError` | Generation taking too long | Simplify prompt or reduce resolution |
 
 ## Reference
 

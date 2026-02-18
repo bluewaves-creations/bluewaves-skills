@@ -13,10 +13,7 @@ compatibility: Requires credentials.json or FAL_KEY environment variable (fal.ai
 
 Generate high-quality images from text prompts using Google's Gemini 3 Pro model via fal.ai.
 
-## Prerequisites
-
-- **API key**: `credentials.json` with `{"api_key": "..."}` in the scripts/ directory (Claude.ai standalone ZIPs), or `FAL_KEY` environment variable (add to `~/.zshrc`)
-- **Python package**: `uv pip install fal-client`
+See `references/fal-api.md` for setup, Python patterns, and error handling.
 
 ## API Endpoint
 
@@ -40,120 +37,16 @@ Generate high-quality images from text prompts using Google's Gemini 3 Pro model
 | `seed` | integer | - | Fix seed for reproducible results |
 | `limit_generations` | boolean | false | Restricts to 1 image per prompt round |
 
-## Usage
-
-### Python (fal_client)
-
-```python
-import fal_client
-
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(f"  [{log.get('level', 'info')}] {log.get('message', '')}")
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "A serene mountain landscape at sunset with golden light",
-        "num_images": 1,
-        "aspect_ratio": "16:9",
-        "resolution": "2K",
-        "output_format": "png",
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-    with_logs=True,
-    on_queue_update=on_queue_update,
-)
-
-image_url = result["images"][0]["url"]
-print(f"Generated image: {image_url}")
-```
-
-### Sync Mode (recommended for reliability)
-
-Sync mode returns a base64 data URI directly, avoiding a separate download step.
-
-```python
-import fal_client
-import base64
-
-result = fal_client.subscribe(
-    "fal-ai/gemini-3-pro-image-preview",
-    arguments={
-        "prompt": "A futuristic city skyline at night",
-        "sync_mode": True,
-        "safety_tolerance": "6",
-        "enable_web_search": True,
-    },
-)
-
-data_uri = result["images"][0]["url"]  # data:image/png;base64,...
-header, b64data = data_uri.split(",", 1)
-with open("output.png", "wb") as f:
-    f.write(base64.b64decode(b64data))
-```
-
-### Uploading Local Images (for use as references)
-
-```python
-import fal_client
-
-uploaded_url = fal_client.upload_file("/path/to/local/image.jpg")
-print(f"Uploaded: {uploaded_url}")
-```
-
-### CLI Script
+## CLI Script
 
 ```bash
-python scripts/fal_generate.py \
+python3 scripts/fal_generate.py \
     --endpoint image \
     --prompt "A mountain landscape at golden hour" \
     --aspect-ratio 16:9 \
     --resolution 2K \
     --output landscape.png
 ```
-
-## Response Format
-
-```json
-{
-  "images": [
-    {
-      "file_name": "generated_image.png",
-      "content_type": "image/png",
-      "url": "https://storage.googleapis.com/..."
-    }
-  ],
-  "description": "A description of the generated image"
-}
-```
-
-When `sync_mode` is true, the `url` field contains a `data:image/...;base64,...` URI instead of an HTTP URL.
-
-## Error Handling
-
-```python
-import fal_client
-
-try:
-    result = fal_client.subscribe("fal-ai/gemini-3-pro-image-preview", arguments={...})
-except fal_client.FalClientError as e:
-    print(f"API error: {e}")         # Auth failures, invalid params
-except fal_client.FalClientTimeoutError as e:
-    print(f"Timeout: {e}")           # Generation took too long
-except Exception as e:
-    print(f"Unexpected error: {e}")
-```
-
-| Symptom | Cause | Solution |
-|---------|-------|----------|
-| `FalClientError` (401) | Invalid FAL_KEY | Verify key at fal.ai dashboard |
-| `FalClientError` (429) | Rate limit exceeded | Wait 60 seconds, retry |
-| `FalClientError` (400) | Invalid parameters | Check aspect_ratio, resolution values |
-| `FalClientTimeoutError` | Generation too slow | Reduce resolution or simplify prompt |
-| Empty `images` array | Content filtered | Rephrase prompt |
 
 ## Tips
 
