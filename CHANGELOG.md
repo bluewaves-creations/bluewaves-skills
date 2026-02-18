@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-02-18
+
+### Added
+
+- **podcast-generator** — Cloudflare AI Gateway proxy support: routes Gemini TTS calls through CF AI Gateway with `cf-aig-authorization` header for usage tracking and rate limiting
+- **podcast-generator** — `### BREAK` markers for splitting long dialogs into independently generated audio segments with optional `[hint text]` for continuation context
+- **build script** — Gateway credential injection (`gateway_url`, `gateway_token`) for podcast-generator when using `--user` flag
+
+### Changed
+
+- **podcast-generator** — Lowered per-chunk word limit from 1500 to 1200 words for safer Gemini TTS ceiling margin
+- **podcast-generator** — Enabled unbuffered stdout (`line_buffering=True`) for real-time log output
+- **keys.example.json** — Renamed `ai_gateway_url` → `ai_gateway_name` for clarity
+- media-factory plugin version bumped to 2.3.0
+
+### Marketplace
+
+- Marketplace version bumped to 2.7.0
+
+---
+
 ## [2.6.0] - 2026-02-18
 
 ### Changed

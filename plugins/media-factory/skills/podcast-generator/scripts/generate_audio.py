@@ -9,6 +9,7 @@ import argparse
 import base64
 import json
 import os
+import re
 import sys
 import wave
 from pathlib import Path
@@ -18,7 +19,7 @@ DEFAULT_MODEL = "gemini-2.5-pro-preview-tts"
 DEFAULT_ATHENA_VOICE = "Autonoe"
 DEFAULT_GIZMO_VOICE = "Achird"
 
-MAX_TRANSCRIPT_WORDS = 1800  # safe limit per chunk (~8 min audio)
+MAX_TRANSCRIPT_WORDS = 1200  # 1200 words ≈ 437s (~7.3 min), safe under Gemini's ~11 min ceiling
 TRANSCRIPT_MARKER = "### TRANSCRIPT"
 
 
@@ -32,11 +33,15 @@ def save_wav(filename, pcm_data, channels=1, rate=24000, sample_width=2):
 
 
 def resolve_credentials():
-    """Resolve Gemini API key from credentials.json or environment variable.
+    """Resolve Gemini API key and optional gateway URL/token.
 
-    Checks scripts/credentials.json first, then falls back to GEMINI_API_KEY
-    environment variable. Returns the API key or None if not found.
+    Checks scripts/credentials.json first, then falls back to environment
+    variables. Returns {"api_key": str|None, "gateway_url": str, "gateway_token": str}.
     """
+    api_key = None
+    gateway_url = ""
+    gateway_token = ""
+
     # Check credentials.json next to this script
     creds_path = Path(__file__).parent / "credentials.json"
     if creds_path.is_file():
@@ -44,14 +49,23 @@ def resolve_credentials():
             creds = json.load(f)
         key = creds.get("gemini_api_key", "")
         if key and key != "YOUR_GEMINI_API_KEY_HERE":
-            return key
+            api_key = key
+        gateway_url = creds.get("gateway_url", "")
+        gateway_token = creds.get("gateway_token", "")
 
-    # Fall back to environment variable
-    return os.environ.get("GEMINI_API_KEY")
+    # Fall back to environment variables
+    if not api_key:
+        api_key = os.environ.get("GEMINI_API_KEY")
+    if not gateway_url:
+        gateway_url = os.environ.get("AI_GATEWAY_URL", "")
+    if not gateway_token:
+        gateway_token = os.environ.get("AI_GATEWAY_TOKEN", "")
+
+    return {"api_key": api_key, "gateway_url": gateway_url, "gateway_token": gateway_token}
 
 
 def _preflight():
-    """Check dependencies and API key. Returns (genai, types, api_key)."""
+    """Check dependencies and API key. Returns (genai, types, creds_dict)."""
     try:
         from google import genai
         from google.genai import types
@@ -62,8 +76,8 @@ def _preflight():
         )
         sys.exit(1)
 
-    api_key = resolve_credentials()
-    if not api_key:
+    creds = resolve_credentials()
+    if not creds["api_key"]:
         print(
             "Error: Gemini API key not found.\n"
             "Option 1: Create scripts/credentials.json with your key\n"
@@ -75,76 +89,97 @@ def _preflight():
         )
         sys.exit(1)
 
-    return genai, types, api_key
+    return genai, types, creds
+
+
+def _apply_hint(preamble, hint):
+    """Append a continuation note to the preamble when a BREAK hint is present."""
+    if hint:
+        return preamble + f"\n\n> Continuation note: {hint}"
+    return preamble
+
+
+# Regex for ### BREAK with optional [hint text]
+_BREAK_RE = re.compile(r"^\s*###\s+BREAK(?:\s+\[([^\]]*)\])?\s*$", re.MULTILINE)
 
 
 def split_dialog(text):
-    """Split a long dialog into chunks that stay under the TTS output limit.
+    """Split dialog at Claude-authored ### BREAK markers.
 
     Returns a list of complete dialog texts (preamble + transcript chunk).
-    Short dialogs or those without a transcript marker return as a single chunk.
+    If the transcript exceeds MAX_TRANSCRIPT_WORDS and has no BREAK markers,
+    the function raises SystemExit with a message asking Claude to add them.
     """
-    import re
-
-    # Find the transcript marker (case-insensitive)
+    # Find the transcript marker
     match = re.search(r"(?i)^(###\s+TRANSCRIPT)\s*$", text, re.MULTILINE)
     if not match:
         return [text]
 
     marker_end = match.end()
-    preamble = text[: marker_end]
+    preamble = text[:marker_end]
     transcript_body = text[marker_end:]
 
-    # Check word count of transcript body
-    words = transcript_body.split()
-    if len(words) <= MAX_TRANSCRIPT_WORDS:
+    word_count = len(transcript_body.split())
+    has_breaks = bool(_BREAK_RE.search(transcript_body))
+
+    # Happy path: short transcript, no breaks needed
+    if word_count <= MAX_TRANSCRIPT_WORDS and not has_breaks:
         return [text]
 
-    # Parse into speaker turns
-    lines = transcript_body.strip().splitlines()
-    turns = []  # list of (list of lines) per turn
-    for line in lines:
-        if re.match(r"^(Athena|Gizmo)\s*:", line):
-            turns.append([line])
-        elif turns:
-            turns[-1].append(line)
-        else:
-            # Lines before any speaker turn — treat as first turn
-            turns.append([line])
+    # Has BREAK markers — split at them
+    if has_breaks:
+        segments = _BREAK_RE.split(transcript_body)
+        # _BREAK_RE.split produces [text0, hint0, text1, hint1, ..., textN]
+        # where hintN is the captured group (None if no hint)
+        chunks = []
+        for i in range(0, len(segments), 2):
+            segment_text = segments[i].strip()
+            if not segment_text:
+                continue
+            # Hint precedes this segment (from the BREAK before it)
+            hint = segments[i - 1] if i > 0 and segments[i - 1] else None
+            chunk_preamble = _apply_hint(preamble, hint)
+            seg_words = len(segment_text.split())
+            if seg_words > MAX_TRANSCRIPT_WORDS:
+                print(
+                    f"Warning: Segment {len(chunks) + 1} is {seg_words} words "
+                    f"(limit: {MAX_TRANSCRIPT_WORDS}). Consider adding another "
+                    f"### BREAK within this segment.",
+                    file=sys.stderr,
+                )
+            chunks.append(chunk_preamble + "\n\n" + segment_text)
+        return chunks
 
-    # Group turns into chunks under the word limit
-    chunks = []
-    current_lines = []
-    current_words = 0
-    for turn in turns:
-        turn_text = "\n".join(turn)
-        turn_words = len(turn_text.split())
-        if current_lines and current_words + turn_words > MAX_TRANSCRIPT_WORDS:
-            chunk_transcript = "\n".join(current_lines)
-            chunks.append(preamble + "\n\n" + chunk_transcript)
-            current_lines = list(turn)
-            current_words = turn_words
-        else:
-            current_lines.extend(turn)
-            current_words += turn_words
-
-    # Don't forget the last chunk
-    if current_lines:
-        chunk_transcript = "\n".join(current_lines)
-        chunks.append(preamble + "\n\n" + chunk_transcript)
-
-    return chunks
+    # No BREAK markers but transcript is too long — error
+    print(
+        f"Error: Transcript is {word_count} words "
+        f"(limit: {MAX_TRANSCRIPT_WORDS} per chunk).\n"
+        f"Add ### BREAK markers at natural narrative transitions to split "
+        f"into segments of 800-1200 words.\n"
+        f"Example:  ### BREAK\n"
+        f"          ### BREAK [The conversation deepens — more reflective pacing]",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 
 def generate_audio_single(text, model=None, athena_voice=None, gizmo_voice=None):
     """Call Gemini TTS and return raw PCM audio bytes (single API call)."""
-    genai, types, api_key = _preflight()
+    genai, types, creds = _preflight()
 
     model = model or DEFAULT_MODEL
     athena_voice = athena_voice or DEFAULT_ATHENA_VOICE
     gizmo_voice = gizmo_voice or DEFAULT_GIZMO_VOICE
 
-    client = genai.Client(api_key=api_key)
+    client_kwargs = {"api_key": creds["api_key"]}
+    if creds["gateway_url"]:
+        http_opts = {"base_url": creds["gateway_url"]}
+        if creds["gateway_token"]:
+            http_opts["headers"] = {
+                "cf-aig-authorization": f"Bearer {creds['gateway_token']}"
+            }
+        client_kwargs["http_options"] = types.HttpOptions(**http_opts)
+    client = genai.Client(**client_kwargs)
 
     response = client.models.generate_content(
         model=model,
@@ -205,6 +240,8 @@ def generate_audio(text, model=None, athena_voice=None, gizmo_voice=None):
 
 
 def main():
+    sys.stdout.reconfigure(line_buffering=True)
+
     parser = argparse.ArgumentParser(
         description="Generate podcast audio using Gemini TTS."
     )

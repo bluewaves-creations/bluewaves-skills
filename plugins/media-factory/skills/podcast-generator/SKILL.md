@@ -17,6 +17,15 @@ compatibility: Requires credentials.json or GEMINI_API_KEY environment variable 
 
 The script checks `credentials.json` first, then falls back to the environment variable. Get a key at https://aistudio.google.com/apikey
 
+**Optional: Cloudflare AI Gateway proxy** — Claude.ai's sandbox blocks direct calls to `generativelanguage.googleapis.com`. To use this skill from Claude.ai, route requests through a Cloudflare AI Gateway:
+
+1. Set up an AI Gateway in the Cloudflare dashboard with a Google AI Studio / Gemini provider
+2. Add to `scripts/credentials.json`:
+   - `"gateway_url"`: your gateway endpoint, e.g. `"https://gateway.ai.cloudflare.com/v1/<account-id>/<gateway-name>/google-ai-studio"`
+   - `"gateway_token"`: your AI Gateway authentication token (if Authenticated Gateway is enabled)
+
+The gateway URL/token can also be set via the `AI_GATEWAY_URL` and `AI_GATEWAY_TOKEN` environment variables. When omitted, the script calls Google directly (works in Claude Code and local environments).
+
 **Dependencies** (first time only):
 
 ```bash
@@ -110,13 +119,21 @@ Using the source content, write a complete dialog file with all four sections: A
 
 ### Step 3: Generate audio
 
+Run the generation in the background to avoid timeout kills (generation takes 2-8 minutes depending on length):
+
 ```bash
-python3 scripts/generate_audio.py --source-file /tmp/podcast-dialog.txt --output /tmp/podcast.wav
+nohup python3 scripts/generate_audio.py --source-file /tmp/podcast-dialog.txt --output /tmp/podcast.wav > /tmp/podcast-log.txt 2>&1 &
+```
+
+Then poll the log every 30-60 seconds until `"Audio saved to"` appears:
+
+```bash
+tail -5 /tmp/podcast-log.txt
 ```
 
 Optional flags: `--model`, `--athena-voice`, `--gizmo-voice`.
 
-The script automatically handles long dialogs. If the transcript exceeds the TTS output limit, it splits into parts, generates each separately, and concatenates the audio seamlessly. No manual intervention needed.
+The script handles multi-part dialogs when `### BREAK` markers are present (see Dialog Crafting Guidelines). Each segment is generated separately and the audio is concatenated seamlessly. If the transcript exceeds 1200 words without `### BREAK` markers, the script will error and ask you to add them.
 
 ## Dialog Crafting Guidelines
 
@@ -129,12 +146,32 @@ When writing the podcast dialog in Step 2, the file must include all four sectio
 
 **Key transcript rules:**
 - Open with branded intro, end with branded outro
-- Target 2000-4000 words (~10 min). Longer is fine — the script auto-splits
+- Target 2000-4000 words (~10 min). Use `### BREAK` markers to split into chunks (see below)
 - Punctuation is emotion control: `...` pauses, CAPS emphasis, `!` energy, combined `"Wait... SERIOUSLY?!"`
 - Elongated vowels for warmth: `"Amaazing"`, `"Fasciiinating"`
 - Speaker labels `Athena:` and `Gizmo:` must match voice config exactly
 - No inline `[tags]` — Gemini ignores them. Emotion comes from Director's Notes + expressive writing
 - Keep under ~12,000 words total (32k token context limit)
+
+**Splitting long dialogs with `### BREAK` markers:**
+
+Any dialog over ~1200 words **must** include `### BREAK` markers. The script refuses to generate without them — this prevents mechanical splitting that breaks the narrative arc.
+
+- Place `### BREAK` on its own line between speaker turns at natural narrative transitions (topic shifts, emotional pivots, act boundaries)
+- Optionally add a tone hint: `### BREAK [The conversation deepens — more reflective pacing]`
+  - The hint is injected into the Director's Notes for the next segment, so Gemini adjusts its energy arc instead of restarting from scratch
+- Aim for **800-1200 words** between breaks
+- Short dialogs (under 1200 words) don't need breaks at all
+
+Example placement in a transcript:
+
+```
+Gizmo: ...and that's what makes it so revolutionary.
+
+### BREAK [Shifting from excitement to deeper analysis]
+
+Athena: Okay, but let's unpack the implications...
+```
 
 See `references/tts-prompting-guide.md` for complete prompting structure, techniques, and anti-patterns.
 

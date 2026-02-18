@@ -94,7 +94,15 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
 import json, sys
 keys = json.load(open(sys.argv[1]))
 user = keys[sys.argv[2]]
-json.dump({'gemini_api_key': user['gemini_api_key']}, open(sys.argv[3], 'w'), indent=2)
+creds = {'gemini_api_key': user['gemini_api_key']}
+gw_name = user.get('ai_gateway_name', '')
+if gw_name:
+    acct = user['cloudflare_account_id']
+    creds['gateway_url'] = f'https://gateway.ai.cloudflare.com/v1/{acct}/{gw_name}/google-ai-studio'
+    token = user.get('cloudflare_api_token', '')
+    if token:
+        creds['gateway_token'] = token
+json.dump(creds, open(sys.argv[3], 'w'), indent=2)
 " "$KEYS_FILE" "$USER_NAME" "$creds_file"
                 else
                     python3 -c "

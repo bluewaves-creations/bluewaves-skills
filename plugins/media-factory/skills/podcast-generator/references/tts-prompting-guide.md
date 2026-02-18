@@ -72,6 +72,8 @@ Chemistry:
 
 The actual dialog with `Athena:` / `Gizmo:` speaker labels.
 
+For long dialogs, `### BREAK` markers can be placed between speaker turns to split the transcript into segments. These markers (and their optional `[hint text]`) are stripped before sending to TTS — Gemini never sees them. See SKILL.md for placement guidelines.
+
 ## Emotional Delivery Techniques
 
 Gemini does not use inline `[tags]`. All emotion comes from Director's Notes combined with expressive transcript writing.
