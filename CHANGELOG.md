@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-02-18
+
+### Added
+
+- **skills-factory (skill-shaper)** — Three new reference guides for the skill-shaper skill:
+  - `testing-and-debugging.md` — Comprehensive testing strategies, validation workflows, and debugging patterns for skill development
+  - `skill-categories.md` — Taxonomy of skill categories with characteristics, examples, and design considerations
+  - `distribution-guide.md` — Distribution formats, packaging strategies, and cross-platform conversion guidance
+
+### Changed
+
+- **skills-factory (skill-shaper)** — Enhanced SKILL.md with improved structure, updated section references, and clearer authoring guidance
+- **skills-factory (skill-shaper)** — Expanded `authoring-best-practices.md` with additional patterns and refined recommendations
+- **skills-factory (skill-shaper)** — Updated `workflows.md` with broader workflow coverage and improved examples
+- skills-factory plugin version bumped to 1.1.0
+
+### Marketplace
+
+- Marketplace version bumped to 2.4.0
+
+---
+
 ## [2.3.4] - 2026-02-12
 
 ### Changed

@@ -46,6 +46,14 @@ Match the level of specificity to the task's fragility and variability:
 
 Think of Claude as exploring a path: a narrow bridge with cliffs needs specific guardrails (low freedom), while an open field allows many routes (high freedom).
 
+### Composability
+
+Skills should be modular and narrowly scoped. Each skill should do one thing well:
+
+- **One concern per skill**: A PDF skill processes PDFs; a charting skill creates charts. Avoid "Swiss army knife" skills.
+- **Scoped descriptions**: Narrow descriptions prevent unintended triggering and make skills composable — users can combine multiple focused skills rather than relying on one monolithic skill.
+- **Design for combination**: When skills may work together, use consistent terminology and compatible output formats so one skill's output can feed into another.
+
 ### Anatomy of a Skill
 
 Every skill consists of a required SKILL.md file and optional bundled resources:
@@ -178,8 +186,11 @@ Consult these references based on your needs during skill creation:
 
 - **[references/skill-specification.md](references/skill-specification.md)** — Read when you need to verify frontmatter field constraints, naming rules, directory structure requirements, or validation rules for SKILL.md format compliance.
 - **[references/authoring-best-practices.md](references/authoring-best-practices.md)** — Read when writing or reviewing skill content for quality: effective descriptions, naming conventions, testing strategies, anti-patterns, evaluation-driven development, and the complete skill quality checklist.
-- **[references/workflows.md](references/workflows.md)** — Read when designing multi-step processes: sequential workflows and conditional logic patterns.
+- **[references/workflows.md](references/workflows.md)** — Read when designing multi-step processes: sequential, conditional, iterative, and multi-MCP workflow patterns.
 - **[references/output-patterns.md](references/output-patterns.md)** — Read when the skill needs to produce consistent output formats: template and example patterns.
+- **[references/testing-and-debugging.md](references/testing-and-debugging.md)** — Read when testing a skill or debugging triggering, execution, or quality problems.
+- **[references/skill-categories.md](references/skill-categories.md)** — Read when choosing a skill archetype: document/asset creation, workflow automation, or MCP enhancement.
+- **[references/distribution-guide.md](references/distribution-guide.md)** — Read when preparing a skill for distribution: channels, packaging formats, and positioning.
 
 ## Skill Creation Process
 
@@ -208,11 +219,18 @@ For example, when building an image-editor skill, relevant questions include:
 
 To avoid overwhelming users, avoid asking too many questions in a single message. Start with the most important questions and follow up as needed.
 
-Conclude this step when there is a clear sense of the functionality the skill should support.
+Before moving on, also define success criteria:
+
+- **Trigger queries**: What should a user say to activate this skill? List 3-5 example queries.
+- **Output quality**: What does a good result look like? Define the minimum acceptable output.
+
+Conclude this step when there is a clear sense of the functionality the skill should support and how success will be measured.
 
 ### Step 2: Planning the Reusable Skill Contents
 
-To turn concrete examples into an effective skill, analyze each example by:
+First, identify which category the skill falls into — Document & Asset Creation, Workflow Automation, or MCP Enhancement. Each category has distinct design implications. See `references/skill-categories.md` for guidance.
+
+Then, turn concrete examples into an effective skill by analyzing each example:
 
 1. Considering how to execute on the example from scratch
 2. Identifying what scripts, references, and assets would be helpful when executing these workflows repeatedly
@@ -339,11 +357,19 @@ If validation fails, fix any errors and run the packaging command again.
 
 ### Step 6: Iterate
 
-After testing the skill, users may request improvements. Often this happens right after using the skill, with fresh context of how the skill performed.
+Before considering the skill complete, test across three areas:
+
+1. **Triggering**: Verify the skill activates on 5+ paraphrased queries and does NOT activate on 3+ unrelated queries
+2. **Functionality**: Run the primary workflow end-to-end with realistic inputs; test at least one edge case
+3. **Performance**: Compare output quality with and without the skill on representative tasks
+
+See `references/testing-and-debugging.md` for detailed testing methodology and common debugging solutions.
+
+After testing, users may request improvements. Often this happens right after using the skill, with fresh context of how the skill performed.
 
 **Iteration workflow:**
 
 1. Use the skill on real tasks
-2. Notice struggles or inefficiencies
+2. Notice struggles or inefficiencies (see iteration signals in `references/testing-and-debugging.md`)
 3. Identify how SKILL.md or bundled resources should be updated
 4. Implement changes and test again

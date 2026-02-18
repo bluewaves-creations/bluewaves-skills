@@ -162,6 +162,14 @@ Choose one term and use it throughout the skill:
 
 ## Common patterns
 
+### Advanced patterns
+
+**Multi-MCP coordination**: When a skill coordinates across multiple MCP tool servers, always use fully qualified tool names (`ServerName:tool_name`). Document the expected data flow between servers and specify which server handles each step.
+
+**Context-aware tool selection**: For skills that work with multiple tools or approaches, provide decision criteria rather than fixed instructions. Example: "For files under 1MB, use direct extraction. For larger files, use the streaming API."
+
+**Domain-specific intelligence**: Skills that add domain knowledge (financial regulations, medical terminology, legal standards) should separate the knowledge base into reference files and keep SKILL.md focused on when and how to apply that knowledge.
+
 ### Template pattern
 
 Provide templates for output format. Match strictness to your needs.
@@ -331,7 +339,13 @@ Watch for:
 
 ## Checklist for effective skills
 
-### Core quality
+### Phase 1: Before you start
+- [ ] Concrete use cases documented (3+ example queries)
+- [ ] Skill category identified (document/asset creation, workflow automation, or MCP enhancement)
+- [ ] Success criteria defined (what triggers the skill, what quality looks like)
+- [ ] Scope is narrow and composable (one concern per skill)
+
+### Phase 2: During development
 - [ ] Description is specific and includes key terms
 - [ ] Description includes both what the skill does and when to use it
 - [ ] SKILL.md body is under 500 lines
@@ -342,8 +356,6 @@ Watch for:
 - [ ] File references are one level deep
 - [ ] Progressive disclosure used appropriately
 - [ ] Workflows have clear steps
-
-### Code and scripts
 - [ ] Scripts solve problems rather than punt to Claude
 - [ ] Error handling is explicit and helpful
 - [ ] No "voodoo constants" (all values justified)
@@ -352,8 +364,18 @@ Watch for:
 - [ ] Validation/verification steps for critical operations
 - [ ] Feedback loops included for quality-critical tasks
 
-### Testing
-- [ ] At least three evaluations created
+### Phase 3: Before distribution
+- [ ] Passes `skills-ref validate` (or `quick_validate.py`)
+- [ ] Trigger testing: 5+ positive queries activate the skill
+- [ ] Trigger testing: 3+ negative queries do NOT activate the skill
+- [ ] Functional testing: happy path works end-to-end
+- [ ] Functional testing: at least one edge case handled
+- [ ] Performance comparison: skill improves output vs. baseline
 - [ ] Tested with Haiku, Sonnet, and Opus
-- [ ] Tested with real usage scenarios
+- [ ] At least three evaluations created
+
+### Phase 4: After distribution
+- [ ] Observe real usage for undertriggering or overtriggering
+- [ ] Iterate on iteration signals (see testing-and-debugging.md)
+- [ ] Collect and incorporate user feedback
 - [ ] Team feedback incorporated (if applicable)
