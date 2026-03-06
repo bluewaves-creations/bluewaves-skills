@@ -3,21 +3,41 @@
 Skill Initializer - Creates a new skill from template
 
 Usage:
-    init_skill.py <skill-name> --path <path>
+    init_skill.py <skill-name> --path <path> [--category <type>]
+
+Categories:
+    document-creation   - Skills that produce files (PDFs, documents, images)
+    workflow            - Skills that orchestrate multi-step processes
+    mcp-enhancement     - Skills that wrap external tools with knowledge
+    generic             - Default template (no category specified)
 
 Examples:
     init_skill.py my-new-skill --path skills/public
-    init_skill.py my-api-helper --path skills/private
-    init_skill.py custom-skill --path /custom/location
+    init_skill.py pdf-creator --path skills/public --category document-creation
+    init_skill.py deploy-pipeline --path skills/private --category workflow
 """
 
+import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 
-SKILL_TEMPLATE = """---
+def title_case_skill_name(skill_name):
+    """Convert hyphenated skill name to Title Case for display."""
+    return ' '.join(word.capitalize() for word in skill_name.split('-'))
+
+
+# --- Category-Specific Templates ---
+
+TEMPLATES = {
+    "generic": """---
 name: {skill_name}
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: >
+  [TODO: Assertive, territory-claiming description of what the skill does
+  and when to use it. Include specific trigger contexts and keywords.
+  Aim for 100-200 words. Example: "Generate X from Y. Use this skill
+  whenever the user wants to Z, needs A, or mentions B."]
 ---
 
 # {skill_title}
@@ -26,277 +46,258 @@ description: [TODO: Complete and informative explanation of what the skill does 
 
 [TODO: 1-2 sentences explaining what this skill enables]
 
-## Structuring This Skill
+## Workflow
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
-
-**1. Workflow-Based** (best for sequential processes)
-- Works well when there are clear step-by-step procedures
-- Example: DOCX skill with "Workflow Decision Tree" → "Reading" → "Creating" → "Editing"
-- Structure: ## Overview → ## Workflow Decision Tree → ## Step 1 → ## Step 2...
-
-**2. Task-Based** (best for tool collections)
-- Works well when the skill offers different operations/capabilities
-- Example: PDF skill with "Quick Start" → "Merge PDFs" → "Split PDFs" → "Extract Text"
-- Structure: ## Overview → ## Quick Start → ## Task Category 1 → ## Task Category 2...
-
-**3. Reference/Guidelines** (best for standards or specifications)
-- Works well for brand guidelines, coding standards, or requirements
-- Example: Brand styling with "Brand Guidelines" → "Colors" → "Typography" → "Features"
-- Structure: ## Overview → ## Guidelines → ## Specifications → ## Usage...
-
-**4. Capabilities-Based** (best for integrated systems)
-- Works well when the skill provides multiple interrelated features
-- Example: Product Management with "Core Capabilities" → numbered capability list
-- Structure: ## Overview → ## Core Capabilities → ### 1. Feature → ### 2. Feature...
-
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
-
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
-
-## [TODO: Replace with the first main section based on chosen structure]
-
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
+[TODO: Main workflow steps. Use imperative form. Explain the WHY behind
+each step, not just the what. Keep under 500 lines — move detailed
+content to references/ files.]
 
 ## Resources
 
-This skill includes example resource directories that demonstrate how to organize different types of bundled resources:
+- **scripts/** — Executable code for deterministic/repetitive tasks
+- **references/** — Documentation loaded as needed into context
+- **assets/** — Files used in output (templates, fonts, images)
 
-### scripts/
-Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
+Delete any unneeded directories.
+""",
 
-**Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
-
-**Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
-
-**Note:** Scripts may be executed without loading into context, but can still be read by Claude for patching or environment adjustments.
-
-### references/
-Documentation and reference material intended to be loaded into context to inform Claude's process and thinking.
-
-**Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
-- BigQuery: API reference documentation and query examples
-- Finance: Schema documentation, company policies
-
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information that Claude should reference while working.
-
-### assets/
-Files not intended to be loaded into context, but rather used within the output Claude produces.
-
-**Examples from other skills:**
-- Brand styling: PowerPoint template files (.pptx), logo files
-- Frontend builder: HTML/React boilerplate project directories
-- Typography: Font files (.ttf, .woff2)
-
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
-
+    "document-creation": """---
+name: {skill_name}
+description: >
+  [TODO: Generate/create [document type] from [input]. Use this skill
+  whenever the user wants to create, generate, render, or produce
+  [document type] output. Triggers on mentions of [keywords].]
 ---
 
-**Any unneeded directories can be deleted.** Not every skill requires all three types of resources.
+# {skill_title}
+
+## Overview
+
+[TODO: What documents this skill creates and from what inputs]
+
+## Workflow
+
+### Step 1: Gather Inputs
+[TODO: What the user needs to provide — content, templates, configuration]
+
+### Step 2: Process Content
+[TODO: How content is transformed — parsing, formatting, layout decisions]
+
+### Step 3: Generate Output
+[TODO: How the final document is produced — scripts, tools, templates]
+
+### Step 4: Validate
+[TODO: Quality checks before delivery — format compliance, content verification]
+
+Validation catches errors that are invisible during creation but break the
+final output. Always validate before delivering to the user.
+
+## Output Format
+
+[TODO: Describe the expected output format with a concrete example]
+
+## Resources
+
+- **scripts/** — Document generation and validation scripts
+- **references/** — Format specifications, templates, style guides
+- **assets/** — Template files, fonts, images, brand assets
+""",
+
+    "workflow": """---
+name: {skill_name}
+description: >
+  [TODO: Automate/orchestrate [process]. Use this skill whenever the user
+  wants to [action], needs to [action], or mentions [keywords]. Handles
+  [specific scenarios].]
+---
+
+# {skill_title}
+
+## Overview
+
+[TODO: What workflow this skill automates and when to use it]
+
+## Decision Tree
+
+[TODO: How to determine which workflow path to follow based on input.
+Use a simple if/then structure.]
+
+## Workflow Steps
+
+### Step 1: [Name]
+[TODO: First step with clear inputs and outputs]
+
+### Step 2: [Name]
+[TODO: Second step — explain WHY this order matters]
+
+### Step 3: [Name]
+[TODO: Third step — include error handling guidance]
+
+## Error Handling
+
+[TODO: Common failure modes and how to recover. Explain the reasoning
+behind each recovery strategy.]
+
+## Resources
+
+- **scripts/** — Automation scripts for each workflow step
+- **references/** — Process documentation, API specs, configuration
+""",
+
+    "mcp-enhancement": """---
+name: {skill_name}
+description: >
+  [TODO: Enhance [tool/service] with specialized knowledge for [domain].
+  Use this skill whenever the user interacts with [tool] for [purpose],
+  queries [data source], or needs [specific capability].]
+---
+
+# {skill_title}
+
+## Overview
+
+[TODO: What external tool this skill enhances and what knowledge it adds]
+
+## MCP Tools
+
+[TODO: List the MCP tools this skill works with using fully-qualified names:
+ServerName:tool_name]
+
+## Patterns
+
+### [Pattern 1 Name]
+[TODO: Common usage pattern with the MCP tool]
+
+### [Pattern 2 Name]
+[TODO: Another usage pattern — show how skill knowledge improves results]
+
+## Domain Knowledge
+
+[TODO: Key domain information that helps Claude use the tools effectively.
+Move detailed schemas and references to references/ files.]
+
+## Resources
+
+- **references/** — API documentation, schemas, domain knowledge
+""",
+}
+
+
+STARTER_EVAL_YAML = """name: trigger-test
+query: "[TODO: Realistic user prompt that should trigger this skill]"
+should_trigger: true
+checks:
+{checks}
+assertions:
+  - "TODO: Add assertion — what should a good output contain?"
 """
 
-EXAMPLE_SCRIPT = '''#!/usr/bin/env python3
-"""
-Example helper script for {skill_name}
-
-This is a placeholder script that can be executed directly.
-Replace with actual implementation or delete if not needed.
-
-Example real scripts from other skills:
-- pdf/scripts/fill_fillable_fields.py - Fills PDF form fields
-- pdf/scripts/convert_pdf_to_images.py - Converts PDF pages to images
+NEGATIVE_EVAL_YAML = """name: negative-test
+query: "What's the weather forecast for tomorrow?"
+should_trigger: false
+checks: []
+assertions: []
 """
 
-def main():
-    print("This is an example script for {skill_name}")
-    # TODO: Add actual script logic here
-    # This could be data processing, file conversion, API calls, etc.
-
-if __name__ == "__main__":
-    main()
-'''
-
-EXAMPLE_REFERENCE = """# Reference Documentation for {skill_title}
-
-This is a placeholder for detailed reference documentation.
-Replace with actual reference content or delete if not needed.
-
-Example real reference docs from other skills:
-- product-management/references/communication.md - Comprehensive guide for status updates
-- product-management/references/context_building.md - Deep-dive on gathering context
-- bigquery/references/ - API references and query examples
-
-## When Reference Docs Are Useful
-
-Reference docs are ideal for:
-- Comprehensive API documentation
-- Detailed workflow guides
-- Complex multi-step processes
-- Information too lengthy for main SKILL.md
-- Content that's only needed for specific use cases
-
-## Structure Suggestions
-
-### API Reference Example
-- Overview
-- Authentication
-- Endpoints with examples
-- Error codes
-- Rate limits
-
-### Workflow Guide Example
-- Prerequisites
-- Step-by-step instructions
-- Common patterns
-- Troubleshooting
-- Best practices
-"""
-
-EXAMPLE_ASSET = """# Example Asset File
-
-This placeholder represents where asset files would be stored.
-Replace with actual asset files (templates, images, fonts, etc.) or delete if not needed.
-
-Asset files are NOT intended to be loaded into context, but rather used within
-the output Claude produces.
-
-Example asset files from other skills:
-- Brand guidelines: logo.png, slides_template.pptx
-- Frontend builder: hello-world/ directory with HTML/React boilerplate
-- Typography: custom-font.ttf, font-family.woff2
-- Data: sample_data.csv, test_dataset.json
-
-## Common Asset Types
-
-- Templates: .pptx, .docx, boilerplate directories
-- Images: .png, .jpg, .svg, .gif
-- Fonts: .ttf, .otf, .woff, .woff2
-- Boilerplate code: Project directories, starter files
-- Icons: .ico, .svg
-- Data files: .csv, .json, .xml, .yaml
-
-Note: This is a text placeholder. Actual assets can be any file type.
-"""
+CATEGORY_CHECKS = {
+    "document-creation": '  - type: file_exists\n    target: "output.*"',
+    "workflow": '  - type: exit_code\n    expected: 0',
+    "mcp-enhancement": '  - type: contains\n    target: "transcript.md"\n    expected: "Tool:"',
+    "generic": "  []",
+}
 
 
-def title_case_skill_name(skill_name):
-    """Convert hyphenated skill name to Title Case for display."""
-    return ' '.join(word.capitalize() for word in skill_name.split('-'))
-
-
-def init_skill(skill_name, path):
-    """
-    Initialize a new skill directory with template SKILL.md.
-
-    Args:
-        skill_name: Name of the skill
-        path: Path where the skill directory should be created
-
-    Returns:
-        Path to created skill directory, or None if error
-    """
-    # Determine skill directory path
+def init_skill(skill_name, path, category="generic"):
+    """Initialize a new skill directory with template SKILL.md and eval bootstrapping."""
     skill_dir = Path(path).resolve() / skill_name
 
-    # Check if directory already exists
     if skill_dir.exists():
-        print(f"❌ Error: Skill directory already exists: {skill_dir}")
+        print(f"Error: Skill directory already exists: {skill_dir}")
         return None
 
-    # Create skill directory
     try:
         skill_dir.mkdir(parents=True, exist_ok=False)
-        print(f"✅ Created skill directory: {skill_dir}")
     except Exception as e:
-        print(f"❌ Error creating directory: {e}")
+        print(f"Error creating directory: {e}")
         return None
 
-    # Create SKILL.md from template
+    # Create SKILL.md from category template
     skill_title = title_case_skill_name(skill_name)
-    skill_content = SKILL_TEMPLATE.format(
-        skill_name=skill_name,
-        skill_title=skill_title
+    template = TEMPLATES.get(category, TEMPLATES["generic"])
+    skill_content = template.format(skill_name=skill_name, skill_title=skill_title)
+
+    (skill_dir / "SKILL.md").write_text(skill_content)
+    print(f"Created SKILL.md ({category} template)")
+
+    # Create resource directories (empty — user fills as needed)
+    for dirname in ("scripts", "references", "assets"):
+        (skill_dir / dirname).mkdir(exist_ok=True)
+
+    # Bootstrap .skill-eval/ with manifest and starter evals
+    eval_dir = skill_dir / ".skill-eval"
+    eval_dir.mkdir()
+    (eval_dir / "runs").mkdir()
+    evals_dir = eval_dir / "evals"
+    evals_dir.mkdir()
+
+    # Manifest
+    manifest = {
+        "skill_name": skill_name,
+        "created": datetime.now(timezone.utc).isoformat(),
+        "runs": [],
+        "pinned_baseline": None,
+    }
+    (eval_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+
+    # Starter eval files
+    checks = CATEGORY_CHECKS.get(category, CATEGORY_CHECKS["generic"])
+    (evals_dir / "trigger-test.eval.yaml").write_text(
+        STARTER_EVAL_YAML.format(checks=checks)
     )
+    (evals_dir / "negative-test.eval.yaml").write_text(NEGATIVE_EVAL_YAML)
+    print(f"Created .skill-eval/ with starter evals")
 
-    skill_md_path = skill_dir / 'SKILL.md'
-    try:
-        skill_md_path.write_text(skill_content)
-        print("✅ Created SKILL.md")
-    except Exception as e:
-        print(f"❌ Error creating SKILL.md: {e}")
-        return None
-
-    # Create resource directories with example files
-    try:
-        # Create scripts/ directory with example script
-        scripts_dir = skill_dir / 'scripts'
-        scripts_dir.mkdir(exist_ok=True)
-        example_script = scripts_dir / 'example.py'
-        example_script.write_text(EXAMPLE_SCRIPT.format(skill_name=skill_name))
-        example_script.chmod(0o755)
-        print("✅ Created scripts/example.py")
-
-        # Create references/ directory with example reference doc
-        references_dir = skill_dir / 'references'
-        references_dir.mkdir(exist_ok=True)
-        example_reference = references_dir / 'api_reference.md'
-        example_reference.write_text(EXAMPLE_REFERENCE.format(skill_title=skill_title))
-        print("✅ Created references/api_reference.md")
-
-        # Create assets/ directory with example asset placeholder
-        assets_dir = skill_dir / 'assets'
-        assets_dir.mkdir(exist_ok=True)
-        example_asset = assets_dir / 'example_asset.txt'
-        example_asset.write_text(EXAMPLE_ASSET)
-        print("✅ Created assets/example_asset.txt")
-    except Exception as e:
-        print(f"❌ Error creating resource directories: {e}")
-        return None
-
-    # Print next steps
-    print(f"\n✅ Skill '{skill_name}' initialized successfully at {skill_dir}")
-    print("\nNext steps:")
-    print("1. Edit SKILL.md to complete the TODO items and update the description")
-    print("2. Customize or delete the example files in scripts/, references/, and assets/")
-    print("3. Run the validator when ready to check the skill structure")
+    print(f"\nSkill '{skill_name}' initialized at {skill_dir}")
+    print(f"Category: {category}")
+    print(f"\nNext steps:")
+    print(f"1. Edit SKILL.md — complete the TODOs, write a pushy description")
+    print(f"2. Add scripts/, references/, assets/ as needed (delete empty dirs)")
+    print(f"3. Customize .skill-eval/evals/ with realistic trigger queries")
+    print(f"4. Validate: skills-ref validate {skill_dir}")
 
     return skill_dir
 
 
 def main():
     if len(sys.argv) < 4 or sys.argv[2] != '--path':
-        print("Usage: init_skill.py <skill-name> --path <path>")
-        print("\nSkill name requirements:")
-        print("  - Hyphen-case identifier (e.g., 'data-analyzer')")
-        print("  - Lowercase letters, digits, and hyphens only")
-        print("  - Max 40 characters")
-        print("  - Must match directory name exactly")
+        print("Usage: init_skill.py <skill-name> --path <path> [--category <type>]")
+        print("\nCategories:")
+        print("  document-creation   Skills that produce files (PDFs, documents)")
+        print("  workflow            Skills that orchestrate multi-step processes")
+        print("  mcp-enhancement    Skills that wrap external tools with knowledge")
+        print("  generic             Default template (no category)")
         print("\nExamples:")
-        print("  init_skill.py my-new-skill --path skills/public")
-        print("  init_skill.py my-api-helper --path skills/private")
-        print("  init_skill.py custom-skill --path /custom/location")
+        print("  init_skill.py my-skill --path skills/public")
+        print("  init_skill.py pdf-creator --path skills/public --category document-creation")
         sys.exit(1)
 
     skill_name = sys.argv[1]
     path = sys.argv[3]
 
-    print(f"🚀 Initializing skill: {skill_name}")
-    print(f"   Location: {path}")
-    print()
+    # Parse optional --category flag
+    category = "generic"
+    if "--category" in sys.argv:
+        cat_idx = sys.argv.index("--category")
+        if cat_idx + 1 < len(sys.argv):
+            category = sys.argv[cat_idx + 1]
 
-    result = init_skill(skill_name, path)
-
-    if result:
-        sys.exit(0)
-    else:
+    valid_categories = ("generic", "document-creation", "workflow", "mcp-enhancement")
+    if category not in valid_categories:
+        print(f"Unknown category '{category}'. Valid: {', '.join(valid_categories)}")
         sys.exit(1)
+
+    result = init_skill(skill_name, path, category)
+    sys.exit(0 if result else 1)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 {
   "name": "skills-factory",
-  "version": "1.1.0",
-  "description": "Skill creation, validation, and cross-platform conversion tools for Agent Skills",
+  "version": "2.0.1",
+  "description": "Complete skill lifecycle platform: creation, evaluation, benchmarking, description optimization, quality gates, packaging, and cross-platform conversion for Agent Skills",
   "author": {
     "name": "Bluewaves Team",
     "email": "contact@bluewaves.boutique"
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/skills-factory",
   "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
   "license": "MIT",
-  "keywords": ["skill-creation", "validation", "cross-platform", "converter", "gemini", "openai"]
+  "keywords": ["skill-creation", "skill-evaluation", "benchmarking", "description-optimization", "regression-testing", "token-budget", "agent-skills", "gemini-gems", "custom-gpts", "cross-platform"]
 }

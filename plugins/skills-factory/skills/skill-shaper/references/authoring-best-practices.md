@@ -1,381 +1,163 @@
-# Skill Authoring Best Practices
+# Authoring Best Practices
 
-Practical guidance for writing effective skills that Claude can discover and use successfully.
+Principles, patterns, and checklist for writing effective skills.
 
-## Contents
+## Table of Contents
 
-- [Core principles](#core-principles)
-- [Naming conventions](#naming-conventions)
-- [Writing effective descriptions](#writing-effective-descriptions)
-- [Content guidelines](#content-guidelines)
-- [Common patterns](#common-patterns)
-- [Workflows and feedback loops](#workflows-and-feedback-loops)
-- [Skills with executable code](#skills-with-executable-code)
-- [Evaluation and iteration](#evaluation-and-iteration)
-- [Anti-patterns to avoid](#anti-patterns-to-avoid)
-- [Checklist for effective skills](#checklist-for-effective-skills)
+1. Pushy Descriptions
+2. Explain the Why
+3. Writing Patterns
+4. Keep Prompts Lean
+5. Generalize over Overfit
+6. Extract Repeated Work
+7. Pre-Distribution Checklist
 
-## Core principles
+---
 
-### Concise is key
+## 1. Pushy Descriptions
 
-The context window is a public good. Your skill shares the context window with everything else Claude needs: system prompt, conversation history, other skills' metadata, and the actual user request.
+Skills tend to undertrigger — Claude doesn't use them when it should. Combat this with assertive, territory-claiming descriptions.
 
-Not every token has an immediate cost. At startup, only the metadata (name and description) is pre-loaded. Claude reads SKILL.md only when the skill becomes relevant. However, being concise in SKILL.md still matters: once Claude loads it, every token competes with conversation history and other context.
+**Weak vs Strong examples:**
 
-**Default assumption**: Claude is already very smart. Only add context Claude doesn't already have.
+| Weak | Strong |
+|------|--------|
+| "A tool for PDF creation" | "Generate production-quality PDF documents from markdown. Use this skill whenever the user wants to create a PDF, render markdown to PDF, generate a report, or produce any formatted document output." |
+| "Helps with data analysis" | "Analyze datasets, generate statistical summaries, and create visualizations. Use this skill whenever the user mentions data analysis, CSV processing, statistical testing, data visualization, pivot tables, or wants to explore any kind of structured data." |
+| "Image generation using fal.ai" | "Generate images from text prompts using fal.ai. Use this skill whenever the user asks to create, generate, or make an image from a text description, wants AI-generated artwork, needs a visual for a project, or mentions image generation in any context." |
+| "Code review tool" | "Review code for quality, security, and best practices. Use this skill whenever the user asks for a code review, wants feedback on their code, mentions code quality, asks about security vulnerabilities, or wants to improve existing code." |
+| "Converts documents" | "Convert documents between formats (markdown, PDF, DOCX, EPUB). Use this skill whenever the user needs to transform a document from one format to another, export content, or generate a different file type from existing text." |
 
-Challenge each piece of information:
-- "Does Claude really need this explanation?"
-- "Can I assume Claude knows this?"
-- "Does this paragraph justify its token cost?"
+**Guidelines:**
+- Start with what it does (imperative form)
+- Follow with "Use this skill whenever..." listing specific triggers
+- Include adjacent keywords users might mention
+- Cover edge cases (indirect mentions, partial matches)
+- 100-200 words, max 1024 characters
 
-**Good example** (~50 tokens):
-````markdown
-## Extract PDF text
+---
 
-Use pdfplumber for text extraction:
+## 2. Explain the Why
 
-```python
-import pdfplumber
+Today's LLMs are smart. They have good theory of mind. When given reasoning, they can go beyond rote instructions. Heavy-handed MUSTs are a yellow flag — reframe as reasoning.
 
-with pdfplumber.open("file.pdf") as pdf:
-    text = pdf.pages[0].extract_text()
-```
-````
+**Before:** "ALWAYS use the brand font. NEVER use system fonts."
+**After:** "The brand font (Inter) maintains visual consistency across all documents. System fonts would break the brand identity and look unprofessional to clients."
 
-**Bad example** (~150 tokens):
+**Before:** "MUST validate output before returning."
+**After:** "Validation catches formatting errors invisible in the editor but that break the final PDF — run validate.py after every render."
+
+**Before:** "NEVER exceed 500 lines in SKILL.md."
+**After:** "SKILL.md shares the context window with everything else. Every line costs tokens. Move detailed content to reference files that load only when needed."
+
+**Principle:** Give Claude the context you'd give a smart colleague. Explain reasoning so they make good decisions in edge cases you didn't anticipate.
+
+---
+
+## 3. Writing Patterns
+
+### Imperative Form
+- "Extract text from the PDF" (not "The skill extracts text")
+- "Validate the output against the schema" (not "Output should be validated")
+
+### Output Templates
 ```markdown
-## Extract PDF text
-
-PDF (Portable Document Format) files are a common file format that contains
-text, images, and other content. To extract text from a PDF, you'll need to
-use a library. There are many libraries available for PDF processing, but we
-recommend pdfplumber because it's easy to use...
+## Report Structure
+ALWAYS use this exact template:
+# [Title]
+## Executive Summary
+## Key Findings
+## Recommendations
 ```
 
-The concise version assumes Claude knows what PDFs are and how libraries work.
-
-### Set appropriate degrees of freedom
-
-Match the level of specificity to the task's fragility and variability.
-
-**High freedom** (text-based instructions): Use when multiple approaches are valid, decisions depend on context, or heuristics guide the approach.
-
-**Medium freedom** (pseudocode or scripts with parameters): Use when a preferred pattern exists, some variation is acceptable, or configuration affects behavior.
-
-**Low freedom** (specific scripts, few parameters): Use when operations are fragile and error-prone, consistency is critical, or a specific sequence must be followed.
-
-**Analogy**: Think of Claude as a robot exploring a path:
-- **Narrow bridge with cliffs**: One safe way forward. Provide exact instructions (low freedom).
-- **Open field**: Many paths to success. Give general direction (high freedom).
-
-### Test with all models you plan to use
-
-Skills act as additions to models, so effectiveness depends on the underlying model. Test your skill with all the models you plan to use it with.
-
-- **Claude Haiku** (fast, economical): Does the skill provide enough guidance?
-- **Claude Sonnet** (balanced): Is the skill clear and efficient?
-- **Claude Opus** (powerful reasoning): Does the skill avoid over-explaining?
-
-What works perfectly for Opus might need more detail for Haiku.
-
-## Naming conventions
-
-Use consistent naming patterns to make skills easier to reference. Recommended: **gerund form** (verb + -ing) for skill names, as this clearly describes the activity the skill provides.
-
-The `name` field must use lowercase letters, numbers, and hyphens only.
-
-**Good naming examples (gerund form)**:
-- `processing-pdfs`
-- `analyzing-spreadsheets`
-- `managing-databases`
-
-**Acceptable alternatives**:
-- Noun phrases: `pdf-processing`, `spreadsheet-analysis`
-- Action-oriented: `process-pdfs`, `analyze-spreadsheets`
-
-**Avoid**:
-- Vague names: `helper`, `utils`, `tools`
-- Overly generic: `documents`, `data`, `files`
-- Reserved words: `anthropic-helper`, `claude-tools`
-- Inconsistent patterns within your skill collection
-
-## Writing effective descriptions
-
-The `description` field enables skill discovery and should include both what the skill does and when to use it.
-
-**Always write in third person.** The description is injected into the system prompt, and inconsistent point-of-view can cause discovery problems.
-
-- **Good:** "Processes Excel files and generates reports"
-- **Avoid:** "I can help you process Excel files"
-- **Avoid:** "You can use this to process Excel files"
-
-**Be specific and include key terms.** Claude uses the description to choose the right skill from potentially 100+ available skills.
-
-Effective examples:
-
-```yaml
-# PDF Processing
-description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
-
-# Excel Analysis
-description: Analyze Excel spreadsheets, create pivot tables, generate charts. Use when analyzing Excel files, spreadsheets, tabular data, or .xlsx files.
-
-# Git Commit Helper
-description: Generate descriptive commit messages by analyzing git diffs. Use when the user asks for help writing commit messages or reviewing staged changes.
-```
-
-Avoid vague descriptions:
-```yaml
-description: Helps with documents
-description: Processes data
-description: Does stuff with files
-```
-
-## Content guidelines
-
-### Avoid time-sensitive information
-
-Don't include information that will become outdated. Use an "old patterns" section for deprecated approaches:
-
+### Examples Pattern
 ```markdown
-## Current method
-
-Use the v2 API endpoint: `api.example.com/v2/messages`
-
-## Old patterns
-
-<details>
-<summary>Legacy v1 API (deprecated 2025-08)</summary>
-The v1 API used: `api.example.com/v1/messages`
-This endpoint is no longer supported.
-</details>
-```
-
-### Use consistent terminology
-
-Choose one term and use it throughout the skill:
-
-- **Good**: Always "API endpoint", always "field", always "extract"
-- **Bad**: Mix "API endpoint"/"URL"/"API route"; mix "field"/"box"/"element"
-
-## Common patterns
-
-### Advanced patterns
-
-**Multi-MCP coordination**: When a skill coordinates across multiple MCP tool servers, always use fully qualified tool names (`ServerName:tool_name`). Document the expected data flow between servers and specify which server handles each step.
-
-**Context-aware tool selection**: For skills that work with multiple tools or approaches, provide decision criteria rather than fixed instructions. Example: "For files under 1MB, use direct extraction. For larger files, use the streaming API."
-
-**Domain-specific intelligence**: Skills that add domain knowledge (financial regulations, medical terminology, legal standards) should separate the knowledge base into reference files and keep SKILL.md focused on when and how to apply that knowledge.
-
-### Template pattern
-
-Provide templates for output format. Match strictness to your needs.
-
-**For strict requirements** (API responses, data formats):
-```markdown
-## Report structure
-
-ALWAYS use this exact template structure:
-[template here]
-```
-
-**For flexible guidance** (when adaptation is useful):
-```markdown
-## Report structure
-
-Here is a sensible default format, but use your best judgment:
-[template here]
-```
-
-### Examples pattern
-
-For skills where output quality depends on seeing examples, provide input/output pairs:
-
-````markdown
-## Commit message format
-
-Generate commit messages following these examples:
-
+## Commit Message Format
 **Example 1:**
 Input: Added user authentication with JWT tokens
-Output:
+Output: feat(auth): implement JWT-based authentication
 ```
-feat(auth): implement JWT-based authentication
-Add login endpoint and token validation middleware
-```
-````
 
-Examples help Claude understand the desired style and detail level more clearly than descriptions alone.
-
-### Conditional workflow pattern
-
-Guide Claude through decision points:
-
+### Visual Output Pattern
+For skills producing visual results:
 ```markdown
-## Document modification workflow
-
-1. Determine the modification type:
-   **Creating new content?** → Follow "Creation workflow" below
-   **Editing existing content?** → Follow "Editing workflow" below
-
-2. Creation workflow: [steps]
-3. Editing workflow: [steps]
+## Reviewing Results
+1. Generate self-contained HTML with embedded CSS and data
+2. Write to /tmp/<skill-name>-output.html
+3. Open: open /tmp/<skill-name>-output.html
 ```
 
-## Workflows and feedback loops
-
-### Use workflows for complex tasks
-
-Break complex operations into clear, sequential steps. For complex workflows, provide a checklist that Claude can copy and check off as it progresses.
-
+### Structured Data Pattern
 ```markdown
-## PDF form filling workflow
-
-Task Progress:
-- [ ] Step 1: Analyze the form (run analyze_form.py)
-- [ ] Step 2: Create field mapping (edit fields.json)
-- [ ] Step 3: Validate mapping (run validate_fields.py)
-- [ ] Step 4: Fill the form (run fill_form.py)
-- [ ] Step 5: Verify output (run verify_output.py)
+## Output Schema
+Write results as JSON:
+{ "status": "success|failure", "items": [...], "summary": "..." }
 ```
 
-### Implement feedback loops
+---
 
-**Common pattern**: Run validator -> fix errors -> repeat
+## 4. Keep Prompts Lean
 
-This pattern greatly improves output quality.
+**Default assumption:** Claude is already very smart. Only add context it doesn't have.
 
-```markdown
-## Document editing process
+**Challenge every paragraph:** "Does Claude need this?" and "Does this justify its token cost?"
 
-1. Make your edits to `word/document.xml`
-2. **Validate immediately**: `python scripts/validate.py unpacked_dir/`
-3. If validation fails:
-   - Review the error message carefully
-   - Fix the issues
-   - Run validation again
-4. **Only proceed when validation passes**
-5. Rebuild: `python scripts/pack.py unpacked_dir/ output.docx`
-```
+**Remove dead weight:** Cut anything that's obvious to a capable AI, repeated, or only relevant to edge cases (move those to references).
 
-## Skills with executable code
+**Measure:** Run `token_budget.py --skill-path <dir>` to see per-section token costs.
 
-### Solve, don't punt
+**Prefer examples over explanations:** 3 input/output pairs teach better than 10 paragraphs.
 
-When writing scripts, handle error conditions rather than punting to Claude.
+---
 
-**Good**: Handle errors explicitly with fallback behavior and clear messages.
-**Bad**: Just `open(path).read()` and let Claude figure out failures.
+## 5. Generalize over Overfit
 
-Configuration parameters should be justified and documented to avoid "voodoo constants."
+The skill will be used on thousands of prompts. Changes must help the category, not just one test case.
 
-### Provide utility scripts
+**Red flags for overfitting:**
+- Rules that only make sense for one specific test case
+- Increasingly specific constraints that limit flexibility
+- "If the user mentions X, always do Y" (too narrow)
 
-Pre-made scripts offer advantages over Claude-generated code:
-- More reliable than generated code
-- Save tokens (no need to include code in context)
-- Save time (no code generation required)
-- Ensure consistency across uses
+**Better:** Use general principles and patterns, not hardcoded responses.
 
-Make clear whether Claude should **execute** the script or **read** it as reference.
+---
 
-### Create verifiable intermediate outputs
+## 6. Extract Repeated Work
 
-For complex, open-ended tasks, use the "plan-validate-execute" pattern: analyze -> **create plan file** -> **validate plan** -> execute -> verify.
+Read transcripts from test runs. If subagents independently wrote similar helper scripts:
+- All 3 runs created `parse_csv.py` → Bundle in `scripts/`
+- All runs followed same 5-step sequence → Document as workflow
+- All runs read same reference data → Include in `references/`
 
-Make validation scripts verbose with specific error messages to help Claude fix issues.
+Use `extract_scripts.py` from skill-eval to identify repeated patterns automatically.
 
-### Package dependencies
+---
 
-List required packages in your SKILL.md and verify availability. Skills run in code execution environments with platform-specific limitations.
+## 7. Pre-Distribution Checklist
 
-### MCP tool references
+### Before starting
+- [ ] Clear success criteria (trigger queries, output quality)
+- [ ] Category identified (document, workflow, MCP)
+- [ ] Reusable contents planned (scripts, references, assets)
 
-If your skill uses MCP tools, always use fully qualified tool names: `ServerName:tool_name`
+### During development
+- [ ] Description is pushy and territory-claiming
+- [ ] Instructions explain the why, not just the what
+- [ ] SKILL.md under 500 lines
+- [ ] Reference files linked with "when to read" guidance
+- [ ] Scripts tested with realistic inputs
+- [ ] No TODO markers in content
 
-Example: `BigQuery:bigquery_schema`, `GitHub:create_issue`
+### Before distribution
+- [ ] Passes `skills-ref validate`
+- [ ] 5+ trigger queries succeed
+- [ ] 3+ negative queries don't trigger
+- [ ] Token budget reasonable (`token_budget.py`)
+- [ ] All referenced files exist
+- [ ] Edge cases tested
 
-## Evaluation and iteration
-
-### Build evaluations first
-
-Create evaluations BEFORE writing extensive documentation. This ensures your skill solves real problems.
-
-**Evaluation-driven development:**
-1. **Identify gaps**: Run Claude on representative tasks without a skill. Document specific failures.
-2. **Create evaluations**: Build three scenarios that test these gaps.
-3. **Establish baseline**: Measure Claude's performance without the skill.
-4. **Write minimal instructions**: Create just enough content to address gaps and pass evaluations.
-5. **Iterate**: Execute evaluations, compare against baseline, and refine.
-
-### Develop skills iteratively with Claude
-
-Work with one instance of Claude ("Claude A") to create a skill that will be used by other instances ("Claude B"):
-
-1. Complete a task without a skill using normal prompting
-2. Identify the reusable pattern from what context you provided
-3. Ask Claude A to create a skill capturing that pattern
-4. Review for conciseness
-5. Improve information architecture
-6. Test on similar tasks with Claude B (fresh instance with skill loaded)
-7. Iterate based on Claude B's behavior
-
-### Observe how Claude navigates skills
-
-Watch for:
-- **Unexpected exploration paths**: Structure may not be as intuitive as you thought
-- **Missed connections**: Links might need to be more explicit
-- **Overreliance on certain sections**: Consider promoting that content to SKILL.md
-- **Ignored content**: Might be unnecessary or poorly signaled
-
-## Anti-patterns to avoid
-
-- **Windows-style paths**: Always use forward slashes (`scripts/helper.py`), not backslashes
-- **Too many options**: Provide a default with an escape hatch, not a buffet of choices
-- **Assuming tools are installed**: Be explicit about dependencies
-
-## Checklist for effective skills
-
-### Phase 1: Before you start
-- [ ] Concrete use cases documented (3+ example queries)
-- [ ] Skill category identified (document/asset creation, workflow automation, or MCP enhancement)
-- [ ] Success criteria defined (what triggers the skill, what quality looks like)
-- [ ] Scope is narrow and composable (one concern per skill)
-
-### Phase 2: During development
-- [ ] Description is specific and includes key terms
-- [ ] Description includes both what the skill does and when to use it
-- [ ] SKILL.md body is under 500 lines
-- [ ] Additional details are in separate files (if needed)
-- [ ] No time-sensitive information
-- [ ] Consistent terminology throughout
-- [ ] Examples are concrete, not abstract
-- [ ] File references are one level deep
-- [ ] Progressive disclosure used appropriately
-- [ ] Workflows have clear steps
-- [ ] Scripts solve problems rather than punt to Claude
-- [ ] Error handling is explicit and helpful
-- [ ] No "voodoo constants" (all values justified)
-- [ ] Required packages listed and verified as available
-- [ ] No Windows-style paths
-- [ ] Validation/verification steps for critical operations
-- [ ] Feedback loops included for quality-critical tasks
-
-### Phase 3: Before distribution
-- [ ] Passes `skills-ref validate` (or `quick_validate.py`)
-- [ ] Trigger testing: 5+ positive queries activate the skill
-- [ ] Trigger testing: 3+ negative queries do NOT activate the skill
-- [ ] Functional testing: happy path works end-to-end
-- [ ] Functional testing: at least one edge case handled
-- [ ] Performance comparison: skill improves output vs. baseline
-- [ ] Tested with Haiku, Sonnet, and Opus
-- [ ] At least three evaluations created
-
-### Phase 4: After distribution
-- [ ] Observe real usage for undertriggering or overtriggering
-- [ ] Iterate on iteration signals (see testing-and-debugging.md)
-- [ ] Collect and incorporate user feedback
-- [ ] Team feedback incorporated (if applicable)
+### After distribution
+- [ ] Monitor for under/overtriggering
+- [ ] Monitor context bloat
+- [ ] Iterate based on real usage feedback

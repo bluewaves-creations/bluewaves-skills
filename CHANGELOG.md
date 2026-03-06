@@ -5,6 +5,73 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.1] - 2026-03-05
+
+### Fixed
+
+#### skills-factory v2.0.1 — Script quality upgrade
+
+- **`run_eval.py`** — Rewritten with UUID-based command naming, non-blocking streaming I/O via `select.select()`, three-tier stream detection (content_block_start/delta/stop), skill identity verification against unique command name, early exit on wrong tool, process cleanup in finally blocks, `find_project_root()` for project discovery, `--include-partial-messages` for early triggering detection
+- **`improve_description.py`** — Rewritten to use Anthropic Python SDK with extended thinking (`budget_tokens=10000`), rich prompt template with failed/false triggers and per-attempt scores, multi-turn shortening preserving conversation context, `<new_description>` tag extraction, transcript logging to log_dir, fallback to claude CLI with warning if SDK unavailable
+- **`eval_grader.py` Tier 2** — Now functional: spawns grader agent via `claude -p` with `references/agents/grader.md` as system prompt, parses JSON response for assertion results, extracts claims/user_notes/eval_feedback, merges with Tier 1 results. Added `--skip-tier2` flag for programmatic-only grading
+- **`run_loop.py`** — Single-batch evaluation (train+test combined, split after), blinded history (test scores stripped before passing to improvement model), direct Python function calls instead of subprocess, confusion matrix stats (precision/recall/accuracy) in verbose mode, live HTML report via `generate_report.build_report_html()` with auto-refresh, per-query `train_results`/`test_results` stored in history for detailed grid reporting, best selection by max test score across all iterations
+- **`utils.py count_tokens()`** — Fixed 73% overestimate: changed from `words * 1.3` to `words * 0.75` (calibrated for Claude tokenizer). Adjusted `token_budget.py` thresholds proportionally (BODY_WARN 4000->3000, SECTION_WARN 1000->800, REFERENCE_WARN 3000->2500)
+- **`eval_scaffold.py`** — Better trigger phrase extraction via verb phrase and "Use when" clause parsing instead of comma splitting. Added `--use-claude` flag for high-quality query generation via claude CLI. Skill-specific negative queries instead of always "What's the weather?"
+- **`generate_report.py`** — Rewritten with per-query ✓/✗ grid: iteration rows × query columns showing pass/fail with trigger rate fractions, train/test column differentiation (test columns use distinct header/cell colors), polarity indicators (should-trigger green, should-not red), score badges (green ≥80%, yellow ≥50%, red <50%), best-row highlighting, legend, summary section, dark theme default with `--light` flag, stdin support
+- **`generate_review.py`** — Fixed template substitution (viewer.html placeholders now correctly replaced with JSON data). Added `--auto-refresh` flag, `atexit` cleanup for temp files, `-o` output alias. Added `--serve` mode: HTTP server (`BaseHTTPRequestHandler`) with `GET /` live workspace scanning, `POST /api/feedback` auto-save to workspace/feedback.json, port conflict resolution via lsof, base64 file embedding (text inline, images as data URIs, PDFs as iframes), auto-save JS (debounced POST on keystroke)
+
+## [2.8.0] - 2026-03-05
+
+### Added
+
+#### skills-factory v2.0.0 — Complete skill lifecycle platform
+
+- **`skill-eval` skill** (new) — Evaluate, benchmark, and optimize skills through automated testing. Features:
+  - Two-tier grading: programmatic Tier 1 checks (file_exists, regex, json_valid, contains, etc.) run at zero token cost; Tier 2 agent-graded assertions only execute when Tier 1 passes, saving 60-80% grading tokens
+  - Token budget analyzer (`token_budget.py`) reports Level 1 (metadata), Level 2 (body per section), Level 3 (references per file) context costs with optimization recommendations
+  - Eval scaffolding (`eval_scaffold.py`) auto-generates `.eval.yaml` test cases from skill description and trigger queries
+  - Eval workspace manager (`eval_workspace.py`) with sequential numbered runs, skill snapshots, manifest tracking, pinning, and regression detection
+  - Description optimization loop (`run_loop.py`) with stratified train/test split (60/40), iterative improvement via extended thinking, and live HTML progress report
+  - Blind A/B comparison pipeline: comparator agent scores two skill versions on task-specific rubrics, analyzer agent identifies strengths and prioritized improvements
+  - Script extraction (`extract_scripts.py`) finds repeated code across transcripts and generates parameterized candidate scripts
+  - Interactive HTML eval viewer (`generate_review.py`) with Outputs + Benchmark tabs, arrow key navigation, and feedback collection
+  - Terminal-native eval diff (`eval_diff.py`) with ANSI-colored pass rate changes and PASS→FAIL regression flags
+  - Benchmark aggregation (`aggregate_benchmark.py`) with mean/stddev/min/max statistics and non-discriminating assertion detection
+  - 3 agent prompt files: grader (8-step with claims extraction and eval critique), comparator (blind A/B with rubrics), analyzer (pattern analysis and improvement suggestions)
+  - 3 reference docs: schemas.md (all JSON schemas), eval-methodology.md (philosophy and patterns), eval-format.md (.eval.yaml specification)
+  - 2 HTML assets: viewer.html (eval viewer template), eval_review.html (trigger query editor)
+
+- **5 new slash commands:**
+  - `/eval-skill` — Run evaluation suite against a skill
+  - `/benchmark-skill` — Aggregate benchmark statistics from eval runs
+  - `/optimize-description` — Run description optimization loop with train/test split
+  - `/review-evals` — Open interactive HTML eval viewer
+  - `/ship-skill` — Full pipeline: validate → eval → quality gate → package
+
+### Changed
+
+- **skill-shaper** — Complete rewrite of SKILL.md and all 7 reference files:
+  - Conversational, flexible tone with 6-step workflow: Capture Intent → Plan Contents → Initialize → Write → Validate/Package → Test/Eval/Ship
+  - Pushy description guidance with 5 weak-vs-strong examples
+  - "Explain the why" approach (theory of mind over rigid MUSTs)
+  - Clear pointer to skill-eval for automated testing
+- **init_skill.py** — Added `--category` flag for category-aware templates: `document-creation`, `workflow`, `mcp-enhancement`, or generic. Each template includes relevant patterns and auto-creates `.skill-eval/` workspace with starter eval files
+- **skill-specification.md** — Added new frontmatter fields (context, agent, hooks, model, user-invocable, disable-model-invocation, argument-hint), string substitutions, dynamic context injection, skill scope and priority
+- **authoring-best-practices.md** — Added pushy descriptions section, explain-the-why patterns, writing patterns (imperative form, examples, templates), keep-prompts-lean guidance
+- **workflows.md** — Added subagent delegation, dynamic context injection, visual output pattern
+- **output-patterns.md** — Added visual output pattern (HTML generation), structured data pattern (JSON/YAML with validation)
+- **testing-and-debugging.md** — Added skill-eval pointer, two-tier testing philosophy, description testing methodology, baseline comparison, regression testing
+- **skill-categories.md** — Added subagent-based skills, knowledge/reference skills, category-to-template mapping table
+- **distribution-guide.md** — Added plugin distribution, managed settings (enterprise), ship pipeline, quality gate checklist
+- skills-factory plugin version bumped to 2.0.0
+
+### Marketplace
+
+- Marketplace version bumped to 2.8.0
+- skills-factory: 4 skills, 8 commands (was 3 skills, 3 commands)
+
+---
+
 ## [2.7.2] - 2026-02-18
 
 ### Fixed

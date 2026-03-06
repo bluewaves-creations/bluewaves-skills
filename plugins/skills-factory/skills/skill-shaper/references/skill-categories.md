@@ -1,49 +1,41 @@
 # Skill Categories
 
-Three archetypes cover most skills. Identifying your skill's category early shapes design decisions around structure, degrees of freedom, and progressive disclosure.
+Identifying your skill's category shapes design decisions around structure, testing, and templates. Use the `--category` flag in `init_skill.py` to get category-tailored scaffolding.
 
-## Contents
-
-- [Document and asset creation](#document-and-asset-creation)
-- [Workflow automation](#workflow-automation)
-- [MCP enhancement](#mcp-enhancement)
-- [Composability principles](#composability-principles)
-
-## Document and asset creation
+## Document and Asset Creation
 
 Skills that produce files: PDFs, images, ebooks, presentations, websites.
 
-**Characteristics**:
-- Template-heavy — assets and reference files define the output format
+**Characteristics:**
+- Template-heavy — assets and references define output format
 - Scripts handle rendering, conversion, or compilation
-- Output quality depends on examples and templates more than instructions
+- Output quality depends on examples and templates
 
-**Typical structure**:
+**Typical structure:**
 ```
 brand-report/
-├── SKILL.md            # Workflow: gather content → apply template → render
+├── SKILL.md            # Workflow: gather → template → render → validate
 ├── scripts/            # render_pdf.py, validate_output.py
 ├── references/         # brand-guidelines.md, page-layouts.md
 └── assets/             # logo.png, fonts/, templates/
 ```
 
-**Design guidance**:
-- **Degrees of freedom**: Low to medium. Templates constrain output format; content varies.
-- **Progressive disclosure**: Keep the creation workflow in SKILL.md. Move template details and brand guidelines to references.
-- **Common pitfall**: Embedding large templates directly in SKILL.md. Always use assets/ for templates and references/ for template documentation.
+**Design:** Low-medium freedom. Templates constrain format; content varies. Keep creation workflow in SKILL.md, move template details to references.
 
-**Examples in this repository**: `pdf-factory`, `epub-creator`, `site-factory`, `brand-bluewaves`
+**Init:** `init_skill.py <name> --path <dir> --category document-creation`
 
-## Workflow automation
+**Examples:** `pdf-factory`, `epub-creator`, `site-factory`, `brand-bluewaves`
 
-Skills that guide Claude through multi-step processes with decision points and validation loops.
+## Workflow Automation
 
-**Characteristics**:
-- Sequential or conditional steps with clear entry/exit criteria
-- Validation and feedback loops between steps
-- May coordinate scripts, file operations, or external tools
+Skills that guide multi-step processes with decision points and validation.
 
-**Typical structure**:
+**Characteristics:**
+- Sequential or conditional steps with entry/exit criteria
+- Validation and feedback loops
+- May coordinate scripts, files, or tools
+
+**Typical structure:**
 ```
 data-pipeline/
 ├── SKILL.md            # Workflow steps with decision points
@@ -51,47 +43,66 @@ data-pipeline/
 └── references/         # schema.md, error-codes.md
 ```
 
-**Design guidance**:
-- **Degrees of freedom**: Medium. The workflow structure is fixed; individual steps allow flexibility.
-- **Progressive disclosure**: Keep the workflow overview and decision criteria in SKILL.md. Move step-specific details to references.
-- **Common pitfall**: Overspecifying every step. Use high freedom for judgment-based steps and low freedom only for fragile operations.
+**Design:** Medium freedom. Workflow is fixed; individual steps flex. High freedom for judgment; low freedom for fragile operations.
 
-**Examples in this repository**: `athena-package`, `skill-shaper`, `chart-designer`
+**Init:** `init_skill.py <name> --path <dir> --category workflow`
 
-## MCP enhancement
+**Examples:** `athena-package`, `skill-shaper`, `chart-designer`
 
-Skills that add domain intelligence and tool guidance for MCP (Model Context Protocol) servers.
+## MCP Enhancement
 
-**Characteristics**:
-- Provide domain knowledge that helps Claude use MCP tools effectively
-- Use fully qualified tool names (`ServerName:tool_name`)
-- May coordinate across multiple MCP servers
+Skills that add domain intelligence for MCP tool servers.
 
-**Typical structure**:
+**Characteristics:**
+- Domain knowledge improves tool usage
+- Fully qualified tool names (`ServerName:tool_name`)
+- May coordinate across multiple servers
+
+**Typical structure:**
 ```
 sales-analytics/
-├── SKILL.md            # When to use which tools, domain terminology
+├── SKILL.md            # Tool selection, domain concepts
 └── references/         # schema.md, metrics.md, query-patterns.md
 ```
 
-**Design guidance**:
-- **Degrees of freedom**: High. The skill provides knowledge; Claude decides how to apply it.
-- **Progressive disclosure**: Keep tool selection guidance and key domain concepts in SKILL.md. Move detailed schemas and query patterns to references.
-- **Common pitfall**: Duplicating MCP tool documentation. Focus on *when* and *why* to use tools, not *how* — the MCP server already provides tool descriptions.
+**Design:** High freedom. Skill provides knowledge; Claude decides application. Focus on when/why to use tools, not how (MCP provides that).
 
-## Composability principles
+**Init:** `init_skill.py <name> --path <dir> --category mcp-enhancement`
 
-Skills work best when they are narrowly scoped and designed for combination.
+## Subagent-Based Skills
 
-**One concern per skill**: A skill that processes PDFs should not also create charts. Split into separate skills that can be used together.
+Skills that fork work to specialized subagents.
 
-**Scoped descriptions**: Broad descriptions cause overtriggering and make skills compete with each other. Be specific:
-- **Too broad**: "Helps with documents and data visualization"
-- **Focused**: "Extract text and tables from PDF files, fill PDF forms, merge PDFs"
+**Characteristics:**
+- Parallel or isolated execution
+- Context: fork with agent type selection
+- May use `isolation: "worktree"` for file-modifying agents
 
-**Compatible interfaces**: When skills may work together, use consistent terminology and formats. If one skill outputs markdown and another consumes it, document this interface.
+**Use when:** Tasks benefit from parallel processing, isolated environments, or specialized agent configurations.
 
-**Avoid monolithic skills**: If a SKILL.md exceeds 300 lines, consider whether it's actually two skills. Signs of a monolithic skill:
-- Multiple unrelated trigger phrases
-- Sections that are never used together
-- Users only need half the skill's functionality at a time
+## Knowledge / Reference Skills
+
+Skills that provide domain knowledge without active workflows.
+
+**Characteristics:**
+- Often `user-invocable: false` — triggered by model, not user
+- Reference-heavy, minimal scripts
+- Enhance other skills' effectiveness
+
+**Example:** A finance-terms skill that provides terminology when Claude encounters financial documents, regardless of which other skill is active.
+
+## Category-to-Template Mapping
+
+| Category | Init Flag | Starter Checks | Key Patterns |
+|----------|-----------|----------------|--------------|
+| Document creation | `--category document-creation` | file_exists, file_size_range | Template, visual output |
+| Workflow | `--category workflow` | exit_code, contains | Sequential, plan-validate-execute |
+| MCP enhancement | `--category mcp-enhancement` | contains (tool calls) | Multi-MCP orchestration |
+| Generic | (default) | — | Flexible |
+
+## Composability Principles
+
+- **One concern per skill.** PDF processing + chart creation = two skills.
+- **Scoped descriptions.** Specific beats broad. "Extract text from PDFs" not "Helps with documents."
+- **Compatible interfaces.** When skills work together, use consistent terms and formats.
+- **Watch for monoliths.** If SKILL.md > 300 lines with unrelated sections, consider splitting.

@@ -1,111 +1,114 @@
 # Workflow Patterns
 
-Common patterns for structuring multi-step skill workflows.
+Design patterns for multi-step processes in skills.
 
-## Contents
+## Sequential Workflow
 
-- [Sequential workflows](#sequential-workflows)
-- [Conditional workflows](#conditional-workflows)
-- [Iterative refinement](#iterative-refinement)
-- [Plan-validate-execute](#plan-validate-execute)
-- [Multi-MCP orchestration](#multi-mcp-orchestration)
-
-## Sequential Workflows
-
-For complex tasks, break operations into clear, sequential steps. It is often helpful to give Claude an overview of the process towards the beginning of SKILL.md:
+Steps in fixed order. Best when each step depends on the previous.
 
 ```markdown
-Filling a PDF form involves these steps:
-
-1. Analyze the form (run analyze_form.py)
-2. Create field mapping (edit fields.json)
-3. Validate mapping (run validate_fields.py)
-4. Fill the form (run fill_form.py)
-5. Verify output (run verify_output.py)
+## Workflow
+### Step 1: Extract
+Read the input file and extract structured data.
+### Step 2: Transform
+Apply business rules to transform the data.
+### Step 3: Validate
+Run validation — catches errors early, fixing them after output costs 10x more.
+### Step 4: Generate
+Produce the final output from validated data.
 ```
 
-## Conditional Workflows
+## Conditional Workflow
 
-For tasks with branching logic, guide Claude through decision points:
+Different paths based on input. Use a decision tree at the top.
 
 ```markdown
-1. Determine the modification type:
-   **Creating new content?** → Follow "Creation workflow" below
-   **Editing existing content?** → Follow "Editing workflow" below
-
-2. Creation workflow: [steps]
-3. Editing workflow: [steps]
+## Decision Tree
+- **New document** (no existing file) → Step 1: Create from template
+- **Existing document** (file provided) → Step 2: Read and analyze
+- **Batch processing** (multiple files) → Step 3: Process each
 ```
 
 ## Iterative Refinement
 
-For tasks where the first output is rarely perfect, build a generate-validate-fix loop:
+Repeated improvement with quality gates. Set max iterations (3-5).
 
 ```markdown
-## Document generation workflow
-
-1. Generate the initial output (run generate.py)
-2. Validate the output (run validate.py)
-3. If validation fails:
-   - Review the error messages
-   - Fix the identified issues
-   - Return to step 1
-4. Only proceed when validation passes
-5. Finalize the output (run finalize.py)
+## Refinement Loop
+1. Generate initial output
+2. Validate against requirements
+3. If passes → deliver
+4. If fails → identify issues, adjust, repeat (max 3 iterations)
+5. If still failing → present best attempt with issues noted
 ```
-
-**When to use**: Output quality is critical and automated validation is possible (document formatting, code generation, data transformation).
-
-**Key design points**:
-- Set a maximum iteration count (3-5) to prevent infinite loops
-- Make validation output specific and actionable so Claude can fix issues
-- Each iteration should make the output strictly better — if not, the validation feedback needs improvement
 
 ## Plan-Validate-Execute
 
-For complex, open-ended tasks, separate planning from execution to catch errors early:
+Three-phase approach for complex tasks.
 
 ```markdown
-## Analysis workflow
-
-1. **Analyze**: Read input files and understand requirements
-2. **Plan**: Write a plan file (plan.md) describing each step
-3. **Validate**: Review the plan for completeness and correctness
-   - Are all required inputs available?
-   - Are the steps in the right order?
-   - Are edge cases addressed?
-4. **Execute**: Follow the validated plan step by step
-5. **Verify**: Compare final output against the plan's goals
+## Approach
+### Phase 1: Plan
+Analyze input, produce concrete plan with steps, issues, estimates.
+### Phase 2: Validate
+Review plan: all inputs accounted for? Edge cases covered? Dependencies resolved?
+### Phase 3: Execute
+Follow validated plan step by step. Save intermediate results for debugging.
 ```
 
-**When to use**: Tasks with multiple valid approaches where an incorrect choice is expensive to redo (data migrations, multi-file refactors, complex document assembly).
-
-**Key design points**:
-- The plan file serves as a verifiable intermediate artifact
-- Validation can be manual (Claude reviews its own plan) or automated (a script checks the plan)
-- Separating planning from execution makes the skill more debuggable
+**Design points:** The plan is a verifiable artifact. Validation can be manual or automated. Separating planning from execution makes debugging easier.
 
 ## Multi-MCP Orchestration
 
-For skills that coordinate data flow across multiple MCP tool servers:
+Skills coordinating across multiple MCP tool servers.
 
 ```markdown
-## Cross-platform report workflow
+## Tools
+- `database:query` — Run SQL queries
+- `search:web_search` — Search the web
+- `github:create_issue` — Create GitHub issues
 
-1. Fetch raw data from the database
-   Tool: `Database:execute_query`
-2. Transform and analyze the data
-   (Claude processes the results directly)
-3. Create visualizations
-   Tool: `Charts:create_chart`
-4. Assemble the final report
-   Tool: `Documents:create_pdf`
+## Workflow
+1. Query database: `database:query`
+2. Search for context: `search:web_search`
+3. Generate report combining sources
+4. Create tracking issue: `github:create_issue`
 ```
 
-**When to use**: The skill's value comes from coordinating tools that don't natively communicate with each other.
+Always use fully qualified tool names (`ServerName:tool_name`). Document data format between steps.
 
-**Key design points**:
-- Always use fully qualified tool names (`ServerName:tool_name`)
-- Document the data format expected between steps (e.g., "Step 1 returns CSV; Step 3 expects a list of dictionaries")
-- Handle partial failures — if one MCP server is unavailable, document the fallback behavior
-- Keep orchestration logic in SKILL.md; keep server-specific details in reference files
+## Subagent Delegation
+
+Fork work to specialized subagents for parallel or isolated execution.
+
+```markdown
+## Parallel Processing
+1. Divide input into N chunks
+2. Spawn N subagents, each processing one chunk
+3. Collect results and merge
+```
+
+Use `isolation: "worktree"` for subagents that modify files, preventing conflicts.
+
+## Dynamic Context Injection
+
+Use `` !`command` `` to inject runtime context:
+
+```markdown
+Current directory: !`pwd`
+Git branch: !`git branch --show-current`
+```
+
+Runs at load time, before the model processes the skill.
+
+## Visual Output Pattern
+
+For skills producing results the user needs to inspect visually:
+
+```markdown
+## Reviewing Results
+1. Generate self-contained HTML with embedded CSS and data
+2. Write to /tmp/<skill-name>-result.html
+3. Open in browser: `open /tmp/<skill-name>-result.html`
+4. Wait for user feedback before proceeding
+```

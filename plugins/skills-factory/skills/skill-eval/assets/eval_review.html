@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eval Query Editor: __SKILL_NAME_PLACEHOLDER__</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 24px; }
+.container { max-width: 1000px; margin: 0 auto; }
+h1 { font-size: 22px; margin-bottom: 4px; color: #fff; }
+.subtitle { color: #888; margin-bottom: 8px; font-size: 14px; }
+.desc { background: #111; border: 1px solid #333; border-radius: 4px; padding: 12px; margin-bottom: 24px; font-family: monospace; font-size: 13px; white-space: pre-wrap; color: #ccc; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+th { text-align: left; padding: 8px 12px; color: #888; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #444; }
+td { padding: 6px 12px; border-bottom: 1px solid #222; vertical-align: top; }
+td input[type="text"] { width: 100%; background: #111; border: 1px solid #333; border-radius: 4px; padding: 6px 8px; color: #e0e0e0; font-family: inherit; font-size: 13px; }
+td input[type="text"]:focus { border-color: #3b82f6; outline: none; }
+.toggle { cursor: pointer; padding: 4px 12px; border-radius: 4px; border: none; font-size: 12px; font-weight: 600; }
+.toggle.yes { background: #052e16; color: #22c55e; }
+.toggle.no { background: #450a0a; color: #ef4444; }
+.btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 13px; margin-right: 8px; }
+.btn-primary { background: #3b82f6; color: #fff; }
+.btn-primary:hover { background: #2563eb; }
+.btn-secondary { background: #333; color: #fff; }
+.btn-secondary:hover { background: #444; }
+.btn-danger { background: #991b1b; color: #fff; }
+.btn-danger:hover { background: #7f1d1d; }
+.actions { margin-bottom: 24px; display: flex; gap: 8px; }
+.count { color: #888; font-size: 13px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Eval Query Editor</h1>
+<p class="subtitle">Skill: __SKILL_NAME_PLACEHOLDER__</p>
+<div class="desc">__SKILL_DESCRIPTION_PLACEHOLDER__</div>
+
+<div class="actions">
+  <button class="btn btn-primary" onclick="addRow(true)">+ Should Trigger</button>
+  <button class="btn btn-secondary" onclick="addRow(false)">+ Should NOT Trigger</button>
+  <button class="btn btn-primary" onclick="exportJSON()">Export Eval Set</button>
+</div>
+
+<p class="count" id="count"></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:60px">Trigger</th>
+      <th>Query</th>
+      <th style="width:80px">Actions</th>
+    </tr>
+  </thead>
+  <tbody id="eval-body"></tbody>
+</table>
+</div>
+
+<script>
+let evalData = __EVAL_DATA_PLACEHOLDER__;
+
+function render() {
+  const tbody = document.getElementById('eval-body');
+  const pos = evalData.filter(e => e.should_trigger).length;
+  const neg = evalData.length - pos;
+  document.getElementById('count').textContent = `${evalData.length} queries: ${pos} should-trigger, ${neg} should-not-trigger`;
+
+  tbody.innerHTML = '';
+  evalData.forEach((item, idx) => {
+    const tr = document.createElement('tr');
+    const cls = item.should_trigger ? 'yes' : 'no';
+    const label = item.should_trigger ? 'YES' : 'NO';
+    tr.innerHTML = `
+      <td><button class="toggle ${cls}" onclick="toggleTrigger(${idx})">${label}</button></td>
+      <td><input type="text" value="${item.query.replace(/"/g, '&quot;')}" oninput="updateQuery(${idx}, this.value)"></td>
+      <td><button class="btn btn-danger" onclick="removeRow(${idx})">Remove</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function toggleTrigger(idx) {
+  evalData[idx].should_trigger = !evalData[idx].should_trigger;
+  render();
+}
+
+function updateQuery(idx, value) {
+  evalData[idx].query = value;
+}
+
+function addRow(shouldTrigger) {
+  evalData.push({ query: '', should_trigger: shouldTrigger });
+  render();
+  // Focus the new input
+  const inputs = document.querySelectorAll('#eval-body input[type="text"]');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+}
+
+function removeRow(idx) {
+  evalData.splice(idx, 1);
+  render();
+}
+
+function exportJSON() {
+  const filtered = evalData.filter(e => e.query.trim());
+  const blob = new Blob([JSON.stringify(filtered, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'eval_set.json';
+  a.click();
+}
+
+render();
+</script>
+</body>
+</html>

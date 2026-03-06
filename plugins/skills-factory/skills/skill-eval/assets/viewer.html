@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eval Review: __SKILL_NAME__</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; }
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+h1 { font-size: 24px; margin-bottom: 4px; color: #fff; }
+.subtitle { color: #888; margin-bottom: 24px; font-size: 14px; }
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid #333; }
+.tab { padding: 8px 16px; cursor: pointer; border: none; background: transparent; color: #888; font-size: 14px; font-family: inherit; }
+.tab:hover { color: #ccc; }
+.tab.active { color: #fff; border-bottom: 2px solid #3b82f6; }
+.panel { display: none; } .panel.active { display: block; }
+.card { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.card h3 { color: #fff; margin-bottom: 8px; font-size: 16px; }
+.pass { color: #22c55e; } .fail { color: #ef4444; } .skip { color: #888; } .pending { color: #f59e0b; }
+.grade { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+.grade.pass { background: #052e16; } .grade.fail { background: #450a0a; } .grade.pending { background: #451a03; }
+.tier-badge { font-size: 10px; color: #666; margin-left: 4px; }
+.evidence { margin-left: 68px; color: #888; font-size: 12px; font-family: monospace; margin-top: 2px; margin-bottom: 8px; }
+.feedback { width: 100%; min-height: 60px; background: #111; border: 1px solid #333; border-radius: 4px; color: #e0e0e0; padding: 8px; margin-top: 8px; resize: vertical; font-family: inherit; font-size: 14px; }
+.nav { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.nav button { padding: 6px 12px; background: #333; border: none; color: #fff; border-radius: 4px; cursor: pointer; font-family: inherit; }
+.nav button:hover { background: #444; }
+.nav-label { color: #888; font-size: 14px; }
+.submit { padding: 10px 24px; background: #3b82f6; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-size: 14px; font-family: inherit; margin-top: 16px; }
+.submit:hover { background: #2563eb; }
+table { width: 100%; border-collapse: collapse; } th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #333; }
+th { color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat { font-variant-numeric: tabular-nums; font-family: 'SF Mono', 'Fira Code', monospace; }
+.delta { font-weight: 600; }
+.delta.positive { color: #22c55e; } .delta.negative { color: #ef4444; }
+.output-files { margin-top: 12px; padding: 8px 12px; background: #111; border-radius: 4px; }
+.output-files code { color: #93c5fd; }
+.timing-row { display: flex; gap: 24px; margin-top: 8px; color: #888; font-size: 13px; }
+.section { margin-top: 12px; }
+.section-toggle { cursor: pointer; color: #3b82f6; font-size: 13px; }
+.section-content { display: none; margin-top: 8px; }
+.section-content.open { display: block; }
+.notes { background: #111; border-radius: 4px; padding: 12px; margin-top: 16px; }
+.notes li { margin: 4px 0; color: #ccc; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Eval Review: __SKILL_NAME__</h1>
+<p class="subtitle">Navigate with arrow keys or prev/next buttons. Feedback auto-saves.</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('outputs')">Outputs</button>
+  <button class="tab" onclick="showTab('benchmark')">Benchmark</button>
+</div>
+
+<div id="outputs" class="panel active"></div>
+<div id="benchmark" class="panel"></div>
+
+<button class="submit" onclick="submitReviews()">Submit All Reviews</button>
+</div>
+
+<script>
+const evalData = __EVAL_DATA__;
+const benchmarkData = __BENCHMARK_DATA__;
+const previousData = __PREVIOUS_DATA__;
+const feedback = {};
+let currentIdx = 0;
+
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(name).classList.add('active');
+}
+
+function renderOutputs() {
+  const panel = document.getElementById('outputs');
+  if (!evalData.length) { panel.innerHTML = '<div class="card"><p>No eval results found.</p></div>'; return; }
+
+  let html = '<div class="nav">';
+  html += '<button onclick="navigate(-1)">&larr; Prev</button>';
+  html += '<span class="nav-label" id="nav-label"></span>';
+  html += '<button onclick="navigate(1)">Next &rarr;</button>';
+  html += '</div><div id="eval-content"></div>';
+  panel.innerHTML = html;
+  renderEval(0);
+}
+
+function renderEval(idx) {
+  if (idx < 0 || idx >= evalData.length) return;
+  currentIdx = idx;
+  const e = evalData[idx];
+  document.getElementById('nav-label').textContent = `${idx + 1} / ${evalData.length} — Run ${e.run_id}`;
+
+  let html = '<div class="card">';
+  html += `<h3>Run: ${e.run_id}</h3>`;
+
+  if (e.grading) {
+    const s = e.grading.summary || {};
+    const cls = s.pass_rate >= 0.8 ? 'pass' : 'fail';
+    html += `<p>Pass rate: <span class="${cls}">${(s.pass_rate * 100).toFixed(0)}%</span> (${s.passed}/${s.total})`;
+    if (s.tier1_count) html += ` | Tier 1: ${s.tier1_passed ? '<span class="pass">all passed</span>' : '<span class="fail">failures</span>'} (${s.tier1_count} checks)`;
+    html += '</p>';
+
+    if (e.grading.expectations && e.grading.expectations.length) {
+      html += '<div class="section">';
+      for (const exp of e.grading.expectations) {
+        const cls = exp.passed === null ? 'pending' : (exp.passed ? 'pass' : 'fail');
+        const label = exp.passed === null ? 'PENDING' : (exp.passed ? 'PASS' : 'FAIL');
+        const tier = exp.tier ? `<span class="tier-badge">T${exp.tier}</span>` : '';
+        html += `<div style="margin:6px 0"><span class="grade ${cls}">${label}</span>${exp.text}${tier}</div>`;
+        if (exp.evidence) html += `<div class="evidence">${exp.evidence}</div>`;
+      }
+      html += '</div>';
+    }
+
+    if (e.grading.eval_feedback && e.grading.eval_feedback.suggestions && e.grading.eval_feedback.suggestions.length) {
+      html += '<div class="section"><span class="section-toggle" onclick="this.nextElementSibling.classList.toggle(\'open\')">Eval Feedback</span>';
+      html += '<div class="section-content">';
+      for (const s of e.grading.eval_feedback.suggestions) {
+        html += `<p style="color:#f59e0b;font-size:13px">${s.assertion ? `[${s.assertion}] ` : ''}${s.reason}</p>`;
+      }
+      html += '</div></div>';
+    }
+  }
+
+  if (e.output_files && e.output_files.length) {
+    html += '<div class="output-files">Output files: ' + e.output_files.map(f => `<code>${f}</code>`).join(', ') + '</div>';
+  }
+
+  if (e.timing) {
+    html += '<div class="timing-row">';
+    if (e.timing.total_tokens) html += `<span>Tokens: ${e.timing.total_tokens.toLocaleString()}</span>`;
+    if (e.timing.total_duration_seconds) html += `<span>Duration: ${e.timing.total_duration_seconds.toFixed(1)}s</span>`;
+    html += '</div>';
+  }
+
+  // Previous iteration comparison
+  if (previousData.length > idx) {
+    const prev = previousData[idx];
+    if (prev && prev.grading) {
+      html += '<div class="section"><span class="section-toggle" onclick="this.nextElementSibling.classList.toggle(\'open\')">Previous Iteration</span>';
+      html += '<div class="section-content">';
+      const ps = prev.grading.summary || {};
+      html += `<p>Previous pass rate: ${(ps.pass_rate * 100).toFixed(0)}% (${ps.passed}/${ps.total})</p>`;
+      html += '</div></div>';
+    }
+  }
+
+  html += `<textarea class="feedback" placeholder="Your feedback on this result..." oninput="saveFeedback('${e.run_id}', this.value)">${feedback[e.run_id] || ''}</textarea>`;
+  html += '</div>';
+
+  document.getElementById('eval-content').innerHTML = html;
+}
+
+function navigate(delta) { renderEval(currentIdx + delta); }
+function saveFeedback(id, text) { feedback[id] = text; }
+
+function renderBenchmark() {
+  const panel = document.getElementById('benchmark');
+  if (!benchmarkData || !benchmarkData.run_summary) {
+    panel.innerHTML = '<div class="card"><p>No benchmark data available. Run aggregate_benchmark.py to generate.</p></div>';
+    return;
+  }
+
+  let html = '<div class="card"><h3>Summary Statistics</h3>';
+  html += '<table><tr><th>Config</th><th>Pass Rate</th><th>Time</th><th>Tokens</th></tr>';
+
+  for (const [config, data] of Object.entries(benchmarkData.run_summary)) {
+    if (config === 'delta') continue;
+    html += `<tr>
+      <td>${config}</td>
+      <td class="stat">${(data.pass_rate.mean * 100).toFixed(0)}% &plusmn; ${(data.pass_rate.stddev * 100).toFixed(0)}%</td>
+      <td class="stat">${data.time_seconds.mean.toFixed(1)}s &plusmn; ${data.time_seconds.stddev.toFixed(1)}s</td>
+      <td class="stat">${data.tokens.mean.toFixed(0)} &plusmn; ${data.tokens.stddev.toFixed(0)}</td>
+    </tr>`;
+  }
+
+  if (benchmarkData.run_summary.delta) {
+    const d = benchmarkData.run_summary.delta;
+    const prCls = parseFloat(d.pass_rate) >= 0 ? 'positive' : 'negative';
+    html += `<tr style="border-top:2px solid #444">
+      <td>Delta</td>
+      <td class="stat delta ${prCls}">${d.pass_rate}</td>
+      <td class="stat delta">${d.time_seconds}s</td>
+      <td class="stat delta">${d.tokens}</td>
+    </tr>`;
+  }
+
+  html += '</table></div>';
+
+  if (benchmarkData.notes && benchmarkData.notes.length) {
+    html += '<div class="card"><h3>Analyst Notes</h3><div class="notes"><ul>';
+    for (const note of benchmarkData.notes) html += `<li>${note}</li>`;
+    html += '</ul></div></div>';
+  }
+
+  // Per-eval breakdown
+  if (benchmarkData.runs && benchmarkData.runs.length) {
+    html += '<div class="card"><h3>Per-Eval Breakdown</h3>';
+    html += '<table><tr><th>Eval</th><th>Config</th><th>Run</th><th>Pass Rate</th><th>Time</th><th>Tokens</th></tr>';
+    for (const run of benchmarkData.runs) {
+      html += `<tr>
+        <td>${run.eval_name}</td>
+        <td>${run.configuration}</td>
+        <td>${run.run_number}</td>
+        <td class="stat">${(run.result.pass_rate * 100).toFixed(0)}%</td>
+        <td class="stat">${(run.result.time_seconds || 0).toFixed(1)}s</td>
+        <td class="stat">${run.result.tokens || 0}</td>
+      </tr>`;
+    }
+    html += '</table></div>';
+  }
+
+  panel.innerHTML = html;
+}
+
+function submitReviews() {
+  const reviews = Object.entries(feedback).map(([id, text]) => ({
+    run_id: id, feedback: text, timestamp: new Date().toISOString()
+  }));
+  const blob = new Blob([JSON.stringify({ reviews, status: 'complete' }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'feedback.json';
+  a.click();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowLeft') navigate(-1);
+  if (e.key === 'ArrowRight') navigate(1);
+});
+
+renderOutputs();
+renderBenchmark();
+</script>
+</body>
+</html>

@@ -1,68 +1,64 @@
 # Distribution Guide
 
-How to package, distribute, and position skills for different audiences and platforms.
+Packaging, distribution channels, and positioning for skills.
 
-## Contents
+## Distribution Channels
 
-- [Distribution channels](#distribution-channels)
-- [Packaging formats](#packaging-formats)
-- [Positioning your skill](#positioning-your-skill)
+### Claude.ai Upload
 
-## Distribution channels
+Users upload `.skill` or ZIP files via Settings > Capabilities.
 
-### Individual upload (Claude.ai)
+**Best for:** Personal skills, prototyping, sharing with individuals.
+**Limitations:** Manual, no version management, one user at a time.
 
-The simplest distribution method. Users upload skills via Claude.ai Settings > Capabilities.
+### Claude Code Plugin Marketplace
 
-**Best for**: Personal skills, prototyping, sharing with individuals.
+Skills distributed as part of a plugin.
 
-**Process**:
-1. Package the skill as a ZIP file
-2. User opens Claude.ai > Settings > Capabilities
-3. Upload the ZIP file
-4. Skill is available immediately in new conversations
+**Best for:** Teams, curated collections, skills bundled with commands and hooks.
+**Process:** Structure within plugin, register in `marketplace.json`, install via `/plugin install`.
+**Advantages:** Version management, bundled dependencies, marketplace discovery.
 
-**Limitations**: Manual process, no version management, one user at a time.
+### Plugin Distribution
 
-### Claude Code plugin marketplace
+For skills that are part of a plugin ecosystem:
 
-Distribute skills as part of a Claude Code plugin for team or community use.
+1. Create plugin directory with `.claude-plugin/plugin.json`
+2. Place skills in `skills/<skill-name>/` directories
+3. Register in marketplace `marketplace.json`
+4. Users install: `/plugin marketplace add <url>` then `/plugin install <name>`
 
-**Best for**: Team-wide skills, curated skill collections, skills bundled with commands and hooks.
+### Managed Settings (Enterprise)
 
-**Process**:
-1. Structure the skill within a plugin directory
-2. Register the plugin in a marketplace (`marketplace.json`)
-3. Users install via `/plugin install your-plugin@marketplace`
+Enterprise deployments can push skills via managed settings:
 
-**Advantages**: Version management, bundled dependencies, discoverable through marketplace browsing.
+- Skills installed at the organization level
+- Priority: enterprise > personal > project > plugin
+- Useful for company-wide standards, compliance tools, internal workflows
 
-### API and SDK usage
+### API / SDK Usage
 
-Attach skills programmatically via the Anthropic Messages API.
+Attach skills programmatically via `container.skills` in API calls.
 
-**Best for**: Automated pipelines, applications that use Claude as a backend, CI/CD integration.
+**Best for:** Automated pipelines, applications using Claude as backend.
 
-**Usage**: Pass skill paths or content via the `container.skills` parameter in API calls. This enables applications to dynamically select which skills Claude uses based on the task context.
+### GitHub Hosting
 
-### GitHub hosting
+Host in a repository for sharing and collaboration.
 
-Host skills in a public or private GitHub repository for sharing and collaboration.
+**Best for:** Open-source skills, community contributions.
 
-**Best for**: Open-source skills, community contributions, version-controlled distribution.
+## Packaging Formats
 
-**Process**:
-1. Structure the repository with one or more skill directories
-2. Users clone or download the repository
-3. Skills can be uploaded to Claude.ai or installed via Claude Code
+### `.skill` ZIP File
 
-## Packaging formats
+Standard portable format. Created by `package_skill.py`:
 
-### `.skill` ZIP file
+```bash
+python3 scripts/package_skill.py <skill-dir> [output-dir]
+```
 
-The standard portable format. Created by `package_skill.py`.
-
-**Structure**:
+Structure inside:
 ```
 skill-name.skill (ZIP)
 └── skill-name/
@@ -72,75 +68,69 @@ skill-name.skill (ZIP)
     └── assets/
 ```
 
-**Usage**: Works with Claude.ai upload and Claude Code. Most portable format.
+### Directory (for plugins)
 
-### Plain ZIP for Claude.ai
+Unpackaged skill directory on the filesystem. Used within plugins and during development.
 
-A standard ZIP file containing the skill directory. Functionally identical to `.skill` but with `.zip` extension.
+### Format Selection
 
-**When to use**: When distributing to users who may not recognize the `.skill` extension.
-
-### Directory for Claude Code
-
-An unpackaged skill directory on the local filesystem.
-
-**When to use**: During development, for skills managed within a plugin, or when version control (git) handles distribution.
-
-### Choosing a format
-
-| Scenario | Recommended format |
-|----------|-------------------|
-| Sharing with a colleague | `.skill` or plain ZIP |
-| Publishing to a marketplace | Directory within a plugin |
-| API integration | Directory (referenced by path) |
-| Open-source distribution | GitHub repository with directories |
+| Scenario | Format |
+|----------|--------|
+| Sharing with a colleague | `.skill` file |
+| Publishing to marketplace | Directory within plugin |
+| API integration | Directory (by path) |
+| Open-source | GitHub repository |
 | Active development | Local directory |
 
-## Positioning your skill
+## Ship Pipeline
 
-How you describe and present a skill affects adoption. Focus on outcomes, not implementation details.
+The recommended distribution workflow (via skill-eval's ship command):
 
-### Lead with the problem solved
+1. **Validate** — `skills-ref validate` (format compliance)
+2. **Eval** — Run full eval suite (all Tier 1 checks pass, 80%+ Tier 2)
+3. **Quality gate:**
+   - SKILL.md under 500 lines
+   - No TODO markers
+   - All referenced files exist
+   - Token budget under threshold
+4. **Package** — Generate `.skill` file
+5. **Summary card** — Skill name, pass rate, token budget, package size
 
-**Weak**: "Uses pdfplumber to extract text from PDF documents with configurable options"
+## Quality Gate Checklist
 
-**Strong**: "Turn any PDF into clean, structured text in seconds — handles scanned documents, tables, and forms"
+Before shipping:
+- [ ] `skills-ref validate` passes
+- [ ] All Tier 1 eval checks pass
+- [ ] 80%+ Tier 2 assertions pass
+- [ ] SKILL.md < 500 lines
+- [ ] No TODO markers in content
+- [ ] All referenced files exist
+- [ ] Token budget reasonable
+- [ ] Description < 1024 chars
 
-### Use before/after examples
+## Positioning
 
-Show what changes for the user:
+### Lead with the Problem
+
+**Weak:** "Uses pdfplumber to extract text from PDFs"
+**Strong:** "Turn any PDF into clean, structured text — handles scans, tables, and forms"
+
+### Before/After Examples
 
 ```
-Without this skill:
-  User: "Extract the data from quarterly-report.pdf"
-  Claude: Writes extraction code from scratch, may miss tables, no error handling
-
-With this skill:
-  User: "Extract the data from quarterly-report.pdf"
-  Claude: Uses optimized extraction pipeline, handles tables and forms,
-          validates output quality, produces structured markdown
+Without skill: Claude writes extraction code from scratch, misses tables
+With skill: Optimized pipeline, handles tables and forms, validates output
 ```
 
-### Describe the scope clearly
-
-Users need to know what a skill handles and what it doesn't. A clear scope prevents frustration:
+### Scope Clarity
 
 ```
-This skill handles:
-- Text extraction from standard and scanned PDFs
-- Table extraction with structure preservation
-- Form field reading and filling
-
-This skill does NOT handle:
-- PDF creation from scratch (see pdf-factory)
-- Image extraction
-- PDF encryption/decryption
+Handles: Text extraction, table extraction, form filling
+Does NOT handle: PDF creation (see pdf-factory), image extraction
 ```
 
-### Target your audience
+### Target Audience
 
-Match the description complexity to the intended user:
-
-- **For developers**: Include API details, configuration options, script interfaces
-- **For end users**: Focus on what they can ask Claude to do, with example queries
-- **For teams**: Emphasize consistency, shared workflows, and integration with existing tools
+- **Developers:** API details, configuration, script interfaces
+- **End users:** What to ask Claude, example queries
+- **Teams:** Consistency, shared workflows, integration
