@@ -47,6 +47,8 @@ def run_single_query(query: str, skill_name: str, skill_description: str,
     """
     unique_id = uuid.uuid4().hex[:8]
     clean_name = f"{skill_name}-skill-{unique_id}"
+    # Match patterns: temp command name OR real skill name (with optional plugin prefix)
+    match_names = {clean_name, skill_name, f":{skill_name}"}
     project_root = Path(project_root)
     commands_dir = project_root / ".claude" / "commands"
     command_file = commands_dir / f"{clean_name}.md"
@@ -134,6 +136,11 @@ def run_single_query(query: str, skill_name: str, skill_description: str,
                                 if tool_name in ("Skill", "Read"):
                                     pending_tool_name = tool_name
                                     accumulated_json = ""
+                                elif tool_name == "ToolSearch":
+                                    # ToolSearch loads deferred tools (e.g. Skill)
+                                    # — don't early-exit, wait for next tool call
+                                    pending_tool_name = None
+                                    accumulated_json = ""
                                 else:
                                     # Wrong tool — not our skill, early exit
                                     duration_ms = int((time.time() - start_time) * 1000)
@@ -146,7 +153,7 @@ def run_single_query(query: str, skill_name: str, skill_description: str,
                             delta = se.get("delta", {})
                             if delta.get("type") == "input_json_delta":
                                 accumulated_json += delta.get("partial_json", "")
-                                if clean_name in accumulated_json:
+                                if any(n in accumulated_json for n in match_names):
                                     duration_ms = int((time.time() - start_time) * 1000)
                                     return {
                                         "query": query, "triggered": True,
@@ -155,7 +162,7 @@ def run_single_query(query: str, skill_name: str, skill_description: str,
 
                         elif se_type in ("content_block_stop", "message_stop"):
                             if pending_tool_name:
-                                triggered = clean_name in accumulated_json
+                                triggered = any(n in accumulated_json for n in match_names)
                                 duration_ms = int((time.time() - start_time) * 1000)
                                 return {
                                     "query": query, "triggered": triggered,
@@ -171,20 +178,28 @@ def run_single_query(query: str, skill_name: str, skill_description: str,
                     # Fallback: full assistant message (non-streaming)
                     elif event_type == "assistant":
                         message = event.get("message", {})
+                        only_toolsearch = True
                         for content_item in message.get("content", []):
                             if content_item.get("type") != "tool_use":
                                 continue
                             tool_name = content_item.get("name", "")
                             tool_input = content_item.get("input", {})
-                            if tool_name == "Skill" and clean_name in tool_input.get("skill", ""):
+                            if tool_name == "Skill" and any(n in tool_input.get("skill", "") for n in match_names):
                                 triggered = True
-                            elif tool_name == "Read" and clean_name in tool_input.get("file_path", ""):
+                                only_toolsearch = False
+                            elif tool_name == "Read" and any(n in tool_input.get("file_path", "") for n in match_names):
                                 triggered = True
-                        duration_ms = int((time.time() - start_time) * 1000)
-                        return {
-                            "query": query, "triggered": triggered,
-                            "duration_ms": duration_ms, "total_tokens": 0,
-                        }
+                                only_toolsearch = False
+                            elif tool_name == "ToolSearch":
+                                pass  # Intermediate step, keep waiting
+                            else:
+                                only_toolsearch = False
+                        if not only_toolsearch:
+                            duration_ms = int((time.time() - start_time) * 1000)
+                            return {
+                                "query": query, "triggered": triggered,
+                                "duration_ms": duration_ms, "total_tokens": 0,
+                            }
 
                     # Usage data
                     elif event_type == "message_delta":

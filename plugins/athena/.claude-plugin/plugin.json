@@ -1,6 +1,6 @@
 {
   "name": "athena",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bidirectional document exchange with the Athena note-taking app: process .athenabrief research packages and create .athena import packages",
   "author": {
     "name": "Bluewaves Team",

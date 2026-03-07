@@ -2,7 +2,7 @@
   "name": "bluewaves-skills",
   "metadata": {
     "description": "AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "2.8.1"
+    "version": "2.8.2"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -43,7 +43,7 @@
       "name": "athena",
       "source": "./plugins/athena",
       "description": "Bidirectional document exchange with the Athena note-taking app: process .athenabrief research packages and create .athena import packages",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Bluewaves Team",
         "email": "contact@bluewaves.boutique"
@@ -58,7 +58,7 @@
       "name": "skills-factory",
       "source": "./plugins/skills-factory",
       "description": "Complete skill lifecycle platform: creation, evaluation, benchmarking, description optimization, quality gates, packaging, and cross-platform conversion for Agent Skills",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "author": {
         "name": "Bluewaves Team",
         "email": "contact@bluewaves.boutique"
