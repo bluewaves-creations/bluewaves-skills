@@ -98,6 +98,22 @@ When `sync_mode` is true, the `url` field contains a `data:image/...;base64,...`
 }
 ```
 
+### Speech-to-text response
+
+```json
+{
+  "text": "Full transcribed text",
+  "language_code": "eng",
+  "language_probability": 0.98,
+  "words": [
+    {"text": "Hello,", "type": "word", "start": 0.079, "end": 0.539, "speaker_id": "speaker_0"},
+    {"text": " ", "type": "spacing", "start": 0.539, "end": 0.599, "speaker_id": "speaker_0"}
+  ]
+}
+```
+
+See `scribe-v2-api.md` for full input/output schema, word types, and language codes.
+
 ## CLI Reference
 
 All skills share the `fal_generate.py` CLI script:
@@ -132,6 +148,12 @@ python3 scripts/fal_generate.py \
     --endpoint video-from-frames \
     --prompt "transition description" \
     --first-frame start.jpg --last-frame end.jpg --duration 8s --video-resolution 1080p --output video.mp4
+
+# Audio transcription
+python3 scripts/fal_generate.py \
+    --endpoint transcribe \
+    --audio /path/to/recording.m4a \
+    --language fra --transcript-format markdown --output transcript.md
 ```
 
 ## Error Handling

@@ -13,7 +13,7 @@ bluewaves-skills/
 ├── .claude-plugin/
 │   └── marketplace.json          # Central registry of all plugins
 ├── plugins/
-│   ├── media-factory/            # fal.ai media generation (images/videos)
+│   ├── media-factory/            # fal.ai media generation (images/videos/transcription)
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/             # check-fal-key, generate-image, install-deps
 │   │   ├── hooks/hooks.json
@@ -28,7 +28,8 @@ bluewaves-skills/
 │   │       ├── photographer-ritts/SKILL.md
 │   │       ├── photographer-testino/SKILL.md
 │   │       ├── photographer-lachapelle/SKILL.md
-│   │       └── photographer-vonunwerth/SKILL.md
+│   │       ├── photographer-vonunwerth/SKILL.md
+│   │       └── audio-transcriber/SKILL.md
 │   ├── epub-generator/           # EPUB ebook generation
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/             # install-deps
@@ -186,7 +187,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 2.7.2
+Current marketplace version: 2.9.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

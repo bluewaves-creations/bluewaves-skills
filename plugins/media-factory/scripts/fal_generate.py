@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Unified fal.ai generation script for media-factory.
 
-Handles image generation, image editing, and video generation via
-fal_client.subscribe() with queue management, progress logging,
-and automatic result download.
+Handles image generation, image editing, video generation, and
+audio transcription via fal_client.subscribe() with queue management,
+progress logging, and automatic result download.
 
 Usage:
     # Image generation
@@ -20,6 +20,9 @@ Usage:
 
     # Video from first/last frames
     python fal_generate.py --endpoint video-from-frames --prompt "day to night" --first-frame day.jpg --last-frame night.jpg --output video.mp4
+
+    # Audio transcription
+    python fal_generate.py --endpoint transcribe --audio recording.m4a --output transcript.md
 """
 import argparse
 import os
@@ -235,13 +238,194 @@ def video_from_frames(args):
         open_file(output)
 
 
+def format_timestamp(seconds: float) -> str:
+    """Format seconds as HH:MM:SS,mmm for SRT or MM:SS for markdown."""
+    h = int(seconds // 3600)
+    m = int((seconds % 3600) // 60)
+    s = int(seconds % 60)
+    ms = int((seconds % 1) * 1000)
+    return f"{h:02d}:{m:02d}:{s:02d},{ms:03d}"
+
+
+def format_timestamp_short(seconds: float) -> str:
+    """Format seconds as MM:SS for markdown headers."""
+    m = int(seconds // 60)
+    s = int(seconds % 60)
+    return f"{m:02d}:{s:02d}"
+
+
+def format_markdown(result: dict) -> str:
+    """Format transcription result as speaker-labeled markdown."""
+    lines = []
+    lang = result.get("language_code", "unknown")
+    prob = result.get("language_probability", 0)
+    lines.append(f"**Language:** {lang} (confidence: {prob:.0%})\n")
+
+    words = result.get("words", [])
+    if not words:
+        lines.append(result.get("text", ""))
+        return "\n".join(lines)
+
+    # Group words by speaker
+    current_speaker = None
+    current_text = []
+    current_start = None
+
+    for w in words:
+        if w.get("type") == "spacing":
+            current_text.append(w["text"])
+            continue
+        speaker = w.get("speaker_id", "unknown")
+        if speaker != current_speaker:
+            # Flush previous speaker block
+            if current_speaker is not None and current_text:
+                ts = format_timestamp_short(current_start)
+                label = current_speaker.replace("_", " ").title()
+                lines.append(f"### {label} [{ts}]\n")
+                lines.append("".join(current_text).strip() + "\n")
+            current_speaker = speaker
+            current_text = []
+            current_start = w.get("start", 0)
+        current_text.append(w["text"])
+
+    # Flush last block
+    if current_speaker is not None and current_text:
+        ts = format_timestamp_short(current_start)
+        label = current_speaker.replace("_", " ").title()
+        lines.append(f"### {label} [{ts}]\n")
+        lines.append("".join(current_text).strip() + "\n")
+
+    return "\n".join(lines)
+
+
+def format_srt(result: dict) -> str:
+    """Format transcription result as SRT subtitles."""
+    words = result.get("words", [])
+    if not words:
+        return ""
+
+    # Build subtitle blocks: group by speaker and pauses, ~10 words per block
+    blocks = []
+    current_words = []
+    current_speaker = None
+    current_start = None
+    current_end = None
+    word_count = 0
+
+    for w in words:
+        if w.get("type") == "spacing":
+            continue
+        if w.get("type") == "audio_event":
+            # Audio events get their own block
+            if current_words:
+                blocks.append((current_start, current_end, "".join(current_words).strip()))
+                current_words = []
+                word_count = 0
+            blocks.append((w.get("start", 0), w.get("end", 0), w["text"]))
+            current_speaker = None
+            current_start = None
+            current_end = None
+            continue
+
+        speaker = w.get("speaker_id")
+        start = w.get("start", 0)
+        gap = (start - current_end) if current_end is not None else 0
+
+        # Break on speaker change, pause > 1s, or ~10 words
+        if (speaker != current_speaker and current_speaker is not None) or gap > 1.0 or word_count >= 10:
+            if current_words:
+                blocks.append((current_start, current_end, "".join(current_words).strip()))
+            current_words = []
+            word_count = 0
+            current_start = start
+
+        if current_start is None:
+            current_start = start
+        current_speaker = speaker
+        current_end = w.get("end", start)
+        current_words.append(w["text"] + " ")
+        word_count += 1
+
+    if current_words:
+        blocks.append((current_start, current_end, "".join(current_words).strip()))
+
+    # Format as SRT
+    srt_lines = []
+    for i, (start, end, text) in enumerate(blocks, 1):
+        srt_lines.append(str(i))
+        srt_lines.append(f"{format_timestamp(start)} --> {format_timestamp(end)}")
+        srt_lines.append(text)
+        srt_lines.append("")
+
+    return "\n".join(srt_lines)
+
+
+def transcribe_audio(args):
+    """Transcribe audio/video to text using Scribe V2."""
+    import fal_client
+
+    # Resolve audio URL
+    audio_url = resolve_image_url(args.audio)
+
+    arguments = {"audio_url": audio_url}
+    if args.language:
+        arguments["language_code"] = args.language
+    if args.no_diarize:
+        arguments["diarize"] = False
+    if args.no_tag_events:
+        arguments["tag_audio_events"] = False
+    if args.keyterms:
+        arguments["keyterms"] = args.keyterms
+
+    print(f"Transcribing audio...")
+    result = fal_client.subscribe(
+        "fal-ai/elevenlabs/speech-to-text/scribe-v2",
+        arguments=arguments,
+        with_logs=True,
+        on_queue_update=on_queue_update,
+    )
+
+    text = result.get("text", "")
+    if not text:
+        print("Error: No transcription in response", file=sys.stderr)
+        sys.exit(1)
+
+    # Format output
+    fmt = args.transcript_format
+    if fmt == "plain":
+        output_text = text
+    elif fmt == "srt":
+        output_text = format_srt(result)
+    else:  # markdown
+        output_text = format_markdown(result)
+
+    # Write to file
+    with open(args.output, "w", encoding="utf-8") as f:
+        f.write(output_text)
+    print(f"Transcript saved to {args.output}")
+
+    # Summary
+    lang = result.get("language_code", "unknown")
+    prob = result.get("language_probability", 0)
+    word_count = len([w for w in result.get("words", []) if w.get("type") == "word"])
+    speakers = set(w.get("speaker_id") for w in result.get("words", []) if w.get("speaker_id"))
+    print(f"Language: {lang} ({prob:.0%} confidence)")
+    print(f"Words: {word_count}")
+    if speakers:
+        print(f"Speakers: {len(speakers)}")
+
+    if not args.no_open:
+        open_file(args.output)
+
+
 def main():
     parser = argparse.ArgumentParser(description="fal.ai media generation")
     parser.add_argument("--endpoint", required=True,
                         choices=["image", "edit", "video-from-image",
-                                 "video-from-reference", "video-from-frames"],
+                                 "video-from-reference", "video-from-frames",
+                                 "transcribe"],
                         help="Generation endpoint")
-    parser.add_argument("--prompt", required=True, help="Text prompt")
+    parser.add_argument("--prompt", help="Text prompt (required for image/video endpoints)")
     parser.add_argument("--output", required=True, help="Output file path")
     parser.add_argument("--no-open", action="store_true", help="Don't open result file")
 
@@ -265,7 +449,25 @@ def main():
     parser.add_argument("--video-resolution", default="720p", choices=["720p", "1080p"])
     parser.add_argument("--no-audio", action="store_true", help="Disable audio generation")
 
+    # Transcription options
+    parser.add_argument("--audio", help="Input audio/video file path or URL (for transcribe)")
+    parser.add_argument("--language", help="Language code (eng, fra, spa, deu, jpn, etc.)")
+    parser.add_argument("--no-diarize", action="store_true", help="Disable speaker diarization")
+    parser.add_argument("--no-tag-events", action="store_true", help="Disable audio event tagging")
+    parser.add_argument("--keyterms", nargs="+", help="Bias terms for domain vocabulary (adds 30%% cost)")
+    parser.add_argument("--transcript-format", default="markdown",
+                        choices=["markdown", "plain", "srt"],
+                        help="Transcript output format")
+
     args = parser.parse_args()
+
+    # Post-parse validation
+    if args.endpoint == "transcribe":
+        if not args.audio:
+            parser.error("--audio is required for the transcribe endpoint")
+    else:
+        if not args.prompt:
+            parser.error("--prompt is required for image/video endpoints")
 
     # Resolve API key (sets FAL_KEY env var for fal_client)
     try:
@@ -281,6 +483,7 @@ def main():
         "video-from-image": video_from_image,
         "video-from-reference": video_from_reference,
         "video-from-frames": video_from_frames,
+        "transcribe": transcribe_audio,
     }
     endpoint_map[args.endpoint](args)
 
