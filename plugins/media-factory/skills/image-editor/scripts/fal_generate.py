@@ -1,1 +1,0 @@
-../../../scripts/fal_generate.py

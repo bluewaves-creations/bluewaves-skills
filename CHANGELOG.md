@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-03-13
+
+### Breaking Changes
+
+- **media-factory** and **web-factory** plugins moved to [bluewaves-skills-rooms](https://github.com/bluewaves-creations/bluewaves-skills-rooms). Install from the new marketplace: `/plugin marketplace add bluewaves-creations/bluewaves-skills-rooms`
+- Removed `keys.example.json` — per-user API key injection is no longer needed (no remaining plugins require API keys)
+- Build script simplified — `media-factory` and `web-factory` credential injection cases removed from `build-skill-zips.sh`
+
+### Changed
+
+- Marketplace version bumped to 3.0.0 (4 plugins, 11 skills)
+- Updated CLAUDE.md, README.md to reflect the split
+
+---
+
 ## [2.9.0] - 2026-03-13
 
 ### Added

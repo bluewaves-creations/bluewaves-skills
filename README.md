@@ -2,10 +2,12 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-2.7.1-blue)
+![Version](https://img.shields.io/badge/version-3.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A Claude Code plugin marketplace featuring AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools.
+A Claude Code plugin marketplace featuring Athena document exchange, branded document generation with charts, EPUB creation, and skill creation and cross-platform conversion tools.
+
+> **Looking for media-factory or web-factory?** Those plugins moved to [bluewaves-skills-rooms](https://github.com/bluewaves-creations/bluewaves-skills-rooms).
 
 ## Installation
 
@@ -16,33 +18,6 @@ Add this marketplace to Claude Code:
 ```
 
 ## Available Plugins
-
-### media-factory
-
-AI-powered image and video generation using fal.ai with Python fal_client and 5 photographer style skills.
-
-```bash
-/plugin install media-factory@bluewaves-skills
-```
-
-**10 Skills:**
-
-| Category | Skills |
-|----------|--------|
-| **Image Generation** | `image-generator`, `image-editor` |
-| **Video Generation** | `video-from-image`, `video-from-reference`, `video-from-frames` |
-| **Photographer Styles** | `photographer-lindbergh`, `photographer-ritts`, `photographer-testino`, `photographer-lachapelle`, `photographer-vonunwerth` |
-
-**Photographer Styles:**
-- **Lindbergh** - Raw B&W photography, emotional depth, film grain
-- **Ritts** - Sculptural forms, California golden hour, classical Greek
-- **Testino** - Vibrant glamour, bold saturated colors
-- **LaChapelle** - Pop surrealism, fluorescent colors, baroque maximalism
-- **von Unwerth** - Playful vintage, film noir, feminine empowerment
-
-**Prerequisites:** `uv pip install fal-client`, provide `credentials.json` in scripts/ directory or set `FAL_KEY` environment variable in `~/.zshrc`
-
----
 
 ### epub-generator
 
@@ -137,30 +112,6 @@ Skill creation, validation, and cross-platform conversion tools for Agent Skills
 
 ---
 
-### web-factory
-
-Password-protected branded websites on Cloudflare. A Hono gateway Worker serves sites from R2 with HMAC cookie auth and an admin API.
-
-```bash
-/plugin install web-factory@bluewaves-skills
-```
-
-**2 Skills:**
-
-| Category | Skills |
-|----------|--------|
-| **Site Building** | `site-factory` |
-| **Site Management** | `site-publisher` |
-
-- **site-factory** - Build branded single-page HTML from markdown using docs-factory brand kits
-- **site-publisher** - Publish/manage password-protected sites via admin API
-
-URL pattern: `https://{brand}.bluewaves-athena.app/{site-name}/`
-
-**Prerequisites:** bun + wrangler for gateway deployment, `WEB_FACTORY_ADMIN_TOKEN` or `credentials.json` for publishing, Python 3.8+ (stdlib only for site_api.py)
-
----
-
 ## Slash Commands
 
 Explicit commands you can invoke from the Claude Code prompt. These complement skills (which trigger automatically).
@@ -171,14 +122,6 @@ Explicit commands you can invoke from the Claude Code prompt. These complement s
 |---------|-------------|
 | `/validate-skills` | Validate marketplace skills via skills-ref |
 | `/build-skill-zips` | Build standalone skill ZIP files for Claude.ai users |
-
-### media-factory
-
-| Command | Description |
-|---------|-------------|
-| `/media-factory:check-fal-key` | Check if FAL_KEY is set and test API connectivity |
-| `/media-factory:generate-image <prompt>` | Quick image generation from a text prompt |
-| `/media-factory:install-deps` | Install fal-client Python package |
 
 ### epub-generator
 
@@ -208,17 +151,6 @@ Explicit commands you can invoke from the Claude Code prompt. These complement s
 | `/skills-factory:validate-skill <path>` | Validate a skill folder |
 | `/skills-factory:package-skill <path> [output-dir]` | Package a skill into a `.skill` ZIP |
 
-### web-factory
-
-| Command | Description |
-|---------|-------------|
-| `/web-factory:install-deps` | Install Worker dependencies (`bun install`) |
-| `/web-factory:check-cf-key` | Validate Cloudflare and gateway credentials |
-| `/web-factory:setup-gateway` | One-time: deploy Worker + create R2/KV + DNS |
-| `/web-factory:create-api-key` | Generate a user API key for the admin API |
-| `/web-factory:list-api-keys` | List registered API key users |
-| `/web-factory:revoke-api-key` | Revoke a user's API key |
-
 ---
 
 ## Use Without Claude Code
@@ -232,24 +164,15 @@ Individual skills are available as standalone ZIP files for **Claude.ai** (web/d
 3. Click **Upload skill** and select the downloaded ZIP
 4. Toggle the skill **ON**
 
-Each ZIP contains a single skill with its instructions. All 23 skills are available individually.
+Each ZIP contains a single skill with its instructions. All 11 skills are available individually.
 
-> **Note:** Plugin hooks (API key validation, dependency checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
+> **Note:** Plugin hooks (dependency checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
 
 ---
 
 ## Usage Examples
 
 ```
-# Generate an image
-"Create a 4K image of a cyberpunk city at night"
-
-# Edit an image
-"Add rain and dramatic lighting to this photo"
-
-# Create video from image
-"Animate this landscape with flowing water and wind"
-
 # Generate EPUB
 "Create an EPUB from the markdown files in ./chapters"
 
@@ -274,12 +197,6 @@ Each ZIP contains a single skill with its instructions. All 23 skills are availa
 # Convert a skill to other platforms
 "Convert my pdf-processor skill to a Gemini Gem"
 "Adapt this skill for use as a Custom GPT"
-
-# Build and publish a branded website
-"Create a branded website from this markdown for Bluewaves"
-"Publish the site as bluewaves/q1-proposal"
-"List all published sites"
-"Rotate the password for bluewaves/q1-proposal"
 ```
 
 ## Updating
@@ -296,7 +213,7 @@ This pulls the latest changes from the repository.
 
 Remove a plugin:
 ```bash
-/plugin uninstall media-factory@bluewaves-skills
+/plugin uninstall epub-generator@bluewaves-skills
 ```
 
 Remove the marketplace entirely:
@@ -319,12 +236,10 @@ Add to your project's `.claude/settings.json` for automatic marketplace loading:
     }
   },
   "enabledPlugins": {
-    "media-factory@bluewaves-skills": true,
     "epub-generator@bluewaves-skills": true,
     "athena@bluewaves-skills": true,
     "skills-factory@bluewaves-skills": true,
-    "docs-factory@bluewaves-skills": true,
-    "web-factory@bluewaves-skills": true
+    "docs-factory@bluewaves-skills": true
   }
 }
 ```
@@ -339,18 +254,11 @@ Ensure you added the marketplace first:
 /plugin marketplace add bluewaves-creations/bluewaves-skills
 ```
 
-### "FAL_KEY not set"
-Add to your `~/.zshrc`:
-```bash
-export FAL_KEY="your-api-key"
-```
-Then restart your terminal or run `source ~/.zshrc`.
-
 ### "Plugin not loading"
 Try reinstalling:
 ```bash
-/plugin uninstall media-factory@bluewaves-skills
-/plugin install media-factory@bluewaves-skills
+/plugin uninstall epub-generator@bluewaves-skills
+/plugin install epub-generator@bluewaves-skills
 ```
 
 ### "HTTPS authentication failed"
@@ -362,12 +270,10 @@ If using a private repository, use the SSH URL:
 ## Requirements
 
 - Claude Code CLI
-- For media-factory: fal.ai API key (`FAL_KEY`), `fal-client` Python package
 - For epub-generator: Python 3.8+ with ebooklib, markdown, Pillow, beautifulsoup4, lxml, PyYAML
 - For athena: Python 3.8+ (stdlib only, no additional packages)
 - For docs-factory: Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2, matplotlib, numpy
 - For skills-factory: `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback
-- For web-factory: bun + wrangler for gateway deployment, Cloudflare API token, `WEB_FACTORY_ADMIN_TOKEN` or `credentials.json`
 
 ## License
 

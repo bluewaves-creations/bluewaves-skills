@@ -1,29 +1,14 @@
 {
   "name": "bluewaves-skills",
   "metadata": {
-    "description": "AI-powered media generation, Athena document exchange, branded document generation with charts, document creation, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "2.9.0"
+    "description": "Athena document exchange, branded document generation with charts, EPUB creation, and skill creation and cross-platform conversion tools for Claude Code",
+    "version": "3.0.0"
   },
   "owner": {
     "name": "Bluewaves Team",
     "email": "contact@bluewaves.boutique"
   },
   "plugins": [
-    {
-      "name": "media-factory",
-      "source": "./plugins/media-factory",
-      "description": "AI-powered image and video generation, speech-to-text transcription via fal.ai, podcast generation via Gemini TTS, Python fal_client, queue-based requests, progress logging, and 5 photographer style skills",
-      "version": "2.4.0",
-      "author": {
-        "name": "Bluewaves Team",
-        "email": "contact@bluewaves.boutique"
-      },
-      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/media-factory",
-      "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
-      "license": "MIT",
-      "keywords": ["fal.ai", "image-generation", "video-generation", "ai-media", "fal-client", "photographer-styles", "podcast", "gemini-tts", "audio-generation", "speech-to-text", "transcription", "scribe-v2"],
-      "category": "media"
-    },
     {
       "name": "epub-generator",
       "source": "./plugins/epub-generator",
@@ -39,7 +24,7 @@
       "keywords": ["epub", "ebook", "markdown", "publishing", "document-generation", "validation"],
       "category": "documents"
     },
-{
+    {
       "name": "athena",
       "source": "./plugins/athena",
       "description": "Bidirectional document exchange with the Athena note-taking app: process .athenabrief research packages and create .athena import packages",
@@ -83,21 +68,6 @@
       "license": "MIT",
       "keywords": ["pdf", "brand-kit", "document-generation", "typography", "design-tokens", "reportlab", "matplotlib", "charts", "data-visualization"],
       "category": "documents"
-    },
-    {
-      "name": "web-factory",
-      "source": "./plugins/web-factory",
-      "description": "Password-protected branded websites on Cloudflare. Hono gateway Worker serves sites from R2 with HMAC cookie auth, admin API, and Python HTTP client for standalone use.",
-      "version": "1.0.3",
-      "author": {
-        "name": "Bluewaves Team",
-        "email": "contact@bluewaves.boutique"
-      },
-      "homepage": "https://github.com/bluewaves-creations/bluewaves-skills/tree/main/plugins/web-factory",
-      "repository": "https://github.com/bluewaves-creations/bluewaves-skills",
-      "license": "MIT",
-      "keywords": ["cloudflare", "workers", "r2", "hono", "branded-websites", "password-protected", "web-publishing"],
-      "category": "web"
     }
   ]
 }

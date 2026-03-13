@@ -87,50 +87,8 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
     if [[ -n "$USER_NAME" && -d "$tmp_dir/$skill_name/scripts" ]]; then
         # Inject user-specific credentials based on plugin type
         creds_file="$tmp_dir/$skill_name/scripts/credentials.json"
-        case "$plugin_name" in
-            media-factory)
-                if [[ "$skill_name" == "podcast-generator" ]]; then
-                    python3 -c "
-import json, sys
-keys = json.load(open(sys.argv[1]))
-user = keys[sys.argv[2]]
-creds = {'gemini_api_key': user['gemini_api_key']}
-gw_name = user.get('ai_gateway_name', '')
-if gw_name:
-    acct = user['cloudflare_account_id']
-    creds['gateway_url'] = f'https://gateway.ai.cloudflare.com/v1/{acct}/{gw_name}/google-ai-studio'
-    token = user.get('cloudflare_api_token', '')
-    if token:
-        creds['gateway_token'] = token
-json.dump(creds, open(sys.argv[3], 'w'), indent=2)
-" "$KEYS_FILE" "$USER_NAME" "$creds_file"
-                else
-                    python3 -c "
-import json, sys
-keys = json.load(open(sys.argv[1]))
-user = keys[sys.argv[2]]
-json.dump({'api_key': user['fal_key']}, open(sys.argv[3], 'w'), indent=2)
-" "$KEYS_FILE" "$USER_NAME" "$creds_file"
-                fi
-                ;;
-            web-factory)
-                python3 -c "
-import json, sys
-keys = json.load(open(sys.argv[1]))
-user = keys[sys.argv[2]]
-json.dump({
-    'gateway_domain': user['gateway_domain'],
-    'admin_token': user['web_factory_admin_token'],
-    'api_token': user['cloudflare_api_token'],
-    'account_id': user['cloudflare_account_id']
-}, open(sys.argv[3], 'w'), indent=2)
-" "$KEYS_FILE" "$USER_NAME" "$creds_file"
-                ;;
-            *)
-                # Other plugins: remove credentials.json as usual
-                find "$tmp_dir" -name "credentials.json" -delete 2>/dev/null || true
-                ;;
-        esac
+        # No plugins currently require credential injection
+        find "$tmp_dir" -name "credentials.json" -delete 2>/dev/null || true
     else
         # No --user: strip all credentials.json
         find "$tmp_dir" -name "credentials.json" -delete 2>/dev/null || true

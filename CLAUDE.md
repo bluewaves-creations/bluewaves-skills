@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Bluewaves Skills is a Claude Code plugin marketplace featuring AI-powered media generation, document creation, and skill creation and cross-platform conversion tools. It contains production-grade plugins that extend Claude's capabilities.
+Bluewaves Skills is a Claude Code plugin marketplace featuring Athena document exchange, branded document generation with charts, EPUB creation, and skill creation and cross-platform conversion tools. It contains production-grade plugins that extend Claude's capabilities.
+
+> **Looking for media-factory or web-factory?** Those plugins moved to [bluewaves-skills-rooms](https://github.com/bluewaves-creations/bluewaves-skills-rooms).
 
 ## Architecture
 
@@ -13,23 +15,6 @@ bluewaves-skills/
 ├── .claude-plugin/
 │   └── marketplace.json          # Central registry of all plugins
 ├── plugins/
-│   ├── media-factory/            # fal.ai media generation (images/videos/transcription)
-│   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/             # check-fal-key, generate-image, install-deps
-│   │   ├── hooks/hooks.json
-│   │   ├── scripts/              # fal_generate.py, fal_utils.py
-│   │   └── skills/
-│   │       ├── image-generator/SKILL.md
-│   │       ├── image-editor/SKILL.md
-│   │       ├── video-from-image/SKILL.md
-│   │       ├── video-from-reference/SKILL.md
-│   │       ├── video-from-frames/SKILL.md
-│   │       ├── photographer-lindbergh/SKILL.md
-│   │       ├── photographer-ritts/SKILL.md
-│   │       ├── photographer-testino/SKILL.md
-│   │       ├── photographer-lachapelle/SKILL.md
-│   │       ├── photographer-vonunwerth/SKILL.md
-│   │       └── audio-transcriber/SKILL.md
 │   ├── epub-generator/           # EPUB ebook generation
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── commands/             # install-deps
@@ -52,23 +37,13 @@ bluewaves-skills/
 │   │       ├── brand-decathlon/SKILL.md, references/, assets/
 │   │       ├── chart-designer/SKILL.md, references/, scripts/
 │   │       └── pdf-factory/SKILL.md, references/, scripts/, assets/
-│   ├── skills-factory/            # Skill creation & cross-platform conversion (3 skills)
-│   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/              # init-skill, validate-skill, package-skill
-│   │   └── skills/
-│   │       ├── skill-shaper/SKILL.md, scripts/, references/
-│   │       ├── gemini-gem-converter/SKILL.md, references/
-│   │       └── openai-gpt-converter/SKILL.md, references/
-│   └── web-factory/               # Branded websites on Cloudflare (2 skills)
+│   └── skills-factory/            # Skill creation & cross-platform conversion (3 skills)
 │       ├── .claude-plugin/plugin.json
-│       ├── commands/              # install-deps, check-cf-key, setup-gateway, api-key mgmt
-│       ├── hooks/hooks.json
-│       ├── worker/                # Hono gateway Worker (bun + wrangler)
-│       │   └── src/               # index.ts, auth.ts, admin.ts, r2.ts, login.ts, words.ts
-│       ├── scripts/               # site_api.py, cf_utils.py
+│       ├── commands/              # init-skill, validate-skill, package-skill
 │       └── skills/
-│           ├── site-factory/SKILL.md, references/
-│           └── site-publisher/SKILL.md, references/
+│           ├── skill-shaper/SKILL.md, scripts/, references/
+│           ├── gemini-gem-converter/SKILL.md, references/
+│           └── openai-gpt-converter/SKILL.md, references/
 ├── deps/
 │   └── agentskills/              # Git submodule: github.com/agentskills/agentskills
 │       └── skills-ref/           # Official skill validation library
@@ -130,12 +105,10 @@ bluewaves-skills/
 
 ## Plugin Prerequisites
 
-- **media-factory:** Requires `FAL_KEY` environment variable (fal.ai API key), `uv pip install fal-client`
 - **epub-generator:** Requires `uv pip install ebooklib markdown Pillow beautifulsoup4 lxml`
 - **athena:** Python 3.8+ (stdlib only, no additional packages)
 - **docs-factory:** Python 3.8+ with xhtml2pdf, reportlab, pypdf, pyhanko, markdown, lxml, pillow, html5lib, cssselect2, matplotlib, numpy
 - **skills-factory:** `skills-ref` recommended (`uv pip install -e deps/agentskills/skills-ref/`), PyYAML fallback for `quick_validate.py`
-- **web-factory:** bun + wrangler for gateway deployment, Cloudflare API token with Workers/R2/KV/DNS permissions, `WEB_FACTORY_ADMIN_TOKEN` or `credentials.json` for publishing
 
 ## Building
 
@@ -148,20 +121,8 @@ Generate standalone `.skill` files for Claude.ai users (uploads via Settings > C
 bash scripts/build-skill-zips.sh
 
 # Build a single skill
-bash scripts/build-skill-zips.sh image-generator
-
-# Build with per-user credentials injected
-bash scripts/build-skill-zips.sh --user bertrand
-bash scripts/build-skill-zips.sh --user bertrand image-generator
+bash scripts/build-skill-zips.sh epub-creator
 ```
-
-The `--user` flag reads API keys from `keys.json` (gitignored) and injects the appropriate `credentials.json` into each skill's `scripts/` directory. To set up:
-
-1. Copy `keys.example.json` to `keys.json`
-2. Fill in each user's API keys
-3. Build with `--user <name>` to produce ready-to-use `.skill` files
-
-Without `--user`, credentials are stripped from `.skill` files (default behavior).
 
 Files are output to `dist/` (gitignored). Each `.skill` file contains `skill-name/SKILL.md` plus any `scripts/`, `references/`, and `assets/` directories.
 
@@ -187,7 +148,7 @@ To update the submodule: `git submodule update --remote deps/agentskills`
 
 ## Versioning
 
-Current marketplace version: 2.9.0
+Current marketplace version: 3.0.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

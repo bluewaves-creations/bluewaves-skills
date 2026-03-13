@@ -3,7 +3,3 @@ __pycache__/
 .DS_Store
 temp-docs/
 plugins/docs-factory/skills/pdf-factory/assets/icons/
-credentials.json
-keys.json
-node_modules/
-.wrangler/
