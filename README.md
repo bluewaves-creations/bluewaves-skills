@@ -31,7 +31,7 @@ Production-grade EPUB 3 generation with validation, nested TOC, and dependency c
 - `epub-creator` - Convert markdown files to EPUB with cover, nested TOC, and styling
 
 **Utilities** (invoke with `/`):
-- `/epub-generator:install-deps` - Install Python dependencies
+- `/epub-generator:install-epub-deps` - Install Python dependencies
 
 **Prerequisites:** `pip install ebooklib markdown Pillow beautifulsoup4 lxml PyYAML`
 
@@ -86,7 +86,7 @@ Branded document generation with three brand kits, a chart designer, and a PDF r
 - **pdf-factory** - Production-grade PDF rendering from markdown with SVG support and image corner radius
 
 **Utilities** (invoke with `/`):
-- `/docs-factory:install-deps` - Install Python dependencies for PDF rendering
+- `/docs-factory:install-docs-deps` - Install Python dependencies for PDF rendering
 - `/docs-factory:generate-pdf <file> [--brand <name>]` - Generate a branded PDF from markdown
 
 **Prerequisites:** Python 3.8+ with `pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib cssselect2 matplotlib numpy`

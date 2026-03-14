@@ -18,7 +18,7 @@ Branded document generation with three brand kits, a chart designer for data vis
 
 ```bash
 # Install all required packages (run the command or use the slash command)
-/docs-factory:install-deps
+/docs-factory:install-docs-deps
 
 # Or manually with pip
 pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib cssselect2
@@ -50,7 +50,7 @@ pip install matplotlib numpy
 
 | Command | Description |
 |---------|-------------|
-| `/docs-factory:install-deps` | Install Python dependencies for PDF rendering |
+| `/docs-factory:install-docs-deps` | Install Python dependencies for PDF rendering |
 | `/docs-factory:generate-pdf` | Full-workflow PDF generation from markdown |
 
 ## How It Works
@@ -84,7 +84,7 @@ Brand kits include placeholder font, logo, template, and pattern files. Replace 
 
 | Issue | Solution |
 |-------|----------|
-| "Missing Python packages" | Run `/docs-factory:install-deps` |
+| "Missing Python packages" | Run `/docs-factory:install-docs-deps` |
 | "Font not embedded" | Verify font path in manifest matches actual file in assets/fonts/ |
 | "Page count 0" | Verify render.py produced output; check input HTML is not empty |
 | "Brand font missing" | Confirm all fonts declared in manifest exist on disk |

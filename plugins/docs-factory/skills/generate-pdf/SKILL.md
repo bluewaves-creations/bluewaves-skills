@@ -23,7 +23,7 @@ Parse arguments: `<markdown-file> [--brand <name>] [--output <path>]`
    ```bash
    python3 -c "import xhtml2pdf, reportlab, pypdf, markdown, lxml, PIL, html5lib, cssselect2" 2>/dev/null
    ```
-   If this fails, run the install-deps skill first.
+   If this fails, run the install-docs-deps skill first.
 
 3. **Resolve brand kit** at `${SKILL_ROOT}/../brand-<name>/`. Verify the directory exists and contains `assets/manifest.json`.
 

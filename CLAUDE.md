@@ -21,7 +21,7 @@ bluewaves-skills/
 │   │   ├── .claude-plugin/plugin.json
 │   │   └── skills/
 │   │       ├── epub-creator/SKILL.md
-│   │       └── install-deps/SKILL.md
+│   │       └── install-epub-deps/SKILL.md
 │   ├── athena/                   # Athena document exchange
 │   │   ├── .claude-plugin/plugin.json
 │   │   └── skills/
@@ -37,7 +37,7 @@ bluewaves-skills/
 │   │       ├── brand-decathlon/SKILL.md, references/, assets/
 │   │       ├── chart-designer/SKILL.md, references/, scripts/
 │   │       ├── pdf-factory/SKILL.md, references/, scripts/, assets/
-│   │       ├── install-deps/SKILL.md
+│   │       ├── install-docs-deps/SKILL.md
 │   │       └── generate-pdf/SKILL.md
 │   └── skills-factory/            # Skill creation & cross-platform conversion
 │       ├── .claude-plugin/plugin.json
@@ -171,7 +171,7 @@ The workflow builds all `.skill` files, creates `.zip` copies, and publishes the
 
 ## Versioning
 
-Current marketplace version: 4.1.1
+Current marketplace version: 4.2.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`
