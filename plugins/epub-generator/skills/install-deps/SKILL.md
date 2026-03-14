@@ -1,6 +1,6 @@
 ---
 name: install-deps
-description: Install Python dependencies required by the epub-creator skill
+description: Install Python dependencies required by the epub-creator skill. Use when epub-creator reports missing modules or before first EPUB generation.
 allowed-tools: Bash
 license: MIT
 compatibility: Requires uv or pip package manager

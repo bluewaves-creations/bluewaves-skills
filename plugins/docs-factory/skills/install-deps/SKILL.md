@@ -1,6 +1,6 @@
 ---
 name: install-deps
-description: Install Python dependencies required by the pdf-factory skill
+description: Install Python dependencies required by the pdf-factory skill. Use when pdf-factory reports missing modules or before first PDF generation.
 allowed-tools: Bash
 license: MIT
 compatibility: Requires uv or pip package manager

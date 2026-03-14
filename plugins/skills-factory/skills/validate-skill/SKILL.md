@@ -1,6 +1,6 @@
 ---
 name: validate-skill
-description: Validate a skill folder using quick_validate.py
+description: Validate a skill folder using quick_validate.py. Use when checking a skill's SKILL.md frontmatter and structure for correctness.
 allowed-tools: Bash
 license: MIT
 compatibility: skills-ref recommended, PyYAML as fallback

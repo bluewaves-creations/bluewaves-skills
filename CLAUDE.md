@@ -171,7 +171,7 @@ The workflow builds all `.skill` files, creates `.zip` copies, and publishes the
 
 ## Versioning
 
-Current marketplace version: 4.1.0
+Current marketplace version: 4.1.1
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

@@ -1,6 +1,6 @@
 ---
 name: generate-pdf
-description: Generate a branded PDF document from a markdown file
+description: Generate a branded PDF document from a markdown file. Use when the user asks to render markdown as a PDF or produce a printable document.
 allowed-tools: Bash, Read, Write
 license: MIT
 compatibility: Python 3.8+ with packages from scripts/install_deps.py

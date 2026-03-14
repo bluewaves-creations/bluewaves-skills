@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.1] - 2026-03-14
+
+### Fixed
+
+- **All plugins** — Added `Use when ...` trigger context to 12 skill descriptions across athena (2), docs-factory (2), epub-generator (1), and skills-factory (7) to resolve Layer 5 "description trigger context" validation warnings
+- athena bumped to 1.0.2, docs-factory to 1.2.3, epub-generator to 1.3.1, skills-factory to 2.0.3
+
+---
+
 ## [4.1.0] - 2026-03-14
 
 ### Added

@@ -1,6 +1,6 @@
 ---
 name: benchmark-skill
-description: Aggregate benchmark results from skill evaluation runs into statistics
+description: Aggregate benchmark results from skill evaluation runs into statistics. Use when comparing evaluation runs or analyzing skill performance trends.
 allowed-tools: Bash, Read
 license: MIT
 compatibility: Python 3.8+. claude CLI required for evaluation runs.

@@ -1,6 +1,6 @@
 ---
 name: inspect-package
-description: Inspect the contents of a .athenabrief or .athena package
+description: Inspect the contents of a .athenabrief or .athena package. Use when you need to examine package structure, verify included notes, or debug import issues.
 allowed-tools: Bash
 license: MIT
 compatibility: Python 3.8+ (stdlib only)

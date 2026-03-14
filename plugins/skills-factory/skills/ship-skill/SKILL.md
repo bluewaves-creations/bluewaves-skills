@@ -1,6 +1,6 @@
 ---
 name: ship-skill
-description: Validate, evaluate, quality-check, and package a skill for distribution
+description: Validate, evaluate, quality-check, and package a skill for distribution. Use when a skill is ready to ship and needs the full pre-release pipeline.
 allowed-tools: Bash, Read, Write
 license: MIT
 compatibility: Python 3.8+. skills-ref recommended. claude CLI required for evaluation.

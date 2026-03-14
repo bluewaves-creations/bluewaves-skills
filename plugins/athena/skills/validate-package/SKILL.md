@@ -1,6 +1,6 @@
 ---
 name: validate-package
-description: Validate a .athena package against the import specification
+description: Validate a .athena package against the import specification. Use when checking package correctness before importing into Athena.
 allowed-tools: Bash
 license: MIT
 compatibility: Python 3.8+ (stdlib only)

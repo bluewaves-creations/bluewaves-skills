@@ -1,6 +1,6 @@
 ---
 name: review-evals
-description: Generate and open interactive HTML viewer for skill evaluation results
+description: Generate and open interactive HTML viewer for skill evaluation results. Use when reviewing eval output or inspecting grading details after a run.
 allowed-tools: Bash, Read
 license: MIT
 compatibility: Python 3.8+. Modern web browser for HTML viewer.

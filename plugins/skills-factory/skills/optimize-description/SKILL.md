@@ -1,6 +1,6 @@
 ---
 name: optimize-description
-description: Run automated description optimization loop with train/test split
+description: Run automated description optimization loop with train/test split. Use when a skill's trigger accuracy is low or the description needs refinement.
 allowed-tools: Bash, Read, Write
 license: MIT
 compatibility: Python 3.8+. anthropic Python SDK required for LLM calls.

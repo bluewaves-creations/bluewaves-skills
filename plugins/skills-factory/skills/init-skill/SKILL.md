@@ -1,6 +1,6 @@
 ---
 name: init-skill
-description: Scaffold a new skill directory from template using init_skill.py
+description: Scaffold a new skill directory from template using init_skill.py. Use when creating a new skill from scratch or bootstrapping a skill folder.
 allowed-tools: Bash
 license: MIT
 compatibility: Python 3.8+ (stdlib only)

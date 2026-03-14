@@ -1,6 +1,6 @@
 ---
 name: package-skill
-description: Package a skill folder into a distributable .skill ZIP file
+description: Package a skill folder into a distributable .skill ZIP file. Use when preparing a skill for distribution or upload to Claude.ai.
 allowed-tools: Bash
 license: MIT
 compatibility: Python 3.8+ (stdlib only)
