@@ -1,0 +1,28 @@
+name: Release Skills
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Build .skill files
+        run: bash scripts/build-skill-zips.sh
+      - name: Create .zip copies
+        run: |
+          cd dist
+          for f in *.skill; do
+            cp "$f" "${f%.skill}.zip"
+          done
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/*.skill
+            dist/*.zip

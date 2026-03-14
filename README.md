@@ -2,7 +2,7 @@
 
 ![Bluewaves — We craft AI products you can actually use](bluewaves.png)
 
-![Version](https://img.shields.io/badge/version-3.0.0-blue)
+![Version](https://img.shields.io/badge/version-4.1.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A Claude Code plugin marketplace featuring Athena document exchange, branded document generation with charts, EPUB creation, and skill creation and cross-platform conversion tools.
@@ -30,12 +30,8 @@ Production-grade EPUB 3 generation with validation, nested TOC, and dependency c
 **Skills:**
 - `epub-creator` - Convert markdown files to EPUB with cover, nested TOC, and styling
 
-**Features:**
-- Pre-validation of source files before processing
-- Post-validation with comprehensive EPUB checks
-- Hierarchical table of contents (H1/H2/H3)
-- Progress reporting during generation
-- Automatic dependency validation hook
+**Utilities** (invoke with `/`):
+- `/epub-generator:install-deps` - Install Python dependencies
 
 **Prerequisites:** `pip install ebooklib markdown Pillow beautifulsoup4 lxml PyYAML`
 
@@ -58,6 +54,10 @@ Bidirectional document exchange with the Athena note-taking app. Process `.athen
 
 - **athena-work** - Process `.athenabrief` research packages with progressive disclosure, zero-instruction support, and automatic result packaging
 - **athena-package** - Create validated `.athena` import packages with manifest, markdown notes, aurora tags, and optional assets
+
+**Utilities** (invoke with `/`):
+- `/athena:inspect-package <path>` - Inspect contents of a `.athenabrief` or `.athena` package
+- `/athena:validate-package <path>` - Validate a `.athena` package against the import spec
 
 **Prerequisites:** Python 3.8+ (stdlib only, no additional packages)
 
@@ -85,88 +85,70 @@ Branded document generation with three brand kits, a chart designer, and a PDF r
 - **chart-designer** - Brand-consistent chart design system for matplotlib (load_theme, apply, named sizes)
 - **pdf-factory** - Production-grade PDF rendering from markdown with SVG support and image corner radius
 
+**Utilities** (invoke with `/`):
+- `/docs-factory:install-deps` - Install Python dependencies for PDF rendering
+- `/docs-factory:generate-pdf <file> [--brand <name>]` - Generate a branded PDF from markdown
+
 **Prerequisites:** Python 3.8+ with `pip install xhtml2pdf reportlab pypdf pyhanko markdown lxml pillow html5lib cssselect2 matplotlib numpy`
 
 ---
 
 ### skills-factory
 
-Skill creation, validation, and cross-platform conversion tools for Agent Skills.
+Skill creation, evaluation, benchmarking, optimization, and cross-platform conversion tools for Agent Skills.
 
 ```bash
 /plugin install skills-factory@bluewaves-skills
 ```
 
-**3 Skills:**
+**5 Skills:**
 
 | Category | Skills |
 |----------|--------|
 | **Skill Creation** | `skill-shaper` |
+| **Evaluation** | `skill-eval` |
 | **Cross-Platform Conversion** | `gemini-gem-converter`, `openai-gpt-converter` |
 
 - **skill-shaper** - Create effective Agent Skills with guided workflows, bundled scripts, and reference materials
+- **skill-eval** - Evaluate, benchmark, and optimize skills through automated testing
 - **gemini-gem-converter** - Convert Agent Skills to Gemini Gems with platform constraint awareness
 - **openai-gpt-converter** - Convert Agent Skills to Custom GPTs with 8K instruction limit strategies
+
+**Utilities** (invoke with `/`):
+- `/skills-factory:init-skill <name> --path <dir>` - Scaffold a new skill from template
+- `/skills-factory:validate-skill <path>` - Validate a skill folder
+- `/skills-factory:package-skill <path> [output-dir]` - Package a skill into a `.skill` ZIP
+- `/skills-factory:benchmark-skill [skill-path]` - Aggregate benchmark stats from eval runs
+- `/skills-factory:optimize-description [skill-path]` - Iterative description optimization loop
+- `/skills-factory:review-evals [skill-path]` - Open interactive HTML eval viewer
+- `/skills-factory:ship-skill [skill-path]` - Full pipeline: validate, eval, quality gate, package
 
 **Prerequisites:** `skills-ref` recommended for validation (`uv pip install -e deps/agentskills/skills-ref/`). Fallback: PyYAML for `quick_validate.py`.
 
 ---
 
-## Slash Commands
+## Project-Level Skills
 
-Explicit commands you can invoke from the Claude Code prompt. These complement skills (which trigger automatically).
-
-### Project-Level
-
-| Command | Description |
-|---------|-------------|
-| `/validate-skills` | Validate marketplace skills via skills-ref |
-| `/build-skill-zips` | Build standalone skill ZIP files for Claude.ai users |
-
-### epub-generator
-
-| Command | Description |
-|---------|-------------|
-| `/epub-generator:install-deps` | Install Python dependencies (uses `uv` by default, `--pip` for pip) |
-
-### athena
-
-| Command | Description |
-|---------|-------------|
-| `/athena:inspect-package <path>` | Inspect contents of a `.athenabrief` or `.athena` package |
-| `/athena:validate-package <path>` | Validate a `.athena` package against the import spec |
-
-### docs-factory
-
-| Command | Description |
-|---------|-------------|
-| `/docs-factory:install-deps` | Install Python dependencies for PDF rendering |
-| `/docs-factory:generate-pdf <file> [--brand <name>]` | Generate a branded PDF from markdown |
-
-### skills-factory
-
-| Command | Description |
-|---------|-------------|
-| `/skills-factory:init-skill <name> --path <dir>` | Scaffold a new skill from template |
-| `/skills-factory:validate-skill <path>` | Validate a skill folder |
-| `/skills-factory:package-skill <path> [output-dir]` | Package a skill into a `.skill` ZIP |
+| Skill | Description |
+|-------|-------------|
+| `/validate-skills [name]` | Validate marketplace skills via skills-ref |
+| `/build-skill-zips [name]` | Build standalone skill ZIP files for Claude.ai users |
+| `/validate-marketplace` | Run comprehensive marketplace validation |
 
 ---
 
 ## Use Without Claude Code
 
-Individual skills are available as standalone ZIP files for **Claude.ai** (web/desktop) users who don't use Claude Code.
+Individual skills are available as standalone files for **Claude.ai** (web/desktop) users who don't use Claude Code.
 
 ### How to install a skill in Claude.ai
 
-1. Download the `.zip` file for the skill you want from the [latest GitHub release](https://github.com/bluewaves-creations/bluewaves-skills/releases)
+1. Download the `.skill` or `.zip` file for the skill you want from the [latest GitHub release](https://github.com/bluewaves-creations/bluewaves-skills/releases)
 2. In Claude.ai, go to **Settings > Capabilities**
-3. Click **Upload skill** and select the downloaded ZIP
+3. Click **Upload skill** and select the downloaded file
 4. Toggle the skill **ON**
 
-Each ZIP contains a single skill with its instructions. All 11 skills are available individually.
-
-> **Note:** Plugin hooks (dependency checks) are Claude Code-only features and won't apply when using skills directly in Claude.ai.
+Both formats contain identical content — `.skill` is the native format, `.zip` is provided for convenience.
 
 ---
 
@@ -282,6 +264,17 @@ MIT
 ## Author
 
 Bluewaves Team (contact@bluewaves.boutique)
+
+## Releasing
+
+Releases are automated via GitHub Actions. Push a version tag to trigger:
+
+```bash
+git tag v4.1.0
+git push --tags
+```
+
+This builds all `.skill` files, creates `.zip` copies, and publishes them as GitHub Release assets.
 
 ## Changelog
 

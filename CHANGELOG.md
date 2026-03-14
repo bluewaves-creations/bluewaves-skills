@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-03-14
+
+### Added
+
+- **GitHub Actions release workflow** — Push a `v*` tag to automatically build all `.skill` files, create `.zip` copies, and publish them as GitHub Release assets with auto-generated release notes
+- **Build script collision handling** — `build-skill-zips.sh` now detects duplicate skill names across plugins (e.g., `install-deps` in both epub-generator and docs-factory) and prefixes the output filename with the plugin name to avoid overwrites
+
+### Changed
+
+- Marketplace version bumped to 4.1.0
+
+---
+
+## [4.0.0] - 2026-03-13
+
+### Breaking Changes
+
+- **All PreToolUse:Bash hooks removed** — dependency validation hooks in athena, epub-generator, and docs-factory have been deleted. These fired on every Bash call, adding latency. Python scripts already provide clear errors (ImportError, RuntimeError) when dependencies are missing.
+- **All commands converted to skills** — every `commands/*.md` file has been replaced with a `skills/*/SKILL.md` using `disable-model-invocation: true`. The `/plugin:command` invocation syntax remains identical. Project-level commands (`.claude/commands/`) moved to `.claude/skills/`.
+
+### Added
+
+- 13 new utility skills from command conversion: `install-deps` (epub-generator, docs-factory), `generate-pdf`, `inspect-package`, `validate-package`, `init-skill`, `validate-skill`, `package-skill`, `benchmark-skill`, `optimize-description`, `review-evals`, `ship-skill`
+- 3 project-level skills: `validate-skills`, `build-skill-zips`, `validate-marketplace`
+- `compatibility` field added to brand-bluewaves, brand-wave-artisans, brand-decathlon, gemini-gem-converter, openai-gpt-converter
+- `user-invocable: false` added to brand kit skills (background knowledge, not directly invoked)
+- `argument-hint` added to athena-work, athena-package, epub-creator
+
+### Removed
+
+- `plugins/athena/hooks/` — validate-python-deps.sh hook
+- `plugins/epub-generator/hooks/` — validate-dependencies.sh hook
+- `plugins/docs-factory/hooks/` — validate-pdf-deps.sh hook
+- All `commands/` directories across all plugins
+- `.claude/commands/` directory
+- `--user` flag and `keys.json` infrastructure from build-skill-zips.sh (no remaining plugins need credential injection)
+
+### Changed
+
+- Build script simplified — removed `--user` flag, credential injection, and keys.json validation
+- Marketplace version bumped to 4.0.0
+- Updated CLAUDE.md, README.md to reflect new architecture (skills-only, no hooks/commands)
+
+---
+
 ## [3.0.0] - 2026-03-13
 
 ### Breaking Changes

@@ -3,6 +3,7 @@ name: brand-wave-artisans
 description: Brand kit for Wave Artisans. Provides design tokens (colors, typography, spacing), Nunito Sans font files, logo variants, and PDF page templates. Use whenever generating documents, presentations, or web pages for the Wave Artisans brand.
 allowed-tools: Bash, Read, Write
 license: MIT
+compatibility: Requires pdf-factory skill for PDF output
 ---
 # Wave Artisans Brand Kit
 

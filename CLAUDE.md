@@ -14,36 +14,47 @@ Bluewaves Skills is a Claude Code plugin marketplace featuring Athena document e
 bluewaves-skills/
 ├── .claude-plugin/
 │   └── marketplace.json          # Central registry of all plugins
+├── .claude/
+│   └── skills/                   # Project-level skills (validate, build, etc.)
 ├── plugins/
 │   ├── epub-generator/           # EPUB ebook generation
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/             # install-deps
 │   │   └── skills/
-│   │       └── epub-creator/SKILL.md
-│   ├── athena/                   # Athena document exchange (2 skills)
+│   │       ├── epub-creator/SKILL.md
+│   │       └── install-deps/SKILL.md
+│   ├── athena/                   # Athena document exchange
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/             # inspect-package, validate-package
-│   │   ├── hooks/hooks.json
 │   │   └── skills/
 │   │       ├── athena-work/SKILL.md, references/
-│   │       └── athena-package/SKILL.md, references/, scripts/
-│   ├── docs-factory/              # Branded document generation (5 skills)
+│   │       ├── athena-package/SKILL.md, references/, scripts/
+│   │       ├── inspect-package/SKILL.md
+│   │       └── validate-package/SKILL.md
+│   ├── docs-factory/              # Branded document generation
 │   │   ├── .claude-plugin/plugin.json
-│   │   ├── commands/              # install-deps, generate-pdf
-│   │   ├── hooks/hooks.json
 │   │   └── skills/
 │   │       ├── brand-bluewaves/SKILL.md, references/, assets/
 │   │       ├── brand-wave-artisans/SKILL.md, references/, assets/
 │   │       ├── brand-decathlon/SKILL.md, references/, assets/
 │   │       ├── chart-designer/SKILL.md, references/, scripts/
-│   │       └── pdf-factory/SKILL.md, references/, scripts/, assets/
-│   └── skills-factory/            # Skill creation & cross-platform conversion (3 skills)
+│   │       ├── pdf-factory/SKILL.md, references/, scripts/, assets/
+│   │       ├── install-deps/SKILL.md
+│   │       └── generate-pdf/SKILL.md
+│   └── skills-factory/            # Skill creation & cross-platform conversion
 │       ├── .claude-plugin/plugin.json
-│       ├── commands/              # init-skill, validate-skill, package-skill
 │       └── skills/
 │           ├── skill-shaper/SKILL.md, scripts/, references/
+│           ├── skill-eval/SKILL.md, scripts/, references/
 │           ├── gemini-gem-converter/SKILL.md, references/
-│           └── openai-gpt-converter/SKILL.md, references/
+│           ├── openai-gpt-converter/SKILL.md, references/
+│           ├── init-skill/SKILL.md
+│           ├── validate-skill/SKILL.md
+│           ├── package-skill/SKILL.md
+│           ├── benchmark-skill/SKILL.md
+│           ├── optimize-description/SKILL.md
+│           ├── review-evals/SKILL.md
+│           └── ship-skill/SKILL.md
+├── .github/
+│   └── workflows/release.yml    # Tag-triggered release with .skill/.zip assets
 ├── deps/
 │   └── agentskills/              # Git submodule: github.com/agentskills/agentskills
 │       └── skills-ref/           # Official skill validation library
@@ -53,9 +64,10 @@ bluewaves-skills/
 **Key patterns:**
 - Each plugin is self-contained in `plugins/[plugin-name]/`
 - Skills are defined in `skills/[skill-name]/SKILL.md` with YAML frontmatter
-- Commands are defined in `commands/[command-name].md` with `description` YAML frontmatter
+- User-invocable utility skills use `disable-model-invocation: true` to prevent auto-triggering
 - Plugin metadata lives in `.claude-plugin/plugin.json`
 - All plugins are registered in `.claude-plugin/marketplace.json`
+- Project-level skills live in `.claude/skills/` (validate, build, etc.)
 
 ## Plugin Development
 
@@ -146,9 +158,20 @@ bash scripts/validate-skills.sh skill-shaper
 
 To update the submodule: `git submodule update --remote deps/agentskills`
 
+## Releasing
+
+Releases are automated via GitHub Actions. Push a version tag to create a release with `.skill` and `.zip` assets:
+
+```bash
+git tag v4.1.0
+git push --tags
+```
+
+The workflow builds all `.skill` files, creates `.zip` copies, and publishes them as GitHub Release assets with auto-generated release notes.
+
 ## Versioning
 
-Current marketplace version: 3.0.0
+Current marketplace version: 4.1.0
 
 When updating:
 1. Update version in plugin's `.claude-plugin/plugin.json`

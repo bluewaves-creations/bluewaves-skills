@@ -4,45 +4,14 @@
 # Each .skill file contains a single skill folder with its SKILL.md file.
 #
 # Usage:
-#   ./scripts/build-skill-zips.sh                              # Build all skills
-#   ./scripts/build-skill-zips.sh image-generator              # Build a single skill
-#   ./scripts/build-skill-zips.sh --user bertrand               # All skills with user credentials
-#   ./scripts/build-skill-zips.sh --user bertrand image-generator  # Single skill with credentials
+#   ./scripts/build-skill-zips.sh                    # Build all skills
+#   ./scripts/build-skill-zips.sh image-generator     # Build a single skill
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIST_DIR="$REPO_ROOT/dist"
-USER_NAME=""
-FILTER=""
-
-# Parse arguments
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --user)
-            USER_NAME="$2"
-            shift 2
-            ;;
-        *)
-            FILTER="$1"
-            shift
-            ;;
-    esac
-done
-
-# If --user is set, validate keys.json exists and user entry is present
-if [[ -n "$USER_NAME" ]]; then
-    KEYS_FILE="$REPO_ROOT/keys.json"
-    if [[ ! -f "$KEYS_FILE" ]]; then
-        echo "Error: keys.json not found. Copy keys.example.json to keys.json and fill in your keys." >&2
-        exit 1
-    fi
-    # Verify the user exists in keys.json
-    if ! python3 -c "import json,sys; d=json.load(open(sys.argv[1])); assert sys.argv[2] in d" "$KEYS_FILE" "$USER_NAME" 2>/dev/null; then
-        echo "Error: User '$USER_NAME' not found in keys.json" >&2
-        exit 1
-    fi
-fi
+FILTER="${1:-}"
 
 rm -rf "$DIST_DIR"
 mkdir -p "$DIST_DIR"
@@ -50,8 +19,19 @@ mkdir -p "$DIST_DIR"
 count=0
 total_size=0
 
+# First pass: detect duplicate skill names across plugins
+duplicate_names=""
+for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
+    sname="$(basename "$skill_dir")"
+    duplicate_names="$duplicate_names $sname"
+done
+# Names appearing more than once are duplicates
+dup_list=$(echo "$duplicate_names" | tr ' ' '\n' | sort | uniq -d | tr '\n' ' ')
+
 for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
     skill_name="$(basename "$skill_dir")"
+    plugin_name="$(basename "$(dirname "$(dirname "$skill_dir")")")"
 
     # If a filter is provided, skip non-matching skills
     if [[ -n "$FILTER" && "$skill_name" != "$FILTER" ]]; then
@@ -64,8 +44,12 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
         continue
     fi
 
-    # Determine which plugin this skill belongs to
-    plugin_name="$(basename "$(dirname "$(dirname "$skill_dir")")")"
+    # Use prefixed name when multiple plugins have the same skill name
+    if echo "$dup_list" | grep -qw "$skill_name"; then
+        output_name="${plugin_name}-${skill_name}"
+    else
+        output_name="$skill_name"
+    fi
 
     # Create a temp directory with the correct structure: skill-name/SKILL.md
     tmp_dir="$(mktemp -d)"
@@ -81,39 +65,24 @@ for skill_dir in "$REPO_ROOT"/plugins/*/skills/*/; do
 
     # Remove files that must never ship in ZIPs
     find "$tmp_dir" -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-    find "$tmp_dir" \( -name "*.pyc" -o -name "*.pyo" -o -name ".DS_Store" -o -name "credentials.example.json" \) -delete 2>/dev/null || true
-
-    # Handle credentials.json: inject per-user keys or strip
-    if [[ -n "$USER_NAME" && -d "$tmp_dir/$skill_name/scripts" ]]; then
-        # Inject user-specific credentials based on plugin type
-        creds_file="$tmp_dir/$skill_name/scripts/credentials.json"
-        # No plugins currently require credential injection
-        find "$tmp_dir" -name "credentials.json" -delete 2>/dev/null || true
-    else
-        # No --user: strip all credentials.json
-        find "$tmp_dir" -name "credentials.json" -delete 2>/dev/null || true
-    fi
+    find "$tmp_dir" \( -name "*.pyc" -o -name "*.pyo" -o -name ".DS_Store" -o -name "credentials.example.json" -o -name "credentials.json" \) -delete 2>/dev/null || true
 
     # Create the ZIP from inside the temp dir so the path is skill-name/SKILL.md
-    (cd "$tmp_dir" && zip -q -r "$DIST_DIR/$skill_name.skill" "$skill_name")
+    (cd "$tmp_dir" && zip -q -r "$DIST_DIR/$output_name.skill" "$skill_name")
 
     rm -rf "$tmp_dir"
 
-    size=$(stat -f%z "$DIST_DIR/$skill_name.skill" 2>/dev/null || stat -c%s "$DIST_DIR/$skill_name.skill" 2>/dev/null)
+    size=$(stat -f%z "$DIST_DIR/$output_name.skill" 2>/dev/null || stat -c%s "$DIST_DIR/$output_name.skill" 2>/dev/null)
     total_size=$((total_size + size))
     count=$((count + 1))
 
     size_kb="$((size / 1024)).$((size % 1024 * 10 / 1024))"
-    printf "  %-40s %s KB\n" "$skill_name.skill" "$size_kb"
+    printf "  %-40s %s KB\n" "$output_name.skill" "$size_kb"
 done
 
 echo ""
 total_kb="$((total_size / 1024)).$((total_size % 1024 * 10 / 1024))"
-if [[ -n "$USER_NAME" ]]; then
-    echo "$count .skill file(s) generated in dist/ for user '$USER_NAME' (total: ${total_kb} KB)"
-else
-    echo "$count .skill file(s) generated in dist/ (total: ${total_kb} KB)"
-fi
+echo "$count .skill file(s) generated in dist/ (total: ${total_kb} KB)"
 
 if [[ -n "$FILTER" && $count -eq 0 ]]; then
     echo "Error: No skill found matching '$FILTER'" >&2
