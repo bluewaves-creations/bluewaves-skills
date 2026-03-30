@@ -15,6 +15,11 @@ import sys
 from html import escape
 from pathlib import Path
 
+try:
+    from .theme import LIGHT_THEME, DARK_THEME, FONT_BODY, FONT_MONO, FONT_IMPORT
+except ImportError:
+    from theme import LIGHT_THEME, DARK_THEME, FONT_BODY, FONT_MONO, FONT_IMPORT
+
 
 def build_report_html(data: dict, auto_refresh: bool = False,
                       light: bool = False) -> str:
@@ -51,25 +56,16 @@ def build_report_html(data: dict, auto_refresh: bool = False,
 
     refresh_tag = '    <meta http-equiv="refresh" content="5">\n' if auto_refresh else ""
 
-    # Theme
-    if light:
-        bg = "#faf9f5"; fg = "#141413"; card_bg = "white"; border = "#e8e6dc"
-        th_bg = "#141413"; th_fg = "#faf9f5"; test_th_bg = "#6a9bcc"
-        test_cell_bg = "#f0f6fc"; hover_bg = "#faf9f5"; best_bg = "#f5f8f2"
-        pass_color = "#788c5d"; fail_color = "#c44"; muted = "#b0aea5"
-        score_good_bg = "#eef2e8"; score_good_fg = "#788c5d"
-        score_ok_bg = "#fef3c7"; score_ok_fg = "#d97706"
-        score_bad_bg = "#fceaea"; score_bad_fg = "#c44"
-        desc_bg = "#f5f5f5"
-    else:
-        bg = "#0a0a0a"; fg = "#e0e0e0"; card_bg = "#1a1a1a"; border = "#333"
-        th_bg = "#222"; th_fg = "#e0e0e0"; test_th_bg = "#1a3a5c"
-        test_cell_bg = "#0d1a2a"; hover_bg = "#1e1e1e"; best_bg = "#1a2e1a"
-        pass_color = "#22c55e"; fail_color = "#ef4444"; muted = "#888"
-        score_good_bg = "#052e16"; score_good_fg = "#22c55e"
-        score_ok_bg = "#422006"; score_ok_fg = "#f59e0b"
-        score_bad_bg = "#450a0a"; score_bad_fg = "#ef4444"
-        desc_bg = "#111"
+    # Theme (Bluewaves brand for light, legacy dark)
+    t = LIGHT_THEME if light else DARK_THEME
+    bg = t["bg"]; fg = t["fg"]; card_bg = t["card_bg"]; border = t["border"]
+    th_bg = t["th_bg"]; th_fg = t["th_fg"]; test_th_bg = t["test_th_bg"]
+    test_cell_bg = t["test_cell_bg"]; hover_bg = t["hover_bg"]; best_bg = t["best_bg"]
+    pass_color = t["pass_color"]; fail_color = t["fail_color"]; muted = t["muted"]
+    score_good_bg = t["score_good_bg"]; score_good_fg = t["score_good_fg"]
+    score_ok_bg = t["score_ok_bg"]; score_ok_fg = t["score_ok_fg"]
+    score_bad_bg = t["score_bad_bg"]; score_bad_fg = t["score_bad_fg"]
+    desc_bg = t["desc_bg"]
 
     # Find best iteration
     best_iter = None
@@ -88,14 +84,15 @@ def build_report_html(data: dict, auto_refresh: bool = False,
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {refresh_tag}<title>{skill_name} — Description Optimization</title>
 <style>
+{FONT_IMPORT}
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: {bg}; color: {fg}; padding: 24px; }}
+body {{ font-family: {FONT_BODY}; background: {bg}; color: {fg}; padding: 24px; }}
 h1 {{ font-size: 22px; margin-bottom: 4px; }}
 .subtitle {{ color: {muted}; margin-bottom: 20px; font-size: 14px; }}
 .summary {{ background: {card_bg}; border: 1px solid {border}; border-radius: 8px; padding: 16px; margin-bottom: 16px; }}
 .summary p {{ margin: 4px 0; font-size: 14px; }}
 .summary .best {{ color: {pass_color}; font-weight: 600; }}
-.desc-block {{ font-family: monospace; font-size: 12px; white-space: pre-wrap; background: {desc_bg}; padding: 10px; border-radius: 4px; margin: 4px 0 8px 0; max-height: 100px; overflow-y: auto; }}
+.desc-block {{ font-family: {FONT_MONO}; font-size: 12px; white-space: pre-wrap; background: {desc_bg}; padding: 10px; border-radius: 4px; margin: 4px 0 8px 0; max-height: 100px; overflow-y: auto; }}
 .legend {{ display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; font-size: 13px; align-items: center; }}
 .legend-item {{ display: flex; align-items: center; gap: 6px; }}
 .swatch {{ width: 16px; height: 16px; border-radius: 3px; display: inline-block; }}

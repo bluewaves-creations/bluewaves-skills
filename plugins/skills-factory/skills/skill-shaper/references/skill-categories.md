@@ -78,6 +78,17 @@ Skills that fork work to specialized subagents.
 - Context: fork with agent type selection
 - May use `isolation: "worktree"` for file-modifying agents
 
+**Typical structure:**
+```
+batch-processor/
+├── SKILL.md            # context: fork, agent type, task specification
+└── scripts/            # Processing scripts the subagent executes
+```
+
+**Design:** The subagent has no conversation history, so the task must be self-contained. Write SKILL.md as if briefing a colleague who has never seen the conversation.
+
+**Init:** `init_skill.py <name> --path <dir> --category subagent`
+
 **Use when:** Tasks benefit from parallel processing, isolated environments, or specialized agent configurations.
 
 ## Knowledge / Reference Skills
@@ -98,6 +109,7 @@ Skills that provide domain knowledge without active workflows.
 | Document creation | `--category document-creation` | file_exists, file_size_range | Template, visual output |
 | Workflow | `--category workflow` | exit_code, contains | Sequential, plan-validate-execute |
 | MCP enhancement | `--category mcp-enhancement` | contains (tool calls) | Multi-MCP orchestration |
+| Subagent | `--category subagent` | exit_code | Subagent delegation, context: fork |
 | Generic | (default) | — | Flexible |
 
 ## Composability Principles

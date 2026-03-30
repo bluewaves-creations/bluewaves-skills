@@ -32,6 +32,23 @@ from functools import partial
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 
+try:
+    from .theme import (
+        PRIMARY, PRIMARY_DARK, ACCENT_TEAL, NEUTRAL_900, NEUTRAL_500,
+        NEUTRAL_300, NEUTRAL_100, WHITE, BORDER_LIGHT, CODE_TEXT,
+        PASS, FAIL, PENDING, PASS_BG, FAIL_BG, PENDING_BG,
+        PASS_TEXT, FAIL_TEXT, PENDING_TEXT,
+        FONT_BODY, FONT_MONO, FONT_IMPORT,
+    )
+except ImportError:
+    from theme import (
+        PRIMARY, PRIMARY_DARK, ACCENT_TEAL, NEUTRAL_900, NEUTRAL_500,
+        NEUTRAL_300, NEUTRAL_100, WHITE, BORDER_LIGHT, CODE_TEXT,
+        PASS, FAIL, PENDING, PASS_BG, FAIL_BG, PENDING_BG,
+        PASS_TEXT, FAIL_TEXT, PENDING_TEXT,
+        FONT_BODY, FONT_MONO, FONT_IMPORT,
+    )
+
 # Extensions rendered as inline text
 TEXT_EXTENSIONS = {
     ".txt", ".md", ".json", ".csv", ".py", ".js", ".ts", ".tsx", ".jsx",
@@ -232,30 +249,31 @@ function autoSaveFeedback() {
 {refresh_tag}
 <title>Eval Review: {_escape_html(skill_name)}</title>
 <style>
+{FONT_IMPORT}
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; }}
+body {{ font-family: {FONT_BODY}; background: {WHITE}; color: {NEUTRAL_900}; }}
 .container {{ max-width: 1200px; margin: 0 auto; padding: 24px; }}
-h1 {{ font-size: 24px; margin-bottom: 16px; color: #fff; }}
-.tabs {{ display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid #333; }}
-.tab {{ padding: 8px 16px; cursor: pointer; border: none; background: transparent; color: #888; font-size: 14px; }}
-.tab.active {{ color: #fff; border-bottom: 2px solid #3b82f6; }}
+h1 {{ font-size: 24px; margin-bottom: 16px; color: {NEUTRAL_900}; }}
+.tabs {{ display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid {NEUTRAL_300}; }}
+.tab {{ padding: 8px 16px; cursor: pointer; border: none; background: transparent; color: {NEUTRAL_500}; font-size: 14px; font-family: inherit; }}
+.tab.active {{ color: {NEUTRAL_900}; border-bottom: 2px solid {PRIMARY}; }}
 .panel {{ display: none; }} .panel.active {{ display: block; }}
-.eval-card {{ background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 16px; }}
-.eval-card h3 {{ color: #fff; margin-bottom: 8px; }}
-.pass {{ color: #22c55e; }} .fail {{ color: #ef4444; }} .skip {{ color: #888; }}
+.eval-card {{ background: {NEUTRAL_100}; border: 1px solid {BORDER_LIGHT}; border-radius: 8px; padding: 16px; margin-bottom: 16px; }}
+.eval-card h3 {{ color: {NEUTRAL_900}; margin-bottom: 8px; }}
+.pass {{ color: {PASS}; }} .fail {{ color: {FAIL}; }} .skip {{ color: {NEUTRAL_500}; }}
 .grade {{ display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }}
-.grade.pass {{ background: #052e16; }} .grade.fail {{ background: #450a0a; }}
-.feedback {{ width: 100%; min-height: 60px; background: #111; border: 1px solid #333; border-radius: 4px; color: #e0e0e0; padding: 8px; margin-top: 8px; resize: vertical; }}
+.grade.pass {{ background: {PASS_BG}; color: {PASS_TEXT}; }} .grade.fail {{ background: {FAIL_BG}; color: {FAIL_TEXT}; }}
+.feedback {{ width: 100%; min-height: 60px; background: {WHITE}; border: 1px solid {NEUTRAL_300}; border-radius: 4px; color: {NEUTRAL_900}; padding: 8px; margin-top: 8px; resize: vertical; font-family: inherit; }}
 .nav {{ display: flex; gap: 8px; margin-bottom: 16px; }}
-.nav button {{ padding: 6px 12px; background: #333; border: none; color: #fff; border-radius: 4px; cursor: pointer; }}
-.nav button:hover {{ background: #444; }}
-.submit {{ padding: 8px 24px; background: #3b82f6; border: none; color: #fff; border-radius: 4px; cursor: pointer; margin-top: 16px; }}
-.submit:hover {{ background: #2563eb; }}
-.embedded-text {{ font-family: monospace; font-size: 12px; white-space: pre-wrap; background: #111; padding: 12px; border-radius: 4px; max-height: 300px; overflow-y: auto; margin: 8px 0; color: #ccc; }}
+.nav button {{ padding: 6px 12px; background: {NEUTRAL_100}; border: 1px solid {BORDER_LIGHT}; color: {NEUTRAL_900}; border-radius: 4px; cursor: pointer; font-family: inherit; }}
+.nav button:hover {{ background: {BORDER_LIGHT}; }}
+.submit {{ padding: 8px 24px; background: {PRIMARY}; border: none; color: {WHITE}; border-radius: 4px; cursor: pointer; margin-top: 16px; font-family: inherit; }}
+.submit:hover {{ background: {PRIMARY_DARK}; }}
+.embedded-text {{ font-family: {FONT_MONO}; font-size: 12px; white-space: pre-wrap; background: {NEUTRAL_100}; padding: 12px; border-radius: 4px; max-height: 300px; overflow-y: auto; margin: 8px 0; color: {NEUTRAL_900}; }}
 .embedded-img {{ max-width: 100%; border-radius: 4px; margin: 8px 0; }}
-table {{ width: 100%; border-collapse: collapse; }} th, td {{ padding: 8px 12px; text-align: left; border-bottom: 1px solid #333; }}
-th {{ color: #888; font-size: 12px; text-transform: uppercase; }}
-.stat {{ font-variant-numeric: tabular-nums; }}
+table {{ width: 100%; border-collapse: collapse; }} th, td {{ padding: 8px 12px; text-align: left; border-bottom: 1px solid {BORDER_LIGHT}; }}
+th {{ color: {NEUTRAL_500}; font-size: 12px; text-transform: uppercase; }}
+.stat {{ font-variant-numeric: tabular-nums; font-family: {FONT_MONO}; }}
 </style>
 </head>
 <body>
@@ -319,7 +337,7 @@ function renderEval(idx) {{
         const label = exp.passed === null ? 'PENDING' : (exp.passed ? 'PASS' : 'FAIL');
         const tier = exp.tier ? ` [T${{exp.tier}}]` : '';
         html += `<div style="margin:4px 0"><span class="grade ${{cls}}">${{label}}</span> ${{exp.text}}${{tier}}</div>`;
-        if (exp.evidence) html += `<div style="margin-left:60px;color:#888;font-size:12px">${{exp.evidence}}</div>`;
+        if (exp.evidence) html += `<div style="margin-left:60px;color:{NEUTRAL_500};font-size:12px">${{exp.evidence}}</div>`;
       }}
       html += '</div>';
     }}
@@ -329,24 +347,24 @@ function renderEval(idx) {{
   if (e.embedded_outputs && e.embedded_outputs.length) {{
     html += '<div style="margin-top:12px">';
     for (const f of e.embedded_outputs) {{
-      html += `<p style="color:#888;font-size:12px;margin-top:8px"><strong>${{f.name}}</strong></p>`;
+      html += `<p style="color:{NEUTRAL_500};font-size:12px;margin-top:8px"><strong>${{f.name}}</strong></p>`;
       if (f.type === 'text') {{
         html += `<div class="embedded-text">${{f.content.replace(/</g,'&lt;').replace(/>/g,'&gt;')}}</div>`;
       }} else if (f.type === 'image') {{
         html += `<img class="embedded-img" src="${{f.data_uri}}" alt="${{f.name}}">`;
       }} else if (f.type === 'pdf') {{
-        html += `<iframe src="${{f.data_uri}}" style="width:100%;height:400px;border:1px solid #333;border-radius:4px;margin:8px 0"></iframe>`;
+        html += `<iframe src="${{f.data_uri}}" style="width:100%;height:400px;border:1px solid {NEUTRAL_300};border-radius:4px;margin:8px 0"></iframe>`;
       }} else if (f.data_uri) {{
-        html += `<a href="${{f.data_uri}}" download="${{f.name}}" style="color:#3b82f6">Download ${{f.name}}</a>`;
+        html += `<a href="${{f.data_uri}}" download="${{f.name}}" style="color:{ACCENT_TEAL}">Download ${{f.name}}</a>`;
       }}
     }}
     html += '</div>';
   }} else if (e.output_files && e.output_files.length) {{
-    html += '<p style="margin-top:12px;color:#888">Output files: ' + e.output_files.join(', ') + '</p>';
+    html += `<p style="margin-top:12px;color:{NEUTRAL_500}">Output files: ` + e.output_files.join(', ') + '</p>';
   }}
 
   if (e.timing) {{
-    html += `<p style="color:#888">Tokens: ${{(e.timing.total_tokens || 0).toLocaleString()}} | Duration: ${{(e.timing.total_duration_seconds || 0).toFixed(1)}}s</p>`;
+    html += `<p style="color:{NEUTRAL_500}">Tokens: ${{(e.timing.total_tokens || 0).toLocaleString()}} | Duration: ${{(e.timing.total_duration_seconds || 0).toFixed(1)}}s</p>`;
   }}
 
   html += `<textarea class="feedback" placeholder="Your feedback..." oninput="saveFeedback('${{e.run_id}}', this.value)">${{feedback[e.run_id] || ''}}</textarea>`;

@@ -24,8 +24,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from utils import parse_skill_md
 from run_eval import evaluate_queries, find_project_root
-from improve_description import improve
+from improve_description import improve, build_improvement_prompt
 from generate_report import build_report_html
+from sim_trigger import sim_evaluate_queries, build_sim_prompt
 
 
 def stratified_split(eval_set: list, holdout: float = 0.4, seed: int = 42) -> tuple:
@@ -128,8 +129,14 @@ def _build_loop_data(skill_name: str, original_desc: str, history: list,
 
 def run_loop(eval_set_path: str, skill_path: str, model: str = None,
              max_iterations: int = 5, holdout: float = 0.4,
-             verbose: bool = False) -> dict:
-    """Run the full eval+improve loop."""
+             verbose: bool = False, sim: bool = False,
+             use_api: bool = False) -> dict:
+    """Run the full eval+improve loop.
+
+    Args:
+        sim: Use simulated trigger testing (one batched call per iteration)
+        use_api: Use Anthropic API for improvement (default: CLI)
+    """
     skill_path = Path(skill_path).resolve()
     eval_set = json.loads(Path(eval_set_path).read_text())
 
@@ -171,12 +178,18 @@ def run_loop(eval_set_path: str, skill_path: str, model: str = None,
         combined = train + test
         train_queries = {q["query"] for q in train}
 
-        print(f"\nEvaluating {len(combined)} queries (train+test combined)...")
-        combined_results = evaluate_queries(
-            combined, name, current_desc, project_root,
-            num_workers=10, timeout=30, runs_per_query=3,
-            model=model,
-        )
+        print(f"\nEvaluating {len(combined)} queries ({'simulated' if sim else 'real'}, train+test combined)...")
+        if sim:
+            combined_results = sim_evaluate_queries(
+                combined, name, current_desc, project_root,
+                model=model or "haiku",
+            )
+        else:
+            combined_results = evaluate_queries(
+                combined, name, current_desc, project_root,
+                num_workers=10, timeout=30, runs_per_query=3,
+                model=model,
+            )
 
         # Split results back into train/test
         train_result_list = [r for r in combined_results["results"] if r["query"] in train_queries]
@@ -259,7 +272,7 @@ def run_loop(eval_set_path: str, skill_path: str, model: str = None,
         improvement_history.append(blinded_entry)
 
         # Improve description via direct function call
-        print(f"\nImproving description...")
+        print(f"\nImproving description{'(CLI)' if not use_api else ' (API)'}...")
         log_dir = skill_path / ".skill-eval" / "logs"
         result = improve(
             eval_results=train_results,
@@ -268,6 +281,7 @@ def run_loop(eval_set_path: str, skill_path: str, model: str = None,
             previous_attempts=improvement_history,
             log_dir=log_dir,
             iteration=iteration,
+            use_api=use_api,
         )
 
         if result.get("success"):
@@ -319,10 +333,23 @@ def main():
     parser.add_argument("--max-iterations", type=int, default=5, help="Max iterations")
     parser.add_argument("--holdout", type=float, default=0.4, help="Test set proportion")
     parser.add_argument("--verbose", action="store_true", help="Show confusion matrix stats")
+    parser.add_argument("--sim", action="store_true",
+                        help="Use simulated trigger testing (one batched call per iteration)")
+    parser.add_argument("--use-api", action="store_true",
+                        help="Use Anthropic API for improvement (default: CLI)")
+    parser.add_argument("--economical", "-e", action="store_true",
+                        help="Preset: --sim + CLI improvement + haiku + 3 iterations + 1 run")
     args = parser.parse_args()
 
+    # Economical preset overrides
+    if args.economical:
+        args.sim = True
+        args.model = args.model or "haiku"
+        args.max_iterations = min(args.max_iterations, 3)
+
     result = run_loop(args.eval_set, args.skill_path, args.model,
-                      args.max_iterations, args.holdout, args.verbose)
+                      args.max_iterations, args.holdout, args.verbose,
+                      sim=args.sim, use_api=args.use_api)
 
     best_score = result.get("best_score", "0%")
     score_val = float(best_score.rstrip("%")) / 100

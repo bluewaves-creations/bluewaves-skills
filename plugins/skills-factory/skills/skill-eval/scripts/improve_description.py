@@ -245,8 +245,14 @@ def improve_via_cli(prompt: str, model: str = None) -> tuple:
 
 def improve(eval_results: dict, skill_path: str, model: str = None,
             previous_attempts: list = None, test_results: dict = None,
-            log_dir: Path = None, iteration: int = None) -> dict:
-    """Run one improvement iteration. Returns dict with success, new_description, transcript."""
+            log_dir: Path = None, iteration: int = None,
+            use_api: bool = False) -> dict:
+    """Run one improvement iteration. Returns dict with success, new_description, transcript.
+
+    Args:
+        use_api: If True, use Anthropic API with extended thinking.
+                 If False (default), use claude CLI (subscription).
+    """
     skill_path = Path(skill_path).resolve()
     name, current_desc, content = parse_skill_md(skill_path)
 
@@ -256,9 +262,12 @@ def improve(eval_results: dict, skill_path: str, model: str = None,
         test_results=test_results,
     )
 
-    # Try API first, fall back to CLI
-    description, transcript = improve_via_api(prompt, model, log_dir, iteration)
-    if description is None:
+    # CLI first (uses subscription), API only when explicitly requested
+    if use_api:
+        description, transcript = improve_via_api(prompt, model, log_dir, iteration)
+        if description is None:
+            description, transcript = improve_via_cli(prompt, model)
+    else:
         description, transcript = improve_via_cli(prompt, model)
 
     if not description:
@@ -284,11 +293,27 @@ def main():
     parser.add_argument("--test-results", help="JSON file with test set results (for blinded reporting)")
     parser.add_argument("--log-dir", help="Directory for transcript logs")
     parser.add_argument("--iteration", type=int, help="Current iteration number")
+    parser.add_argument("--prompt-only", action="store_true",
+                        help="Output the improvement prompt and exit (for in-session use)")
+    parser.add_argument("--use-api", action="store_true",
+                        help="Use Anthropic API with extended thinking (default: CLI)")
     args = parser.parse_args()
 
     eval_results = json.loads(Path(args.eval_results).read_text())
     history = json.loads(Path(args.history).read_text()) if args.history else None
     test_results = json.loads(Path(args.test_results).read_text()) if args.test_results else None
+
+    # Prompt-only mode: output the prompt for in-session use, no execution
+    if args.prompt_only:
+        skill_path = Path(args.skill_path).resolve()
+        name, current_desc, content = parse_skill_md(skill_path)
+        prompt = build_improvement_prompt(
+            name, current_desc, eval_results, content,
+            previous_attempts=history, test_results=test_results,
+        )
+        print(prompt)
+        sys.exit(0)
+
     log_dir = Path(args.log_dir) if args.log_dir else None
 
     result = improve(
@@ -297,6 +322,7 @@ def main():
         test_results=test_results,
         log_dir=log_dir,
         iteration=args.iteration,
+        use_api=args.use_api,
     )
 
     # Output without transcript for cleaner piping

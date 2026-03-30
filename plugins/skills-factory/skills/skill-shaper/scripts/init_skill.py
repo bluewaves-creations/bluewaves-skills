@@ -180,6 +180,43 @@ Move detailed schemas and references to references/ files.]
 
 - **references/** — API documentation, schemas, domain knowledge
 """,
+
+    "subagent": """---
+name: {skill_name}
+description: >
+  [TODO: What this skill does when forked to a subagent. Use when
+  the user wants to [action] in isolation, needs parallel processing,
+  or mentions [keywords].]
+context: fork
+agent: general-purpose
+---
+
+# {skill_title}
+
+## Task
+
+[TODO: The task this subagent executes. Must be explicit and self-contained —
+the subagent has no conversation history. Write as if briefing a colleague
+who has never seen the conversation.]
+
+## Steps
+
+### Step 1: [Name]
+[TODO: First step with clear inputs and outputs]
+
+### Step 2: [Name]
+[TODO: Second step — explain WHY this order matters]
+
+## Output
+
+[TODO: What the subagent returns to the parent conversation.
+Be specific — the parent only sees the summary, not the full transcript.]
+
+## Resources
+
+- **scripts/** — Executable code for deterministic tasks
+- **references/** — Documentation loaded as needed
+""",
 }
 
 
@@ -203,6 +240,7 @@ CATEGORY_CHECKS = {
     "document-creation": '  - type: file_exists\n    target: "output.*"',
     "workflow": '  - type: exit_code\n    expected: 0',
     "mcp-enhancement": '  - type: contains\n    target: "transcript.md"\n    expected: "Tool:"',
+    "subagent": '  - type: exit_code\n    expected: 0',
     "generic": "  []",
 }
 
@@ -275,6 +313,7 @@ def main():
         print("  document-creation   Skills that produce files (PDFs, documents)")
         print("  workflow            Skills that orchestrate multi-step processes")
         print("  mcp-enhancement    Skills that wrap external tools with knowledge")
+        print("  subagent            Skills that fork work to isolated subagents")
         print("  generic             Default template (no category)")
         print("\nExamples:")
         print("  init_skill.py my-skill --path skills/public")
@@ -291,7 +330,7 @@ def main():
         if cat_idx + 1 < len(sys.argv):
             category = sys.argv[cat_idx + 1]
 
-    valid_categories = ("generic", "document-creation", "workflow", "mcp-enhancement")
+    valid_categories = ("generic", "document-creation", "workflow", "mcp-enhancement", "subagent")
     if category not in valid_categories:
         print(f"Unknown category '{category}'. Valid: {', '.join(valid_categories)}")
         sys.exit(1)

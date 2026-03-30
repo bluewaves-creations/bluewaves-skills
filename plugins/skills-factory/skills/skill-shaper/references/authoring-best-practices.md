@@ -6,11 +6,12 @@ Principles, patterns, and checklist for writing effective skills.
 
 1. Pushy Descriptions
 2. Explain the Why
-3. Writing Patterns
-4. Keep Prompts Lean
-5. Generalize over Overfit
-6. Extract Repeated Work
-7. Pre-Distribution Checklist
+3. Principle of Lack of Surprise
+4. Writing Patterns
+5. Keep Prompts Lean
+6. Generalize over Overfit
+7. Extract Repeated Work
+8. Pre-Distribution Checklist
 
 ---
 
@@ -54,7 +55,17 @@ Today's LLMs are smart. They have good theory of mind. When given reasoning, the
 
 ---
 
-## 3. Writing Patterns
+## 3. Principle of Lack of Surprise
+
+Skills must not contain malware, exploit code, or content that could compromise system security. A skill's contents should not surprise the user in their intent if described.
+
+Don't create misleading skills or skills designed to facilitate unauthorized access, data exfiltration, or other malicious activities. Playful skills (roleplay, creative writing) are fine — the bar is intent, not tone.
+
+This is a floor, not a ceiling. Most skills pass trivially.
+
+---
+
+## 4. Writing Patterns
 
 ### Imperative Form
 - "Extract text from the PDF" (not "The skill extracts text")
@@ -96,7 +107,7 @@ Write results as JSON:
 
 ---
 
-## 4. Keep Prompts Lean
+## 5. Keep Prompts Lean
 
 **Default assumption:** Claude is already very smart. Only add context it doesn't have.
 
@@ -110,22 +121,25 @@ Write results as JSON:
 
 ---
 
-## 5. Generalize over Overfit
+## 6. Generalize over Overfit
 
-The skill will be used on thousands of prompts. Changes must help the category, not just one test case.
+The skill will be used thousands — possibly millions — of times across many different prompts. You and the user iterate on a few examples because it's fast and they know those examples inside out. But if the skill only works for those examples, it's useless.
 
 **Red flags for overfitting:**
 - Rules that only make sense for one specific test case
 - Increasingly specific constraints that limit flexibility
 - "If the user mentions X, always do Y" (too narrow)
+- Fiddly changes to fix one test case that don't generalize
 
-**Better:** Use general principles and patterns, not hardcoded responses.
+**Better:** Use general principles and patterns, not hardcoded responses. If a stubborn issue resists general fixes, try different metaphors or recommend different working patterns rather than adding oppressively constrictive MUSTs. It's cheap to experiment and you might land on something great.
 
 ---
 
-## 6. Extract Repeated Work
+## 7. Extract Repeated Work
 
-Read transcripts from test runs. If subagents independently wrote similar helper scripts:
+**Read transcripts from test runs**, not just final outputs. If the skill is making the model waste time on unproductive steps, identify which instructions cause that and cut or rewrite them.
+
+If subagents independently wrote similar helper scripts:
 - All 3 runs created `parse_csv.py` → Bundle in `scripts/`
 - All runs followed same 5-step sequence → Document as workflow
 - All runs read same reference data → Include in `references/`
@@ -134,11 +148,11 @@ Use `extract_scripts.py` from skill-eval to identify repeated patterns automatic
 
 ---
 
-## 7. Pre-Distribution Checklist
+## 8. Pre-Distribution Checklist
 
 ### Before starting
 - [ ] Clear success criteria (trigger queries, output quality)
-- [ ] Category identified (document, workflow, MCP)
+- [ ] Category identified (document, workflow, MCP, subagent)
 - [ ] Reusable contents planned (scripts, references, assets)
 
 ### During development

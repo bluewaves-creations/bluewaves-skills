@@ -11,9 +11,10 @@ description: >
   running evals, benchmarking skill performance, or shipping a skill.
 allowed-tools: Bash, Read, Write
 compatibility: >
-  claude CLI required for trigger testing. anthropic Python SDK recommended
-  for description optimization (pip install anthropic). PyYAML recommended
-  for eval files.
+  claude CLI optional (for full-fidelity trigger testing). Description
+  optimization works in-session (zero cost) or via claude CLI. Anthropic
+  Python SDK optional for API-based improvement (pip install anthropic).
+  PyYAML recommended for eval files.
 license: MIT
 ---
 
@@ -29,7 +30,7 @@ Before starting, detect the environment:
 
 1. **Claude Code** — check `which claude`. Full capabilities: subagents, browser, `claude -p` for trigger testing.
 2. **Cowork** — check for Task tools. Subagents work, but no display. Use `--static <path>` for HTML viewer output.
-3. **Claude.ai** — fallback. Inline testing only. Skip benchmarking and description optimization (requires `claude` CLI).
+3. **Claude.ai** — fallback. Inline testing only. Description optimization works in-session (no CLI needed). Skip benchmarking.
 
 Adapt workflows below based on detected environment.
 
@@ -227,7 +228,7 @@ The regression check compares pass/fail per expectation and flags any PASS→FAI
 
 ## Description Optimization
 
-Optimize the skill's description for better triggering accuracy:
+Optimize the skill's description for better triggering accuracy. Three approaches from cheapest to most thorough.
 
 ### Step 1: Generate trigger queries
 
@@ -250,17 +251,52 @@ Present queries using the HTML editor:
 4. Write to temp file, open in browser
 5. User edits and exports `eval_set.json`
 
-### Step 3: Run optimization loop
+### Step 3: Run optimization
+
+Three modes — pick based on your environment and cost tolerance:
+
+#### In-Session (zero external cost — preferred)
+
+Run everything within the current conversation. No subprocess spawning, no API calls. Uses the host subscription with negligible overhead.
+
+1. Generate trigger simulation prompt:
+   ```bash
+   python3 scripts/sim_trigger.py --prompt-only \
+     --skill-path <skill-dir> --eval-set <eval_set.json>
+   ```
+2. Feed the prompt to a Haiku subagent (Claude Code: `Agent(model: haiku)`) or evaluate inline (Claude.ai)
+3. Parse results:
+   ```bash
+   python3 scripts/sim_trigger.py --parse \
+     --skill-name <name> --eval-set <eval_set.json> --response <response-file>
+   ```
+4. Analyze failures inline — identify which queries failed and why
+5. Generate improvement prompt:
+   ```bash
+   python3 scripts/improve_description.py --prompt-only \
+     --eval-results <results.json> --skill-path <skill-dir>
+   ```
+6. Improve the description yourself — you ARE the model, reason about it directly
+7. Update SKILL.md frontmatter with the new description
+8. Repeat steps 1-7 until convergence or max iterations
+
+#### Economical (minimal subprocess calls)
 
 ```bash
-python3 scripts/run_loop.py \
-  --eval-set <eval_set.json> \
-  --skill-path <skill-dir> \
-  --model <model-id> \
-  --max-iterations 5
+python3 -m scripts.run_loop --eval-set <eval_set.json> \
+  --skill-path <skill-dir> --economical
 ```
 
-This handles: stratified 60/40 train/test split, parallel evaluation, extended thinking for description improvement, live HTML report, best description selected by TEST score (prevents overfitting).
+Uses simulated trigger testing (one batched Haiku call per iteration) and CLI-based improvement. ~5 lightweight `claude -p` calls per iteration instead of 60+. No API key needed.
+
+#### Full Fidelity (for final validation)
+
+```bash
+python3 -m scripts.run_loop --eval-set <eval_set.json> \
+  --skill-path <skill-dir> --model <model-id> --max-iterations 5
+```
+
+Real trigger testing via `claude -p` (N queries × 3 runs × N iterations). Use after in-session or economical optimization has converged. Optionally add `--use-api` for Anthropic API improvement with extended thinking.
 
 ### Step 4: Apply result
 

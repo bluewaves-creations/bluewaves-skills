@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0] - 2026-03-30
+
+### Added
+
+#### skills-factory v2.1.0 — skill-shaper best-in-class upgrade + in-session eval
+
+**skill-shaper enhancements (closing all gaps with Anthropic's skill-creator):**
+- New "Interview and Research" step in the authoring workflow
+- Environment adaptation section: Claude Code / Cowork / Claude.ai guidance
+- Troubleshooting section with quick-reference diagnosis
+- Principle of Lack of Surprise (security) in authoring best practices
+- `context: fork` + `agent` interaction documentation in skill specification
+- Invocation control table (`disable-model-invocation` vs `user-invocable`)
+- `$ARGUMENTS[N]` / `$0` shorthand, `allowed-tools` patterns (`Bash(gh *)`), character budget info
+- Automatic discovery from nested directories and `--add-dir`
+- New `subagent` category in `init_skill.py` with `context: fork` template
+- Fixed `quick_validate.py` ALLOWED_PROPERTIES: accepts all 12 standard frontmatter fields
+
+**skill-eval in-session optimization (zero external cost):**
+- New `sim_trigger.py` — simulated trigger testing via prompt generation + parsing. Modes: `--prompt-only` (for in-session subagent use), `--parse` (response → results), `--execute` (batched Haiku fallback)
+- `improve_description.py` — added `--prompt-only` mode, flipped default from API to CLI (subscription), API now opt-in with `--use-api`
+- `run_loop.py` — added `--sim` (simulated triggers), `--economical` preset (sim + haiku + 3 iterations), `--use-api` opt-in
+- Three-tier optimization: in-session (zero cost), economical (~5 Haiku calls/iteration), full fidelity (existing behavior, opt-in)
+
+**Bluewaves brand for skill-eval HTML:**
+- New `theme.py` shared module — single source of truth for brand tokens
+- `eval_review.html` and `viewer.html` — Bluewaves light theme (Merriweather, brand colors, semantic pass/fail badges)
+- `generate_review.py` and `generate_report.py` — import from theme.py, Bluewaves light theme default
+
 ## [4.2.0] - 2026-03-14
 
 ### Fixed

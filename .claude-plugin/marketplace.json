@@ -2,7 +2,7 @@
   "name": "bluewaves-skills",
   "metadata": {
     "description": "Athena document exchange, branded document generation with charts, EPUB creation, and skill creation and cross-platform conversion tools for Claude Code",
-    "version": "4.2.0"
+    "version": "4.3.0"
   },
   "owner": {
     "name": "Bluewaves Team",
@@ -43,7 +43,7 @@
       "name": "skills-factory",
       "source": "./plugins/skills-factory",
       "description": "Complete skill lifecycle platform: creation, evaluation, benchmarking, description optimization, quality gates, packaging, and cross-platform conversion for Agent Skills",
-      "version": "2.0.3",
+      "version": "2.1.0",
       "author": {
         "name": "Bluewaves Team",
         "email": "contact@bluewaves.boutique"

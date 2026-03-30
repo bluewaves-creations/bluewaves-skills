@@ -5,44 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eval Review: __SKILL_NAME__</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Fira+Code&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; }
+body { font-family: 'Merriweather', Georgia, serif; background: #FFFFFF; color: #2C2C2C; }
 .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-h1 { font-size: 24px; margin-bottom: 4px; color: #fff; }
-.subtitle { color: #888; margin-bottom: 24px; font-size: 14px; }
-.tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid #333; }
-.tab { padding: 8px 16px; cursor: pointer; border: none; background: transparent; color: #888; font-size: 14px; font-family: inherit; }
-.tab:hover { color: #ccc; }
-.tab.active { color: #fff; border-bottom: 2px solid #3b82f6; }
+h1 { font-size: 24px; margin-bottom: 4px; color: #2C2C2C; }
+.subtitle { color: #7A7A7A; margin-bottom: 24px; font-size: 14px; }
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid #B0B0B0; }
+.tab { padding: 8px 16px; cursor: pointer; border: none; background: transparent; color: #7A7A7A; font-size: 14px; font-family: inherit; }
+.tab:hover { color: #2C2C2C; }
+.tab.active { color: #2C2C2C; border-bottom: 2px solid #B78A66; }
 .panel { display: none; } .panel.active { display: block; }
-.card { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-.card h3 { color: #fff; margin-bottom: 8px; font-size: 16px; }
-.pass { color: #22c55e; } .fail { color: #ef4444; } .skip { color: #888; } .pending { color: #f59e0b; }
+.card { background: #F5F5F7; border: 1px solid #E5E5E5; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.card h3 { color: #2C2C2C; margin-bottom: 8px; font-size: 16px; }
+.pass { color: #30D158; } .fail { color: #FF4245; } .skip { color: #7A7A7A; } .pending { color: #D97706; }
 .grade { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-right: 8px; }
-.grade.pass { background: #052e16; } .grade.fail { background: #450a0a; } .grade.pending { background: #451a03; }
-.tier-badge { font-size: 10px; color: #666; margin-left: 4px; }
-.evidence { margin-left: 68px; color: #888; font-size: 12px; font-family: monospace; margin-top: 2px; margin-bottom: 8px; }
-.feedback { width: 100%; min-height: 60px; background: #111; border: 1px solid #333; border-radius: 4px; color: #e0e0e0; padding: 8px; margin-top: 8px; resize: vertical; font-family: inherit; font-size: 14px; }
+.grade.pass { background: #E8F8EC; color: #166534; } .grade.fail { background: #FEE2E2; color: #991B1B; } .grade.pending { background: #FEF3C7; color: #92400E; }
+.tier-badge { font-size: 10px; color: #7A7A7A; margin-left: 4px; }
+.evidence { margin-left: 68px; color: #7A7A7A; font-size: 12px; font-family: 'Fira Code', 'SF Mono', monospace; margin-top: 2px; margin-bottom: 8px; }
+.feedback { width: 100%; min-height: 60px; background: #FFFFFF; border: 1px solid #B0B0B0; border-radius: 4px; color: #2C2C2C; padding: 8px; margin-top: 8px; resize: vertical; font-family: inherit; font-size: 14px; }
 .nav { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.nav button { padding: 6px 12px; background: #333; border: none; color: #fff; border-radius: 4px; cursor: pointer; font-family: inherit; }
-.nav button:hover { background: #444; }
-.nav-label { color: #888; font-size: 14px; }
-.submit { padding: 10px 24px; background: #3b82f6; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-size: 14px; font-family: inherit; margin-top: 16px; }
-.submit:hover { background: #2563eb; }
-table { width: 100%; border-collapse: collapse; } th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #333; }
-th { color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
-.stat { font-variant-numeric: tabular-nums; font-family: 'SF Mono', 'Fira Code', monospace; }
+.nav button { padding: 6px 12px; background: #F5F5F7; border: 1px solid #E5E5E5; color: #2C2C2C; border-radius: 4px; cursor: pointer; font-family: inherit; }
+.nav button:hover { background: #E5E5E5; }
+.nav-label { color: #7A7A7A; font-size: 14px; }
+.submit { padding: 10px 24px; background: #B78A66; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-size: 14px; font-family: inherit; margin-top: 16px; }
+.submit:hover { background: #A07550; }
+table { width: 100%; border-collapse: collapse; } th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #E5E5E5; }
+th { color: #7A7A7A; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat { font-variant-numeric: tabular-nums; font-family: 'Fira Code', 'SF Mono', monospace; }
 .delta { font-weight: 600; }
-.delta.positive { color: #22c55e; } .delta.negative { color: #ef4444; }
-.output-files { margin-top: 12px; padding: 8px 12px; background: #111; border-radius: 4px; }
-.output-files code { color: #93c5fd; }
-.timing-row { display: flex; gap: 24px; margin-top: 8px; color: #888; font-size: 13px; }
+.delta.positive { color: #30D158; } .delta.negative { color: #FF4245; }
+.output-files { margin-top: 12px; padding: 8px 12px; background: #F5F5F7; border-radius: 4px; }
+.output-files code { color: #0891B2; }
+.timing-row { display: flex; gap: 24px; margin-top: 8px; color: #7A7A7A; font-size: 13px; }
 .section { margin-top: 12px; }
-.section-toggle { cursor: pointer; color: #3b82f6; font-size: 13px; }
+.section-toggle { cursor: pointer; color: #00D2E0; font-size: 13px; }
 .section-content { display: none; margin-top: 8px; }
 .section-content.open { display: block; }
-.notes { background: #111; border-radius: 4px; padding: 12px; margin-top: 16px; }
-.notes li { margin: 4px 0; color: #ccc; font-size: 13px; }
+.notes { background: #F5F5F7; border-radius: 4px; padding: 12px; margin-top: 16px; }
+.notes li { margin: 4px 0; color: #2C2C2C; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -120,7 +121,7 @@ function renderEval(idx) {
       html += '<div class="section"><span class="section-toggle" onclick="this.nextElementSibling.classList.toggle(\'open\')">Eval Feedback</span>';
       html += '<div class="section-content">';
       for (const s of e.grading.eval_feedback.suggestions) {
-        html += `<p style="color:#f59e0b;font-size:13px">${s.assertion ? `[${s.assertion}] ` : ''}${s.reason}</p>`;
+        html += `<p style="color:#D97706;font-size:13px">${s.assertion ? `[${s.assertion}] ` : ''}${s.reason}</p>`;
       }
       html += '</div></div>';
     }
@@ -181,7 +182,7 @@ function renderBenchmark() {
   if (benchmarkData.run_summary.delta) {
     const d = benchmarkData.run_summary.delta;
     const prCls = parseFloat(d.pass_rate) >= 0 ? 'positive' : 'negative';
-    html += `<tr style="border-top:2px solid #444">
+    html += `<tr style="border-top:2px solid #B0B0B0">
       <td>Delta</td>
       <td class="stat delta ${prCls}">${d.pass_rate}</td>
       <td class="stat delta">${d.time_seconds}s</td>
