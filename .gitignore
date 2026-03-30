@@ -2,4 +2,6 @@ dist/
 __pycache__/
 .DS_Store
 temp-docs/
+keys.json
 plugins/docs-factory/skills/pdf-factory/assets/icons/
+plugins/web-factory/
